@@ -121,6 +121,7 @@
 
     <br/>
 
+    <button type="button" onclick="stopTimer();" id="clear">Stop Timer</button>
     <button type="button" onclick="clearLog();" id="clear">Clear Log</button>
     <button type="button" onclick="requestNotificationPermission();" id="enableNotifications">Enable Notifications</button>
 
@@ -386,6 +387,14 @@
     let currentIntervalId = null;
     let notificationEnabled = false; // Track notification permission status
 
+    function stopTimer(){
+        if (currentIntervalId !== null) {
+            clearCurrentTimer();
+            currentIntervalId = null;
+        }
+        endGlobalTimer();
+    }
+
     // Populate the select box with options from liberatingStructures
     window.onload = function() {
         const selectBox = document.getElementById('liberatingStructureSelect');
@@ -553,7 +562,12 @@
     }
 
     function delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        return new Promise(resolve => {
+            currentIntervalId = setTimeout(() => {
+                currentIntervalId = null; // Clear the global variable when timeout completes
+                resolve();
+            }, ms);
+        });
     }
 
     async function startTimer(timer) {
