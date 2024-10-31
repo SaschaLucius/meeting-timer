@@ -97,6 +97,7 @@
 
     <div>
         <label for="customTimer">Custom Timer:</label>
+        <button onclick="onclickCopyPredefinedTimer();">Copy predefined</button>
         <br/>
         <textarea id="customTimer" name="customTimer" rows="10" cols="50">{
     "name": "Custom Timer",
@@ -431,6 +432,15 @@
         startGlobalTimer();
         await startTimer(JSON.parse(value));
         endGlobalTimer();
+    }
+
+    function onclickCopyPredefinedTimer(){
+        const selectBox = document.getElementById('liberatingStructureSelect');
+        const selectedStructureKey = selectBox.value;
+        const selectedStructure = liberatingStructures[selectedStructureKey];
+
+        const element = document.getElementById('customTimer');
+        element.value = JSON.stringify(selectedStructure.timer, null, 4);
     }
 
     function requestNotificationPermission() {
