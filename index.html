@@ -397,6 +397,10 @@
         }
     };
 
+    function clearCurrentTimer() {
+        if (currentIntervalId) clearInterval(currentIntervalId);
+    }
+
     async function onclickSingleTimer() {
         const input = document.getElementById('inputTime');
         const value = input.value;
