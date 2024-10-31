@@ -387,14 +387,6 @@
     let currentIntervalId = null;
     let notificationEnabled = false; // Track notification permission status
 
-    function stopTimer(){
-        if (currentIntervalId !== null) {
-            clearCurrentTimer();
-            currentIntervalId = null;
-        }
-        endGlobalTimer();
-    }
-
     // Populate the select box with options from liberatingStructures
     window.onload = function() {
         const selectBox = document.getElementById('liberatingStructureSelect');
@@ -406,74 +398,10 @@
         }
     };
 
+    // ####### Helper Functions #######
+
     function clearCurrentTimer() {
         if (currentIntervalId) clearInterval(currentIntervalId);
-    }
-
-    async function onclickSingleTimer() {
-        const input = document.getElementById('inputTime');
-        const value = input.value;
-
-        startGlobalTimer();
-        await startTimer({ name: 'Countdown', duration: value});
-        /*
-         (async () => {
-            await startTimer({ name: 'Timer 1', duration: 5})
-        })();
-        */
-        endGlobalTimer();
-    }
-
-    async function onclickPreDefinedTimer() {
-        // Get the selected Liberating Structure
-        const selectBox = document.getElementById('liberatingStructureSelect');
-        const selectedStructureKey = selectBox.value;
-        const selectedStructure = liberatingStructures[selectedStructureKey];
-
-        if (selectedStructure && selectedStructure.timer) {
-            startGlobalTimer();
-            await startTimer(selectedStructure.timer);
-            endGlobalTimer();
-        } else {
-            console.error("Selected structure does not have a valid timer configuration.");
-        }
-    }
-
-    async function onclickCustomTimer() {
-        const element = document.getElementById('customTimer');
-        const value = element.value;
-        startGlobalTimer();
-        await startTimer(JSON.parse(value));
-        endGlobalTimer();
-    }
-
-    function onclickCopyPredefinedTimer(){
-        const selectBox = document.getElementById('liberatingStructureSelect');
-        const selectedStructureKey = selectBox.value;
-        const selectedStructure = liberatingStructures[selectedStructureKey];
-
-        const element = document.getElementById('customTimer');
-        element.value = JSON.stringify(selectedStructure.timer, null, 4);
-    }
-
-    function requestNotificationPermission() {
-        if (!("Notification" in window)) {
-            console.log("This browser does not support notifications.");
-            return;
-        }
-        if (Notification.permission === "granted") {
-            notificationEnabled = true;
-            alert("Notifications are already enabled.");
-        } else if (Notification.permission !== "denied") {
-            Notification.requestPermission().then(permission => {
-                notificationEnabled = permission === "granted";
-                if (notificationEnabled) {
-                    alert("Notifications enabled.");
-                } else {
-                    alert("Notifications were denied.");
-                }
-            });
-        }
     }
 
     function updateDisplay({ name, time, repetitions }) {
@@ -542,10 +470,88 @@
         }
     }
 
+    // ####### Button Handler #######
+
+    function stopTimer(){
+        if (currentIntervalId !== null) {
+            clearCurrentTimer();
+            currentIntervalId = null;
+        }
+        endGlobalTimer();
+    }
+
+    async function onclickSingleTimer() {
+        const input = document.getElementById('inputTime');
+        const value = input.value;
+
+        startGlobalTimer();
+        await startTimer({ name: 'Countdown', duration: value});
+        /*
+         (async () => {
+            await startTimer({ name: 'Timer 1', duration: 5})
+        })();
+        */
+        endGlobalTimer();
+    }
+
+    async function onclickPreDefinedTimer() {
+        // Get the selected Liberating Structure
+        const selectBox = document.getElementById('liberatingStructureSelect');
+        const selectedStructureKey = selectBox.value;
+        const selectedStructure = liberatingStructures[selectedStructureKey];
+
+        if (selectedStructure && selectedStructure.timer) {
+            startGlobalTimer();
+            await startTimer(selectedStructure.timer);
+            endGlobalTimer();
+        } else {
+            console.error("Selected structure does not have a valid timer configuration.");
+        }
+    }
+
+    async function onclickCustomTimer() {
+        const element = document.getElementById('customTimer');
+        const value = element.value;
+        startGlobalTimer();
+        await startTimer(JSON.parse(value));
+        endGlobalTimer();
+    }
+
+    function onclickCopyPredefinedTimer(){
+        const selectBox = document.getElementById('liberatingStructureSelect');
+        const selectedStructureKey = selectBox.value;
+        const selectedStructure = liberatingStructures[selectedStructureKey];
+
+        const element = document.getElementById('customTimer');
+        element.value = JSON.stringify(selectedStructure.timer, null, 4);
+    }
+
+    function requestNotificationPermission() {
+        if (!("Notification" in window)) {
+            console.log("This browser does not support notifications.");
+            return;
+        }
+        if (Notification.permission === "granted") {
+            notificationEnabled = true;
+            alert("Notifications are already enabled.");
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(permission => {
+                notificationEnabled = permission === "granted";
+                if (notificationEnabled) {
+                    alert("Notifications enabled.");
+                } else {
+                    alert("Notifications were denied.");
+                }
+            });
+        }
+    }
+
     function clearLog() {
         const logContent = document.getElementById("logContent");
         logContent.innerHTML = "";
     }
+
+    // ####### Timer Functions #######
 
     function startGlobalTimer() {
         globalStartTime = Date.now(); // Start the global timer
