@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer Structure Creator</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Custom Timer Structure</h1>
+
+        <div id="timerBuilder">
+            
+        </div>
+        
+        <button onclick="generateStructure()">Generate Structure</button>
+
+        <h2>Generated Structure:</h2>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        const rootTimer = {
+            name: "Custom Timer",
+            duration: "",
+            timers: []
+        };
+
+        function addTimer(parent = rootTimer) {
+            const timer = {
+                name: "",
+                duration: "",
+                repetitions: "",
+                timers: []
+            };
+
+            parent.timers.push(timer);
+            renderTimers(rootTimer, document.getElementById("timerBuilder"));
+        }
+
+        function addSubTimer(timer) {
+            const subTimer = {
+                name: "",
+                duration: "",
+                repetitions: "",
+                timers: []
+            };
+            timer.timers.push(subTimer);
+            renderTimers(rootTimer, document.getElementById("timerBuilder"));
+        }
+
+        function deleteTimer(parent, timerIndex) {
+            parent.timers.splice(timerIndex, 1);
+            renderTimers(rootTimer, document.getElementById("timerBuilder"));
+        }
+
+        function renderTimers(timer, container, parent = null, index = null) {
+            container.innerHTML = "";
+            const mainDiv = document.createElement("div");
+            mainDiv.className = "timer-block";
+
+            // "×" delete button for each timer
+            if (parent !== null && index !== null) {
+                const deleteButton = document.createElement("span");
+                deleteButton.className = "delete-button";
+                deleteButton.innerText = "×";
+                deleteButton.onclick = () => deleteTimer(parent, index);
+                mainDiv.appendChild(deleteButton);
+            }
+
+            // Timer name input
+            const nameInput = document.createElement("input");
+            nameInput.placeholder = "Name";
+            nameInput.value = timer.name;
+            nameInput.required = true;
+            nameInput.oninput = (e) => (timer.name = e.target.value);
+
+            // Duration input
+            const durationInput = document.createElement("input");
+            durationInput.placeholder = "Duration HH:MM:SS";
+            durationInput.value = timer.duration;
+            durationInput.oninput = (e) => (timer.duration = e.target.value);
+
+            // Repetitions input
+            const repetitionsInput = document.createElement("input");
+            repetitionsInput.placeholder = "Repetitions";
+            repetitionsInput.type = "number";
+            repetitionsInput.value = timer.repetitions;
+            repetitionsInput.min="2"
+            repetitionsInput.oninput = (e) => (timer.repetitions = e.target.value);
+
+            mainDiv.append(nameInput, durationInput, repetitionsInput);
+        
+            
+
+            // List of sub-timers
+            const timerList = document.createElement("div");
+            timerList.className = "timer-list";
+            timer.timers.forEach((subTimer, subIndex) => {
+                const subTimerContainer = document.createElement("div");
+                subTimerContainer.className = "sub-timer";
+
+                // Render sub-timer recursively
+                renderTimers(subTimer, subTimerContainer, timer, subIndex);
+                timerList.appendChild(subTimerContainer);
+            });
+            mainDiv.appendChild(timerList);
+
+            // Add sub-timer button
+            const addSubTimerButton = document.createElement("button");
+            addSubTimerButton.innerText = "Add Timer";
+            addSubTimerButton.onclick = () => timer !== rootTimer?addSubTimer(timer):addTimer();
+            mainDiv.appendChild(addSubTimerButton);
+
+            container.appendChild(mainDiv);
+        }
+
+        function cleanUpTimer(timer) {
+            const cleanedTimer = {};
+
+            cleanedTimer.name = timer.name;
+
+            if(timer.duration && timer.timers && timer.timers.length > 0){
+                console.log(timer.name + " can not have duration and sub timers together")
+            }
+            if (timer.duration) cleanedTimer.duration = timer.duration;
+            if (timer.repetitions && timer.repetitions>1) cleanedTimer.repetitions = timer.repetitions;
+
+            if (timer.timers && timer.timers.length > 0) {
+                cleanedTimer.timers = timer.timers.map(cleanUpTimer);
+            }
+
+            return cleanedTimer;
+        }
+
+        function generateStructure() {
+            const cleanedRoot = cleanUpTimer(rootTimer);
+            document.getElementById("output").innerText = JSON.stringify(cleanedRoot, null, 2);
+        }
+
+        // Initialize root timer UI
+        renderTimers(rootTimer, document.getElementById("timerBuilder"));
+    </script>
+
+    <style>
+        .container { max-width: 600px; margin: auto; padding: 20px; }
+        .timer-block { position: relative; margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .timer-list { padding-left: 20px; }
+        .sub-timer { margin-top: 5px; padding-left: 15px; border-left: 1px dotted #ccc; }
+        .delete-button { position: absolute; top: 5px; right: 5px; cursor: pointer; color: red; font-weight: bold; }
+        input { margin: 5px; padding: 5px; }
+        button { margin: 5px; padding: 5px 10px; }
+    </style>
+</body>
+</html>
