@@ -151,7 +151,7 @@
         }
 
         function validateTimerStructure(timer) {
-            if (!timer.name) timer.name = "Unnamed Timer";
+            if (!timer.name) timer.name = "";
             if (!timer.duration) timer.duration = "";
             if (!timer.repetitions) timer.repetitions = "";
             if (!Array.isArray(timer.timers)) timer.timers = [];
