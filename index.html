@@ -105,6 +105,7 @@
     <br/>
 
     <div>
+        <label for="timerBuilder">Custom Timer:</label>
         <div id="timerBuilder"></div>
 
         <button onclick="onclickCustomTimer();">Start</button>
@@ -112,15 +113,15 @@
         <button onclick="displayTotalTime()">Calculate Duration</button>
 
         <div id="errorMessage" style="color: red; margin-top: 5px;"></div>
-
-        
     </div>
 
     <br/>
 
-    <button type="button" onclick="stopTimer();" id="clear">Stop Timer</button>
-    <button type="button" onclick="clearLog();" id="clear">Clear Log</button>
-    <button type="button" onclick="requestNotificationPermission();" id="enableNotifications">Enable Notifications</button>
+    <div>
+        <button type="button" onclick="stopTimer();" id="stop">Stop Timer</button>
+        <button type="button" onclick="clearLog();" id="clear">Clear Log</button>
+        <button type="button" onclick="requestNotificationPermission();" id="enableNotifications">Enable Notifications</button>
+    </div>
 
     <h2>Log</h2>
     <div class="logContent" id="logContent">
@@ -409,7 +410,7 @@
 
     function toggleButtons(disable) {
         Array.from(document.querySelectorAll("button"))
-            .filter(b => !['enableNotifications','clear'].includes(b.id))
+            .filter(b => !['enableNotifications','clear', 'stop'].includes(b.id))
             .forEach((btn) => btn.disabled = disable);
     }
 
