@@ -79,48 +79,51 @@
 <div class="container">
     <h1>Meeting Timer</h1>
     <div class="timer">
-        <div class="timer-name">Timer: <span id="timerName">-</span></div>
+        <div class="timer-name"><span id="timerName">-</span></div>
         <div class="timer-description">Description: <span id="timerDescription">-</span></div>
         <div class="timer-info">Remaining Time: <span id="remainingTime">HH:MM:SS</span></div>
         <div class="timer-info">Repetitions Left: <span id="repetitionsLeft">0</span></div>
     </div>
 
-    <div>
-        <label for="inputTime">Choose Time:</label>
-        <input type="text" id="inputTime" name="inputTime" placeholder="HH:MM:SS" value="00:00:05">
-        <button onclick="onclickSingleTimer();">Start</button>
-    </div>
-
-    <br/>
-
-    <div>
-        <label for="liberatingStructureSelect">Predefined Timer:</label>
-        <select id="liberatingStructureSelect">
-            <!-- Options will be added here dynamically -->
-        </select>
-        <button onclick="onclickPreDefinedTimer();">Start</button>
-        <button onclick="onclickCopyPredefinedTimer();">Edit</button>
+    <div class="container" id="toHide">
+        <div>
+            <label for="inputTime">Choose Time:</label>
+            <input type="text" id="inputTime" name="inputTime" placeholder="HH:MM:SS" value="00:00:05">
+            <button onclick="onclickSingleTimer();">Start</button>
+        </div>
+    
+        <br/>
+    
+        <div>
+            <label for="liberatingStructureSelect">Predefined Timer:</label>
+            <select id="liberatingStructureSelect">
+                <!-- Options will be added here dynamically -->
+            </select>
+            <button onclick="onclickPreDefinedTimer();">Start</button>
+            <button onclick="onclickCopyPredefinedTimer();">Edit</button>
+        </div>
+        
+        <br/>
+    
+        <div>
+            <label for="timerBuilder">Custom Timer:</label>
+            <div id="timerBuilder"></div>
+    
+            <button onclick="onclickCustomTimer();">Start</button>
+            <button onclick="saveTimer()">Save as predefined</button>
+            <button onclick="displayTotalTime()">Calculate Duration</button>
+    
+            <div id="errorMessage" style="color: red; margin-top: 5px;"></div>
+        </div>
+    
+        <br/>
+    
+        <button type="button" onclick="requestNotificationPermission();" id="enableNotifications">Enable Notifications</button>    
     </div>
     
-    <br/>
-
-    <div>
-        <label for="timerBuilder">Custom Timer:</label>
-        <div id="timerBuilder"></div>
-
-        <button onclick="onclickCustomTimer();">Start</button>
-        <button onclick="saveTimer()">Save as predefined</button>
-        <button onclick="displayTotalTime()">Calculate Duration</button>
-
-        <div id="errorMessage" style="color: red; margin-top: 5px;"></div>
-    </div>
-
-    <br/>
-
     <div>
         <button type="button" onclick="stopTimer();" id="stop">Stop Timer</button>
         <button type="button" onclick="clearLog();" id="clear">Clear Log</button>
-        <button type="button" onclick="requestNotificationPermission();" id="enableNotifications">Enable Notifications</button>
     </div>
 
     <h2>Log</h2>
@@ -628,6 +631,10 @@
 
     function startGlobalTimer() {
         globalStartTime = Date.now(); // Start the global timer
+
+        const hide = document.getElementById("toHide");
+        hide.style.display = "none";
+
         toggleButtons(true); // Disable buttons at the start
     }
 
@@ -636,6 +643,9 @@
             const elapsedTime = Math.floor((Date.now() - globalStartTime) / 1000); // Calculate elapsed time in seconds
             logEvent(`Total time elapsed: ${elapsedTime} seconds.`);
             globalStartTime = null; // Reset the global timer
+
+            const hide = document.getElementById("toHide");
+            hide.style.display = "block";
             toggleButtons(false); // Enable buttons at the end
         }
     }
@@ -683,7 +693,7 @@
         let remainingTime = hmsToSeconds(duration) - 1; // Start at duration - 1 for countdown
 
         updateDisplay({ name, time: remainingTime + 1 }); // Initial display update
-        logEvent(`Starting '${name}' with ${duration}s.`);
+        logEvent(`Starting '${name}' with ${duration}.`);
 
         for (; remainingTime >= 0; remainingTime--) {
             updateDisplay({ time: remainingTime });
