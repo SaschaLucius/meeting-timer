@@ -12,9 +12,11 @@
         <div id="timerBuilder"></div>
         
         <button onclick="generateStructure()">Generate Structure</button>
+        <button onclick="loadStructure()">Load Structure</button>
 
-        <h2>Generated Structure:</h2>
-        <pre id="output"></pre>
+        <h2>JSON Structure:</h2>
+        <textarea id="jsonInput" placeholder="Enter or view JSON structure here" rows="10" style="width: 100%;"></textarea>
+        <div id="errorMessage" style="color: red; margin-top: 5px;"></div>
     </div>
 
     <script>
@@ -145,7 +147,22 @@
 
         function generateStructure() {
             const cleanedRoot = cleanUpTimer(rootTimer);
-            document.getElementById("output").innerText = JSON.stringify(cleanedRoot, null, 2);
+            document.getElementById("jsonInput").value = JSON.stringify(cleanedRoot, null, 2);
+            document.getElementById("errorMessage").innerText = ""; // Clear error message
+        }
+
+        function loadStructure() {
+            const jsonInput = document.getElementById("jsonInput").value;
+            const errorMessageElement = document.getElementById("errorMessage");
+            try {
+                const parsedStructure = JSON.parse(jsonInput);
+                rootTimer = parsedStructure;
+                renderTimers(rootTimer, document.getElementById("timerBuilder"));
+                errorMessageElement.innerText = ""; // Clear any previous error message
+            } catch (error) {
+                errorMessageElement.innerText = "Invalid JSON structure. Please try again. " + error.message;
+                console.error("JSON Parse Error:", error);
+            }
         }
 
         // Initialize root timer UI
@@ -160,6 +177,7 @@
         .delete-button { position: absolute; top: 5px; right: 5px; cursor: pointer; color: red; font-weight: bold; }
         input { margin: 5px; padding: 5px; }
         button { margin: 5px; padding: 5px 10px; }
+        textarea { margin-top: 10px; padding: 10px; }
     </style>
 </body>
 </html>
