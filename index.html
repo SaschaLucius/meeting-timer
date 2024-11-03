@@ -88,30 +88,28 @@
     <div>
         <label for="inputTime">Choose Time:</label>
         <input type="text" id="inputTime" name="inputTime" placeholder="HH:MM:SS" value="00:00:05">
-        <button onclick="onclickSingleTimer();">Start Timer</button>
+        <button onclick="onclickSingleTimer();">Start</button>
     </div>
 
     <br/>
 
     <div>
-        <label for="liberatingStructureSelect">Choose Timer:</label>
+        <label for="liberatingStructureSelect">Predefined Timer:</label>
         <select id="liberatingStructureSelect">
             <!-- Options will be added here dynamically -->
         </select>
-        <button onclick="onclickPreDefinedTimer();">Start Timer</button>
+        <button onclick="onclickPreDefinedTimer();">Start</button>
+        <button onclick="onclickCopyPredefinedTimer();">Edit</button>
     </div>
     
     <br/>
 
     <div>
-        <label for="customTimer">Custom Timer:</label>
-        <button onclick="onclickCopyPredefinedTimer();">Edit selected</button>
-        <br/>
         <div id="timerBuilder"></div>
 
-        <button onclick="onclickCustomTimer();">Start Timer</button>
-        <button onclick="saveTimer()">Save Timer</button>
-        <button onclick="displayTotalTime()">Calculate Total Duration</button>
+        <button onclick="onclickCustomTimer();">Start</button>
+        <button onclick="saveTimer()">Save as predefined</button>
+        <button onclick="displayTotalTime()">Calculate Duration</button>
 
         <div id="errorMessage" style="color: red; margin-top: 5px;"></div>
 
@@ -653,19 +651,27 @@
     async function startTimer(timer) {
         const { name, duration, repetitions, timers, groups} = timer;
 
-        if(repetitions > 1){
-            logEvent(`Starting '${name}' (${repetitions} repetitions).`);
-            for (let currentRep = repetitions; currentRep > 0; currentRep--) {
-                updateDisplay({ repetitions: currentRep });
-                await startTimer({name:`${name} (${repetitions-currentRep+1}/${repetitions})`, duration, timers, groups});
-            }
-            return;
-        }
+        const errorMessageElement = document.getElementById("errorMessage");
+        errorMessageElement.innerText = "";
 
-        if(timers){
-            await startSeriesOfTimers(timer)
-        } else {
-            await startSingleTimer(timer)
+        try {
+            if(repetitions > 1){
+                logEvent(`Starting '${name}' (${repetitions} repetitions).`);
+                for (let currentRep = repetitions; currentRep > 0; currentRep--) {
+                    updateDisplay({ repetitions: currentRep });
+                    await startTimer({name:`${name} (${repetitions-currentRep+1}/${repetitions})`, duration, timers, groups});
+                }
+                return;
+            }
+
+            if(timers){
+                await startSeriesOfTimers(timer)
+            } else {
+                await startSingleTimer(timer)
+            }
+        } catch (error) {
+            errorMessageElement.innerText = "Please try again. " + error.message;
+            console.error("JSON Parse Error:", error);
         }
     }
 
@@ -784,17 +790,17 @@
 
         // Add sub-timer button
         const addSubTimerButton = document.createElement("button");
-        addSubTimerButton.innerText = "Add Timer";
+        addSubTimerButton.innerText = "+";
         addSubTimerButton.onclick = () => timer !== rootTimer ? addSubTimer(timer) : addTimer();
         mainDiv.appendChild(addSubTimerButton);
 
         if (timer.timers && timer.timers.length > 0) {
             // Collapse/Expand button for sub-timers
             const toggleButton = document.createElement("button");
-            toggleButton.innerText = "Hide Sub-timers";
+            toggleButton.innerText = "Hide";
             toggleButton.onclick = () => {
                 timerList.style.display = timerList.style.display === "none" ? "block" : "none";
-                toggleButton.innerText = timerList.style.display === "none" ? "Show Sub-timers" : "Hide Sub-timers";
+                toggleButton.innerText = timerList.style.display === "none" ? "Show" : "Hide";
             };
             mainDiv.appendChild(toggleButton);
         }
