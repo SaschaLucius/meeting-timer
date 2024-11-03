@@ -72,22 +72,22 @@
             // Timer name input
             const nameInput = document.createElement("input");
             nameInput.placeholder = "Name";
-            nameInput.value = timer.name;
+            nameInput.value = timer.name || "";
             nameInput.required = true;
             nameInput.oninput = (e) => (timer.name = e.target.value);
 
             // Duration input
             const durationInput = document.createElement("input");
             durationInput.placeholder = "Duration HH:MM:SS";
-            durationInput.value = timer.duration;
+            durationInput.value = timer.duration || "";
             durationInput.oninput = (e) => (timer.duration = e.target.value);
-            durationInput.disabled = timer.timers.length > 0;
+            durationInput.disabled = timer.timers && timer.timers.length > 0;
 
             // Repetitions input
             const repetitionsInput = document.createElement("input");
             repetitionsInput.placeholder = "Repetitions";
             repetitionsInput.type = "number";
-            repetitionsInput.value = timer.repetitions;
+            repetitionsInput.value = timer.repetitions || "";
             repetitionsInput.min = 2;
             repetitionsInput.oninput = (e) => (timer.repetitions = e.target.value);
 
@@ -96,12 +96,14 @@
             // List of sub-timers
             const timerList = document.createElement("div");
             timerList.className = "timer-list";
-            timer.timers.forEach((subTimer, subIndex) => {
-                const subTimerContainer = document.createElement("div");
-                subTimerContainer.className = "sub-timer";
-                renderTimers(subTimer, subTimerContainer, timer, subIndex);
-                timerList.appendChild(subTimerContainer);
-            });
+            if (timer.timers) {
+                timer.timers.forEach((subTimer, subIndex) => {
+                    const subTimerContainer = document.createElement("div");
+                    subTimerContainer.className = "sub-timer";
+                    renderTimers(subTimer, subTimerContainer, timer, subIndex);
+                    timerList.appendChild(subTimerContainer);
+                });
+            }
             mainDiv.appendChild(timerList);
 
             // Add sub-timer button
@@ -110,7 +112,7 @@
             addSubTimerButton.onclick = () => timer !== rootTimer ? addSubTimer(timer) : addTimer();
             mainDiv.appendChild(addSubTimerButton);
 
-            if(timer.timers.length > 0){
+            if (timer.timers && timer.timers.length > 0) {
                 // Collapse/Expand button for sub-timers
                 const toggleButton = document.createElement("button");
                 toggleButton.innerText = "Hide Sub-timers";
@@ -147,11 +149,20 @@
             document.getElementById("errorMessage").innerText = ""; // Clear error message
         }
 
+        function validateTimerStructure(timer) {
+            if (!timer.name) timer.name = "Unnamed Timer";
+            if (!timer.duration) timer.duration = "";
+            if (!timer.repetitions) timer.repetitions = "";
+            if (!Array.isArray(timer.timers)) timer.timers = [];
+            timer.timers.forEach(validateTimerStructure);
+        }
+
         function loadStructure() {
             const jsonInput = document.getElementById("jsonInput").value;
             const errorMessageElement = document.getElementById("errorMessage");
             try {
                 const parsedStructure = JSON.parse(jsonInput);
+                validateTimerStructure(parsedStructure);
                 rootTimer = parsedStructure;
                 renderTimers(rootTimer, document.getElementById("timerBuilder"));
                 errorMessageElement.innerText = ""; // Clear any previous error message
