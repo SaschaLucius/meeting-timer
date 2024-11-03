@@ -107,7 +107,7 @@
             // Add sub-timer button
             const addSubTimerButton = document.createElement("button");
             addSubTimerButton.innerText = "Add Timer";
-            addSubTimerButton.onclick = () => timer !== rootTimer?addSubTimer(timer):addTimer();
+            addSubTimerButton.onclick = () => timer !== rootTimer ? addSubTimer(timer) : addTimer();
             mainDiv.appendChild(addSubTimerButton);
 
             if(timer.timers.length>0){
