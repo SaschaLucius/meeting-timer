@@ -33,7 +33,7 @@
                 repetitions: "",
                 timers: []
             };
-
+            parent.duration=""
             parent.timers.push(timer);
             renderTimers(rootTimer, document.getElementById("timerBuilder"));
         }
@@ -45,6 +45,7 @@
                 repetitions: "",
                 timers: []
             };
+            timer.duration=""
             timer.timers.push(subTimer);
             renderTimers(rootTimer, document.getElementById("timerBuilder"));
         }
@@ -80,19 +81,18 @@
             durationInput.placeholder = "Duration HH:MM:SS";
             durationInput.value = timer.duration;
             durationInput.oninput = (e) => (timer.duration = e.target.value);
+            durationInput.disabled = timer.timers.length > 0;
 
             // Repetitions input
             const repetitionsInput = document.createElement("input");
             repetitionsInput.placeholder = "Repetitions";
             repetitionsInput.type = "number";
             repetitionsInput.value = timer.repetitions;
-            repetitionsInput.min="2"
+            repetitionsInput.min=2;
             repetitionsInput.oninput = (e) => (timer.repetitions = e.target.value);
 
             mainDiv.append(nameInput, durationInput, repetitionsInput);
         
-            
-
             // List of sub-timers
             const timerList = document.createElement("div");
             timerList.className = "timer-list";
@@ -112,6 +112,17 @@
             addSubTimerButton.onclick = () => timer !== rootTimer?addSubTimer(timer):addTimer();
             mainDiv.appendChild(addSubTimerButton);
 
+            if(timer.timers.length>0){
+                // Collapse/Expand button for sub-timers
+                const toggleButton = document.createElement("button");
+                toggleButton.innerText = "Hide Sub-timers";
+                toggleButton.onclick = () => {
+                    timerList.style.display = timerList.style.display === "none" ? "block" : "none";
+                    toggleButton.innerText = timerList.style.display === "none" ? "Show Sub-timers" : "Hide Sub-timers";
+                };
+                mainDiv.appendChild(toggleButton);
+            }
+
             container.appendChild(mainDiv);
         }
 
@@ -121,7 +132,8 @@
             cleanedTimer.name = timer.name;
 
             if(timer.duration && timer.timers && timer.timers.length > 0){
-                console.log(timer.name + " can not have duration and sub timers together")
+                console.log(timer.name + " can not have duration and sub timers together");
+                delete timer.duration;  // Clear duration if sub-timers are present
             }
             if (timer.duration) cleanedTimer.duration = timer.duration;
             if (timer.repetitions && timer.repetitions>1) cleanedTimer.repetitions = timer.repetitions;
