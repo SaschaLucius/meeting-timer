@@ -20,7 +20,7 @@
     </div>
 
     <script>
-        const rootTimer = {
+        let rootTimer = {
             name: "Custom Timer",
             duration: "",
             timers: []
@@ -33,7 +33,7 @@
                 repetitions: "",
                 timers: []
             };
-            parent.duration=""
+            parent.duration = "";
             parent.timers.push(timer);
             renderTimers(rootTimer, document.getElementById("timerBuilder"));
         }
@@ -45,7 +45,7 @@
                 repetitions: "",
                 timers: []
             };
-            timer.duration=""
+            timer.duration = "";
             timer.timers.push(subTimer);
             renderTimers(rootTimer, document.getElementById("timerBuilder"));
         }
@@ -88,7 +88,7 @@
             repetitionsInput.placeholder = "Repetitions";
             repetitionsInput.type = "number";
             repetitionsInput.value = timer.repetitions;
-            repetitionsInput.min=2;
+            repetitionsInput.min = 2;
             repetitionsInput.oninput = (e) => (timer.repetitions = e.target.value);
 
             mainDiv.append(nameInput, durationInput, repetitionsInput);
@@ -99,8 +99,6 @@
             timer.timers.forEach((subTimer, subIndex) => {
                 const subTimerContainer = document.createElement("div");
                 subTimerContainer.className = "sub-timer";
-
-                // Render sub-timer recursively
                 renderTimers(subTimer, subTimerContainer, timer, subIndex);
                 timerList.appendChild(subTimerContainer);
             });
@@ -112,7 +110,7 @@
             addSubTimerButton.onclick = () => timer !== rootTimer ? addSubTimer(timer) : addTimer();
             mainDiv.appendChild(addSubTimerButton);
 
-            if(timer.timers.length>0){
+            if(timer.timers.length > 0){
                 // Collapse/Expand button for sub-timers
                 const toggleButton = document.createElement("button");
                 toggleButton.innerText = "Hide Sub-timers";
@@ -127,16 +125,14 @@
         }
 
         function cleanUpTimer(timer) {
-            const cleanedTimer = {};
+            const cleanedTimer = { name: timer.name };
 
-            cleanedTimer.name = timer.name;
-
-            if(timer.duration && timer.timers && timer.timers.length > 0){
-                console.log(timer.name + " can not have duration and sub timers together");
-                delete timer.duration;  // Clear duration if sub-timers are present
+            if (timer.duration && timer.timers.length > 0) {
+                console.log(`${timer.name} cannot have both duration and sub-timers together`);
+                delete timer.duration;
             }
             if (timer.duration) cleanedTimer.duration = timer.duration;
-            if (timer.repetitions && timer.repetitions>1) cleanedTimer.repetitions = timer.repetitions;
+            if (timer.repetitions && timer.repetitions > 1) cleanedTimer.repetitions = timer.repetitions;
 
             if (timer.timers && timer.timers.length > 0) {
                 cleanedTimer.timers = timer.timers.map(cleanUpTimer);
@@ -160,7 +156,7 @@
                 renderTimers(rootTimer, document.getElementById("timerBuilder"));
                 errorMessageElement.innerText = ""; // Clear any previous error message
             } catch (error) {
-                errorMessageElement.innerText = "Invalid JSON structure. Please try again. " + error.message;
+                errorMessageElement.innerText = "Invalid JSON structure. Please try again.";
                 console.error("JSON Parse Error:", error);
             }
         }
