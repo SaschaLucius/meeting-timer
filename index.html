@@ -823,7 +823,7 @@
     function cleanUpTimer(timer) {
         const cleanedTimer = { name: timer.name };
 
-        if (timer.duration && timer.timers.length > 0) {
+        if (timer.duration && timer.timers && timer.timers.length > 0) {
             console.log(`${timer.name} cannot have both duration and sub-timers together`);
             delete timer.duration;
         }
@@ -837,14 +837,6 @@
         return cleanedTimer;
     }
 
-    function validateTimerStructure(timer) {
-        if (!timer.name) timer.name = "";
-        if (!timer.duration) timer.duration = "";
-        if (!timer.repetitions) timer.repetitions = "";
-        if (!Array.isArray(timer.timers)) timer.timers = [];
-        timer.timers.forEach(validateTimerStructure);
-    }
-
     function onclickEditTimer(){
         const selectBox = document.getElementById('liberatingStructureSelect');
         const selectedStructureKey = selectBox.value;
@@ -852,7 +844,6 @@
         const errorMessageElement = document.getElementById("errorMessage");
 
         try {
-            validateTimerStructure(selectedStructure.timer);
             rootTimer = selectedStructure.timer;
             renderTimers(rootTimer, document.getElementById("timerBuilder"));
             errorMessageElement.innerText = ""; // Clear any previous error message
