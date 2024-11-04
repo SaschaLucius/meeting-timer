@@ -90,7 +90,7 @@
         <div>
             <label for="inputTime">Choose Time:</label>
             <input type="text" id="inputTime" name="inputTime" placeholder="HH:MM:SS" value="00:00:05">
-            <button onclick="onclickSingleTimer();">Start</button>
+            <button onclick="onclickStartSingleTimer();">Start</button>
         </div>
     
         <br/>
@@ -100,8 +100,8 @@
             <select id="liberatingStructureSelect">
                 <!-- Options will be added here dynamically -->
             </select>
-            <button onclick="onclickPreDefinedTimer();">Start</button>
-            <button onclick="onclickCopyPredefinedTimer();">Edit</button>
+            <button onclick="onclickStartPreDefinedTimer();">Start</button>
+            <button onclick="onclickEditTimer();">Edit</button>
         </div>
         
         <br/>
@@ -558,7 +558,7 @@
         endGlobalTimer();
     }
 
-    async function onclickSingleTimer() {
+    async function onclickStartSingleTimer() {
         const input = document.getElementById('inputTime');
         const value = input.value;
 
@@ -573,7 +573,7 @@
         showAlertBox('Countdown')
     }
 
-    async function onclickPreDefinedTimer() {
+    async function onclickStartPreDefinedTimer() {
         // Get the selected Liberating Structure
         const selectBox = document.getElementById('liberatingStructureSelect');
         const selectedStructureKey = selectBox.value;
@@ -845,7 +845,7 @@
         timer.timers.forEach(validateTimerStructure);
     }
 
-    function onclickCopyPredefinedTimer(){
+    function onclickEditTimer(){
         const selectBox = document.getElementById('liberatingStructureSelect');
         const selectedStructureKey = selectBox.value;
         const selectedStructure = liberatingStructures[selectedStructureKey];
