@@ -403,7 +403,10 @@
     // ####### Helper Functions #######
 
     function clearCurrentTimer() {
-        if (currentIntervalId) clearInterval(currentIntervalId);
+        if (currentIntervalId) {
+            clearInterval(currentIntervalId);
+            currentIntervalId = null;
+        }
     }
 
     function updateDisplay({ name, time, repetitions }) {
@@ -551,10 +554,7 @@
     // ####### Button Handler #######
 
     function stopTimer(){
-        if (currentIntervalId !== null) {
-            clearCurrentTimer();
-            currentIntervalId = null;
-        }
+        clearCurrentTimer();
         endGlobalTimer();
     }
 
