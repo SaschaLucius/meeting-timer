@@ -405,11 +405,6 @@
 
     // ####### Helper Functions #######
 
-    function clearCurrentTimer() {
-        TIMER_INSTANCE.cancel()
-        endGlobalTimer();
-    }
-
     function updateDisplay({ name, time, repetitions }) {
         if (name !== undefined) document.getElementById("timerName").innerText = name;
         if (time !== undefined) document.getElementById("remainingTime").innerText = secondsToHMS(time);
@@ -417,9 +412,13 @@
     }
 
     function toggleButtons(disable) {
-        Array.from(document.querySelectorAll("button"))
-            .filter(b => b.keepEnabled !== undefined)
-            .forEach((btn) => btn.disabled = disable);
+        console.log("toggleButtons called with:", disable);
+        document.querySelectorAll("button").forEach(btn => {
+            const hasKeepEnabled = btn.hasAttribute("keepEnabled");
+            if (!hasKeepEnabled) {
+                btn.disabled = disable;
+            }
+        });
     }
 
     // Converts HH:MM:SS, MM:SS, or SS format to total seconds
@@ -792,7 +791,6 @@
     async function startSingleTimer(timer) {
         const { name, duration } = timer;
 
-        clearCurrentTimer();
         let remainingTime = hmsToSeconds(duration) - 1; // Start at duration - 1 for countdown
 
         updateDisplay({ name, time: remainingTime + 1 }); // Initial display update
