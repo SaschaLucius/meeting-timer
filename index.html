@@ -122,9 +122,13 @@
         <button type="button" onclick="requestNotificationPermission();" id="enableNotifications">Enable Notifications</button>    
     </div>
     
-    <div>
-        <button type="button" onclick="stopTimer();" id="stop">Stop Timer</button>
-        <button type="button" onclick="clearLog();" id="clear">Clear Log</button>
+    <div>        
+        <button type="button" keepEnabled onclick="pauseTimer()">Pause</button>
+        <button type="button" keepEnabled onclick="resumeTimer()">Resume</button>
+        <button type="button" keepEnabled onclick="cancelTimer()">Cancel</button>
+        <button type="button" keepEnabled onclick="addOneMinute()">Add 1 Minute</button>
+
+        <button type="button" keepEnabled onclick="clearLog()">Clear Log</button>
     </div>
 
     <h2>Log</h2>
@@ -386,7 +390,6 @@
     }
 
     let globalStartTime = null; // Global variable to store the start time
-    let currentIntervalId = null;
     let notificationEnabled = false; // Track notification permission status
 
     // Populate the select box with options from liberatingStructures
@@ -403,10 +406,8 @@
     // ####### Helper Functions #######
 
     function clearCurrentTimer() {
-        if (currentIntervalId) {
-            clearInterval(currentIntervalId);
-            currentIntervalId = null;
-        }
+        TIMER_INSTANCE.cancel()
+        endGlobalTimer();
     }
 
     function updateDisplay({ name, time, repetitions }) {
@@ -417,7 +418,7 @@
 
     function toggleButtons(disable) {
         Array.from(document.querySelectorAll("button"))
-            .filter(b => !['enableNotifications','clear', 'stop'].includes(b.id))
+            .filter(b => b.keepEnabled !== undefined)
             .forEach((btn) => btn.disabled = disable);
     }
 
@@ -550,13 +551,123 @@
         document.body.appendChild(overlay);
     }
 
+    // ####### Timer #######
+
+    class Timer {
+        constructor(updateDisplay) {
+            this.timeLeft = 0;            // Time left in milliseconds
+            this.isRunning = false;       // Tracks if the timer is running
+            this.isPaused = false;        // Tracks if the timer is paused
+            this.updateDisplay = updateDisplay; // Store display update function
+        }
+
+        // Helper function to create a delay
+        delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Starts the timer with the specified number of seconds
+        async start(seconds) {
+            if (this.isRunning) return;   // Prevent starting multiple intervals
+            this.timeLeft = seconds * 1000;
+            this.isRunning = true;
+            this.isPaused = false;
+
+            console.log(`Timer started: ${seconds} seconds`);
+
+            while (this.timeLeft > 0 && this.isRunning) {
+                // Check if the timer is paused and wait until it's unpaused
+                while (this.isPaused) {
+                    await this.delay(100); // Small delay to avoid tight loop
+                }
+
+                // Calculate time for the next update based on the remaining time
+                const nextUpdateTime = Math.min(1000, this.timeLeft); // Update in 1s increments or less if close to 0
+                
+                this.updateDisplay({ time: Math.ceil(this.timeLeft / 1000) }); // Update the display
+                await this.delay(nextUpdateTime); // Wait for delay
+
+                // Reduce the remaining time only if not paused
+                if (!this.isPaused) {
+                    this.timeLeft -= nextUpdateTime;
+                }
+            }
+
+            if (this.timeLeft <= 0) {
+                this.updateDisplay({ time: 0 });
+                console.log("Timer completed!");
+                this.isRunning = false;
+            }
+        }
+
+        // Pauses the timer without resolving the promise
+        pause() {
+            if (this.isRunning && !this.isPaused) {
+                this.isPaused = true;
+                console.log("Timer paused.");
+            }
+        }
+
+        // Resumes the timer
+        resume() {
+            if (this.isRunning && this.isPaused) {
+                this.isPaused = false;
+                console.log("Timer resumed.");
+            }
+        }
+
+        // Cancels the timer and resets the time
+        cancel() {
+            this.isRunning = false;
+            this.isPaused = false;
+            this.timeLeft = 0;
+            this.updateDisplay({ time: 0 });
+            console.log("Timer canceled.");
+        }
+
+        // Adds seconds to the current timer time
+        addTime(seconds) {
+            this.timeLeft += seconds * 1000;
+            console.log(`Added ${seconds} seconds. New time left: ${Math.ceil(this.timeLeft / 1000)} seconds`);
+        }
+    }
+
+    const TIMER_INSTANCE = new Timer(updateDisplay); // Create timer with display function
+
+    // Functions to be called from onclick attributes
+    function startTimer() {
+        TIMER_INSTANCE.start(10);  // Starts a 10-second timer
+    }
+
+    function pauseTimer() {
+        TIMER_INSTANCE.pause();
+    }
+
+    function resumeTimer() {
+        TIMER_INSTANCE.resume();
+    }
+
+    function cancelTimer() {
+        TIMER_INSTANCE.cancel();
+    }
+
+    function addOneMinute() {
+        TIMER_INSTANCE.addTime(60); // Adds 60 seconds (1 minute)
+    }
+
+    // Example usage:
+    // function updateDisplay({ time }) {
+    //     console.log(`Time left: ${time} seconds`);
+    // }
+
+    // const TIMER_INSTANCE = new Timer(updateDisplay); // Create timer with display function
+    // TIMER_INSTANCE.start(10);      // Starts a 10-second timer
+    // TIMER_INSTANCE.pause();     // Pauses the timer
+    // TIMER_INSTANCE.resume();    // Resumes the timer
+    // TIMER_INSTANCE.cancel();    // Cancels the timer
+    // TIMER_INSTANCE.addTime(5);  // Adds 5 seconds to the timer
 
     // ####### Button Handler #######
-
-    function stopTimer(){
-        clearCurrentTimer();
-        endGlobalTimer();
-    }
 
     async function onclickStartSingleTimer() {
         const input = document.getElementById('inputTime');
@@ -651,15 +762,6 @@
         }
     }
 
-    function delay(ms) {
-        return new Promise(resolve => {
-            currentIntervalId = setTimeout(() => {
-                currentIntervalId = null; // Clear the global variable when timeout completes
-                resolve();
-            }, ms);
-        });
-    }
-
     async function startTimer(timer) {
         const { name, duration, repetitions, timers, groups} = timer;
 
@@ -696,10 +798,7 @@
         updateDisplay({ name, time: remainingTime + 1 }); // Initial display update
         logEvent(`Starting '${name}' with ${duration}.`);
 
-        for (; remainingTime >= 0; remainingTime--) {
-            updateDisplay({ time: remainingTime });
-            await delay(1000); // Wait 1 second for each tick
-        }
+        await TIMER_INSTANCE.start(remainingTime)
 
         logEvent(`Timer '${name}' completed!`);
     }
