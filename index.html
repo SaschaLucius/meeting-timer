@@ -633,40 +633,35 @@
         }
     }
 
-    const TIMER_INSTANCE = new Timer(updateDisplay); // Create timer with display function
+    const timerWorker = new Worker("timeWorker.js");
+
+    timerWorker.onmessage = function(event) {
+        const { type, time } = event.data;
+        if (type === 'updateDisplay') {
+            updateDisplay({ time });
+        }
+    };
 
     // Functions to be called from onclick attributes
     function startTimer() {
-        TIMER_INSTANCE.start(10);  // Starts a 10-second timer
+        timerWorker.postMessage({ command: 'start', seconds: 10 });  // Starts a 10-second timer
     }
 
     function pauseTimer() {
-        TIMER_INSTANCE.pause();
+        timerWorker.postMessage({ command: 'pause' });
     }
 
     function resumeTimer() {
-        TIMER_INSTANCE.resume();
+        timerWorker.postMessage({ command: 'resume' });
     }
 
     function cancelTimer() {
-        TIMER_INSTANCE.cancel();
+        timerWorker.postMessage({ command: 'cancel' });
     }
 
     function addOneMinute() {
-        TIMER_INSTANCE.addTime(60); // Adds 60 seconds (1 minute)
+        timerWorker.postMessage({ command: 'addTime', seconds: 60 }); // Adds 60 seconds (1 minute)
     }
-
-    // Example usage:
-    // function updateDisplay({ time }) {
-    //     console.log(`Time left: ${time} seconds`);
-    // }
-
-    // const TIMER_INSTANCE = new Timer(updateDisplay); // Create timer with display function
-    // TIMER_INSTANCE.start(10);      // Starts a 10-second timer
-    // TIMER_INSTANCE.pause();     // Pauses the timer
-    // TIMER_INSTANCE.resume();    // Resumes the timer
-    // TIMER_INSTANCE.cancel();    // Cancels the timer
-    // TIMER_INSTANCE.addTime(5);  // Adds 5 seconds to the timer
 
     // ####### Button Handler #######
 
@@ -796,12 +791,23 @@
     async function startSingleTimer(timer) {
         const { name, duration } = timer;
 
-        let remainingTime = hmsToSeconds(duration) - 1; // Start at duration - 1 for countdown
+        let remainingTime = hmsToSeconds(duration); // Corrected to start at full duration
 
-        updateDisplay({ name, time: remainingTime + 1 }); // Initial display update
+        updateDisplay({ name, time: remainingTime }); // Initial display update
         logEvent(`Starting '${name}' with ${duration}.`);
 
-        await TIMER_INSTANCE.start(remainingTime)
+        timerWorker.postMessage({ command: 'start', seconds: remainingTime });
+
+        // Wait for the timer to complete
+        await new Promise(resolve => {
+            const handleMessage = (event) => {
+                if (event.data.type === 'completed') {
+                    timerWorker.removeEventListener('message', handleMessage);
+                    resolve();
+                }
+            };
+            timerWorker.addEventListener('message', handleMessage);
+        });
 
         logEvent(`Timer '${name}' completed!`);
     }
