@@ -136,6 +136,7 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.12.0/NoSleep.min.js"></script>
 <script>
     const liberatingStructures={
         "Wicket Questions":{ 
@@ -391,6 +392,7 @@
 
     let globalStartTime = null; // Global variable to store the start time
     let notificationEnabled = false; // Track notification permission status
+    const noSleep = new NoSleep();
 
     // Populate the select box with options from liberatingStructures
     window.onload = function() {
@@ -745,6 +747,7 @@
 
         const hide = document.getElementById("toHide");
         hide.style.display = "none";
+        noSleep.enable(); // Enable NoSleep to prevent screen dimming
 
         toggleButtons(true); // Disable buttons at the start
     }
@@ -757,6 +760,8 @@
 
             const hide = document.getElementById("toHide");
             hide.style.display = "flex";
+            noSleep.disable(); // Disable NoSleep to allow screen dimming
+
             toggleButtons(false); // Enable buttons at the end
         }
     }
