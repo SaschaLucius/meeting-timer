@@ -396,13 +396,8 @@
 
     // Populate the select box with options from liberatingStructures
     window.onload = function() {
-        const selectBox = document.getElementById('liberatingStructureSelect');
-        for (const key in liberatingStructures) {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = liberatingStructures[key].name;
-            selectBox.appendChild(option);
-        }
+        updatePredefinedTimers();
+        // ...existing code...
     };
 
     // ####### Helper Functions #######
@@ -684,13 +679,14 @@
         // Get the selected Liberating Structure
         const selectBox = document.getElementById('liberatingStructureSelect');
         const selectedStructureKey = selectBox.value;
-        const selectedStructure = liberatingStructures[selectedStructureKey];
+        const selectedStructure = liberatingStructures[selectedStructureKey] || JSON.parse(localStorage.getItem('savedTimers'))[selectedStructureKey];
 
-        if (selectedStructure && selectedStructure.timer) {
+        if (selectedStructure) {
+            const timerConfig = selectedStructure.timer || selectedStructure;
             startGlobalTimer();
-            await startTimer(selectedStructure.timer);
+            await startTimer(timerConfig);
             endGlobalTimer();
-            showAlertBox(selectedStructure.timer.name)
+            showAlertBox(timerConfig.name);
         } else {
             console.error("Selected structure does not have a valid timer configuration.");
         }
@@ -704,11 +700,36 @@
         showAlertBox(cleanedRoot.name)
     }
 
-    function saveTimer() { // TODO
+    function saveTimer() {
         const cleanedRoot = cleanUpTimer(rootTimer);
-        console.log(JSON.stringify(cleanedRoot, null, 2));
+        const savedTimers = JSON.parse(localStorage.getItem('savedTimers')) || {};
+        savedTimers[cleanedRoot.name] = cleanedRoot;
+        localStorage.setItem('savedTimers', JSON.stringify(savedTimers));
+        updatePredefinedTimers();
+        alert(`Timer '${cleanedRoot.name}' saved as predefined.`);
     }
 
+    function updatePredefinedTimers() {
+        const selectBox = document.getElementById('liberatingStructureSelect');
+        selectBox.innerHTML = ''; // Clear existing options
+
+        // Add predefined timers from liberatingStructures
+        for (const key in liberatingStructures) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = liberatingStructures[key].name;
+            selectBox.appendChild(option);
+        }
+
+        // Add saved timers from local storage
+        const savedTimers = JSON.parse(localStorage.getItem('savedTimers')) || {};
+        for (const key in savedTimers) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = savedTimers[key].name;
+            selectBox.appendChild(option);
+        }
+    }
 
     function requestNotificationPermission() {
         if (!("Notification" in window)) {
@@ -954,14 +975,18 @@
         return cleanedTimer;
     }
 
-    function onclickEditTimer(){
+    function onclickEditTimer() {
         const selectBox = document.getElementById('liberatingStructureSelect');
         const selectedStructureKey = selectBox.value;
-        const selectedStructure = liberatingStructures[selectedStructureKey];
+        const selectedStructure = liberatingStructures[selectedStructureKey] || JSON.parse(localStorage.getItem('savedTimers'))[selectedStructureKey];
         const errorMessageElement = document.getElementById("errorMessage");
 
         try {
-            rootTimer = selectedStructure.timer;
+            if (selectedStructure && selectedStructure.timer) {
+                rootTimer = selectedStructure.timer;
+            } else {
+                rootTimer = selectedStructure;
+            }
             renderTimers(rootTimer, document.getElementById("timerBuilder"));
             errorMessageElement.innerText = ""; // Clear any previous error message
         } catch (error) {
