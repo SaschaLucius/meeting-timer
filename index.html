@@ -614,10 +614,16 @@
     function saveTimer() {
         const cleanedRoot = cleanUpTimer(rootTimer);
         const savedTimers = JSON.parse(localStorage.getItem('savedTimers')) || {};
+
+        if (savedTimers[cleanedRoot.name]) {
+            if (!confirm(`Timer '${cleanedRoot.name}' already exists. Do you want to overwrite it?`)) {
+                return; // Exit if the user declines to overwrite
+            }
+        }
+
         savedTimers[cleanedRoot.name] = cleanedRoot;
         localStorage.setItem('savedTimers', JSON.stringify(savedTimers));
         updatePredefinedTimers();
-        alert(`Timer '${cleanedRoot.name}' saved as predefined.`);
 
         // Select the newly saved timer in the selection
         const selectBox = document.getElementById('liberatingStructureSelect');
