@@ -113,7 +113,7 @@
     
     <div id="timerControls" style="display: none;">        
         <button type="button" keepEnabled id="pauseResumeButton" onclick="togglePauseResume()">Pause</button>
-        <button type="button" keepEnabled onclick="cancelTimer()">Cancel</button>
+        <button type="button" keepEnabled onclick="cancelTimer()">Next</button>
         <button type="button" keepEnabled onclick="addOneMinute()">Add 1 Minute</button>
     </div>
     
@@ -644,6 +644,7 @@
             option.textContent = savedTimers[key].name;
             selectBox.appendChild(option);
         }
+        showSelectedTimer();
     }
 
     async function requestNotificationPermission() {
