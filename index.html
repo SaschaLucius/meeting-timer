@@ -112,11 +112,9 @@
     </div>
     
     <div>        
-        <button type="button" keepEnabled onclick="pauseTimer()">Pause</button>
-        <button type="button" keepEnabled onclick="resumeTimer()">Resume</button>
+        <button type="button" keepEnabled id="pauseResumeButton" onclick="togglePauseResume()">Pause</button>
         <button type="button" keepEnabled onclick="cancelTimer()">Cancel</button>
         <button type="button" keepEnabled onclick="addOneMinute()">Add 1 Minute</button>
-
         <button type="button" keepEnabled onclick="clearLog()">Clear Log</button>
     </div>
 
@@ -403,7 +401,6 @@
     }
 
     function toggleButtons(disable) {
-        console.log("toggleButtons called with:", disable);
         document.querySelectorAll("button").forEach(btn => {
             const hasKeepEnabled = btn.hasAttribute("keepEnabled");
             if (!hasKeepEnabled) {
@@ -541,107 +538,24 @@
         document.body.appendChild(overlay);
     }
 
-    // ####### Timer #######
-
-    class Timer {
-        constructor(updateDisplay) {
-            this.timeLeft = 0;            // Time left in milliseconds
-            this.isRunning = false;       // Tracks if the timer is running
-            this.isPaused = false;        // Tracks if the timer is paused
-            this.updateDisplay = updateDisplay; // Store display update function
-        }
-
-        // Helper function to create a delay
-        delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        // Starts the timer with the specified number of seconds
-        async start(seconds) {
-            if (this.isRunning) return;   // Prevent starting multiple intervals
-            this.timeLeft = seconds * 1000;
-            this.isRunning = true;
-            this.isPaused = false;
-
-            console.log(`Timer started: ${seconds} seconds`);
-
-            while (this.timeLeft > 0 && this.isRunning) {
-                // Check if the timer is paused and wait until it's unpaused
-                while (this.isPaused) {
-                    await this.delay(100); // Small delay to avoid tight loop
-                }
-
-                // Calculate time for the next update based on the remaining time
-                const nextUpdateTime = Math.min(1000, this.timeLeft); // Update in 1s increments or less if close to 0
-                
-                this.updateDisplay({ time: Math.ceil(this.timeLeft / 1000) }); // Update the display
-                await this.delay(nextUpdateTime); // Wait for delay
-
-                // Reduce the remaining time only if not paused
-                if (!this.isPaused) {
-                    this.timeLeft -= nextUpdateTime;
-                }
-            }
-
-            if (this.timeLeft <= 0) {
-                this.updateDisplay({ time: 0 });
-                console.log("Timer completed!");
-                this.isRunning = false;
-            }
-        }
-
-        // Pauses the timer without resolving the promise
-        pause() {
-            if (this.isRunning && !this.isPaused) {
-                this.isPaused = true;
-                console.log("Timer paused.");
-            }
-        }
-
-        // Resumes the timer
-        resume() {
-            if (this.isRunning && this.isPaused) {
-                this.isPaused = false;
-                console.log("Timer resumed.");
-            }
-        }
-
-        // Cancels the timer and resets the time
-        cancel() {
-            this.isRunning = false;
-            this.isPaused = false;
-            this.timeLeft = 0;
-            this.updateDisplay({ time: 0 });
-            console.log("Timer canceled.");
-        }
-
-        // Adds seconds to the current timer time
-        addTime(seconds) {
-            this.timeLeft += seconds * 1000;
-            console.log(`Added ${seconds} seconds. New time left: ${Math.ceil(this.timeLeft / 1000)} seconds`);
-        }
-    }
-
     const timerWorker = new Worker("timeWorker.js");
 
     timerWorker.onmessage = function(event) {
-        const { type, time } = event.data;
-        if (type === 'updateDisplay') {
-            updateDisplay({ time });
+        const { type, time, isPaused } = event.data;
+        switch (type) {
+            case 'updateDisplay':
+                updateDisplay({ time });
+                break;
+            case 'togglePauseResume':
+                document.getElementById("pauseResumeButton").innerText = isPaused ? "Resume" : "Pause";
+                break;
+            // ...other cases if needed...
         }
     };
 
     // Functions to be called from onclick attributes
     function startTimer() {
         timerWorker.postMessage({ command: 'start', seconds: 10 });  // Starts a 10-second timer
-    }
-
-    function pauseTimer() {
-        timerWorker.postMessage({ command: 'pause' });
-    }
-
-    function resumeTimer() {
-        timerWorker.postMessage({ command: 'resume' });
     }
 
     function cancelTimer() {
@@ -1038,6 +952,10 @@
 
     // Initialize root timer UI
     renderTimers(rootTimer, document.getElementById("timerBuilder"));
+
+    function togglePauseResume() {
+        timerWorker.postMessage({ command: 'togglePauseResume' });
+    }
 </script>
 
 </body>

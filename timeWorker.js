@@ -42,20 +42,6 @@ class Timer {
         }
     }
 
-    // Pauses the timer without resolving the promise
-    pause() {
-        if (this.isRunning && !this.isPaused) {
-            this.isPaused = true;
-        }
-    }
-
-    // Resumes the timer
-    resume() {
-        if (this.isRunning && this.isPaused) {
-            this.isPaused = false;
-        }
-    }
-
     // Cancels the timer and resets the time
     cancel() {
         this.isRunning = false;
@@ -68,6 +54,16 @@ class Timer {
     addTime(seconds) {
         this.timeLeft += seconds * 1000;
     }
+
+    // Toggles the pause/resume state and sends the updated state back to the main thread
+    togglePauseResume() {
+        if (this.isRunning){
+            this.isPaused = !this.isPaused;
+            postMessage({ type: 'togglePauseResume', isPaused: this.isPaused });
+        } else {
+            postMessage({ type: 'togglePauseResume', isPaused: false });
+        }
+    }
 }
 
 const TIMER_INSTANCE = new Timer();
@@ -78,17 +74,14 @@ onmessage = function(event) {
         case 'start':
             TIMER_INSTANCE.start(seconds);
             break;
-        case 'pause':
-            TIMER_INSTANCE.pause();
-            break;
-        case 'resume':
-            TIMER_INSTANCE.resume();
-            break;
         case 'cancel':
             TIMER_INSTANCE.cancel();
             break;
         case 'addTime':
             TIMER_INSTANCE.addTime(seconds);
+            break;
+        case 'togglePauseResume':
+            TIMER_INSTANCE.togglePauseResume();
             break;
     }
 };
