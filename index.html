@@ -542,6 +542,7 @@
     const timerWorker = new Worker("timeWorker.js");
 
     timerWorker.onmessage = function(event) {
+        console.log("Main: Message received from worker:", event.data);
         const { type, time, isPaused } = event.data;
         switch (type) {
             case 'updateDisplay':
