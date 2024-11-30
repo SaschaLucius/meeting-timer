@@ -86,32 +86,22 @@
         <div class="timer-info">Repetitions Left: <span id="repetitionsLeft">0</span></div>
     </div>
 
-    <div class="container" id="toHide">
+    <div class="container" id="toHide">    
         <div>
-            <label for="inputTime">Choose Time:</label>
-            <input type="text" id="inputTime" name="inputTime" placeholder="HH:MM:SS" value="00:00:05">
-            <button onclick="onclickStartSingleTimer();">Start</button>
-        </div>
-    
-        <br/>
-    
-        <div>
-            <label for="liberatingStructureSelect">Predefined Timer:</label>
-            <select id="liberatingStructureSelect">
+            <label for="liberatingStructureSelect">Timer:</label>
+            <select id="liberatingStructureSelect" onchange="showSelectedTimer()">
+                <!--option value="" disabled selected>Select a timer</option-->
                 <!-- Options will be added here dynamically -->
             </select>
-            <button onclick="onclickStartPreDefinedTimer();">Start</button>
-            <button onclick="onclickEditTimer();">Edit</button>
+            <button onclick="onclickCustomTimer();">Start</button>
         </div>
         
         <br/>
     
         <div>
-            <label for="timerBuilder">Custom Timer:</label>
             <div id="timerBuilder"></div>
     
-            <button onclick="onclickCustomTimer();">Start</button>
-            <button onclick="saveTimer()">Save as predefined</button>
+            <button onclick="saveTimer()">Save</button>
             <button onclick="displayTotalTime()">Calculate Duration</button>
     
             <div id="errorMessage" style="color: red; margin-top: 5px;"></div>
@@ -139,6 +129,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.12.0/NoSleep.min.js"></script>
 <script>
     const liberatingStructures={
+        "Countdown":{ 
+            name:"Countdown",
+            description:'',
+            timer:{ name: 'Countdown', duration: '5:00'}
+        },
         "Wicket Questions":{ 
             name:"Wicked Questions",
             description:'"Wicked Questions" is a Liberating Structure designed to surface and explore paradoxes that groups face when navigating complex challenges. This structure helps reveal the “both/and” thinking necessary for innovation and avoids simplistic “either/or” responses. By articulating paradoxical forces influencing behavior, teams can engage in strategic thinking that confronts messy realities, sparks creativity, and balances competing needs.',
@@ -711,7 +706,7 @@
 
     function updatePredefinedTimers() {
         const selectBox = document.getElementById('liberatingStructureSelect');
-        selectBox.innerHTML = ''; // Clear existing options
+        //selectBox.innerHTML = '<option value="" disabled selected>Select a timer</option>'; // Ensure default option is selected
 
         // Add predefined timers from liberatingStructures
         for (const key in liberatingStructures) {
@@ -844,8 +839,8 @@
 
     // ####### Custom Timer Creator #######
     let rootTimer = {
-        name: "Custom Timer",
-        duration: "",
+        name: "",
+        duration: "00:00:00",
         timers: []
     };
 
@@ -975,7 +970,7 @@
         return cleanedTimer;
     }
 
-    function onclickEditTimer() {
+    function showSelectedTimer() {
         const selectBox = document.getElementById('liberatingStructureSelect');
         const selectedStructureKey = selectBox.value;
         const selectedStructure = liberatingStructures[selectedStructureKey] || JSON.parse(localStorage.getItem('savedTimers'))[selectedStructureKey];
