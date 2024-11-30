@@ -111,14 +111,15 @@
     
     </div>
     
-    <div>        
+    <div id="timerControls" style="display: none;">        
         <button type="button" keepEnabled id="pauseResumeButton" onclick="togglePauseResume()">Pause</button>
         <button type="button" keepEnabled onclick="cancelTimer()">Cancel</button>
         <button type="button" keepEnabled onclick="addOneMinute()">Add 1 Minute</button>
-        <button type="button" keepEnabled onclick="clearLog()">Clear Log</button>
     </div>
-
+    
+    
     <h2>Log</h2>
+    <button type="button" keepEnabled onclick="clearLog()">Clear</button>
     <div class="logContent" id="logContent">
     </div>
 </div>
@@ -672,6 +673,7 @@
         noSleep.enable(); // Enable NoSleep to prevent screen dimming
 
         toggleButtons(true); // Disable buttons at the start
+        document.getElementById("timerControls").style.display = "block"; // Show timer controls
     }
 
     function endGlobalTimer() {
@@ -685,6 +687,7 @@
             noSleep.disable(); // Disable NoSleep to allow screen dimming
 
             toggleButtons(false); // Enable buttons at the end
+            document.getElementById("timerControls").style.display = "none"; // Hide timer controls
         }
     }
 

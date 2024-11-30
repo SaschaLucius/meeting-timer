@@ -69,6 +69,7 @@ class Timer {
 const TIMER_INSTANCE = new Timer();
 
 onmessage = function(event) {
+    console.log('Worker: Message received from main thread:', event.data);
     const { command, seconds } = event.data;
     switch (command) {
         case 'start':
