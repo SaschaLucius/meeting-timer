@@ -109,7 +109,6 @@
     
         <br/>
     
-        <button type="button" onclick="requestNotificationPermission();" id="enableNotifications">Enable Notifications</button>    
     </div>
     
     <div>        
@@ -688,11 +687,12 @@
     }
 
     async function onclickCustomTimer() {
+        await requestNotificationPermission();
         const cleanedRoot = cleanUpTimer(rootTimer);
         startGlobalTimer();
         await startTimer(cleanedRoot);
         endGlobalTimer();
-        showAlertBox(cleanedRoot.name)
+        showAlertBox(cleanedRoot.name);
     }
 
     function saveTimer() {
@@ -726,23 +726,16 @@
         }
     }
 
-    function requestNotificationPermission() {
+    async function requestNotificationPermission() {
         if (!("Notification" in window)) {
             console.log("This browser does not support notifications.");
             return;
         }
         if (Notification.permission === "granted") {
             notificationEnabled = true;
-            alert("Notifications are already enabled.");
         } else if (Notification.permission !== "denied") {
-            Notification.requestPermission().then(permission => {
-                notificationEnabled = permission === "granted";
-                if (notificationEnabled) {
-                    alert("Notifications enabled.");
-                } else {
-                    alert("Notifications were denied.");
-                }
-            });
+            const permission = await Notification.requestPermission();
+            notificationEnabled = permission === "granted";
         }
     }
 
