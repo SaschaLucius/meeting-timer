@@ -616,11 +616,15 @@
         localStorage.setItem('savedTimers', JSON.stringify(savedTimers));
         updatePredefinedTimers();
         alert(`Timer '${cleanedRoot.name}' saved as predefined.`);
+
+        // Select the newly saved timer in the selection
+        const selectBox = document.getElementById('liberatingStructureSelect');
+        selectBox.value = cleanedRoot.name;
     }
 
     function updatePredefinedTimers() {
         const selectBox = document.getElementById('liberatingStructureSelect');
-        //selectBox.innerHTML = '<option value="" disabled selected>Select a timer</option>'; // Ensure default option is selected
+        selectBox.innerHTML = ''; // Clear existing options
 
         // Add predefined timers from liberatingStructures
         for (const key in liberatingStructures) {
