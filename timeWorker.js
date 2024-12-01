@@ -69,7 +69,7 @@ class Timer {
 const TIMER_INSTANCE = new Timer();
 
 onmessage = function(event) {
-    console.log('Worker: Message received from main thread:', event.data);
+    console.log('Worker: Command received from Main:', event.data);
     const { command, seconds } = event.data;
     switch (command) {
         case 'start':
@@ -83,6 +83,9 @@ onmessage = function(event) {
             break;
         case 'togglePauseResume':
             TIMER_INSTANCE.togglePauseResume();
+            break;
+        default:
+            console.error('Worker: Unhandled command received:', command);
             break;
     }
 };

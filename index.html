@@ -520,7 +520,8 @@
             case 'togglePauseResume':
                 document.getElementById("pauseResumeButton").innerText = isPaused ? "Resume" : "Pause";
                 break;
-            // ...other cases if needed...
+            default:
+                console.log("Main: Unhandled message recieved:", event.data);
         }
     };
 
