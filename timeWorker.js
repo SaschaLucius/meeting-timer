@@ -3,6 +3,8 @@ class Timer {
         this.timeLeft = 0;            // Time left in milliseconds
         this.isRunning = false;       // Tracks if the timer is running
         this.isPaused = false;        // Tracks if the timer is paused
+        this.startTime = null;        // Tracks the start time
+        this.elapsedTime = 0;         // Tracks the elapsed time
     }
 
     // Helper function to create a delay
@@ -16,6 +18,8 @@ class Timer {
         this.timeLeft = seconds * 1000;
         this.isRunning = true;
         this.isPaused = false;
+        this.startTime = Date.now() - this.elapsedTime; // Adjust start time if resumed
+        this.elapsedTime = 0;
 
         while (this.timeLeft > 0 && this.isRunning) {
             // Check if the timer is paused and wait until it's unpaused
@@ -23,16 +27,18 @@ class Timer {
                 await this.delay(100); // Small delay to avoid tight loop
             }
 
+            // Calculate elapsed time
+            const currentTime = Date.now();
+            this.elapsedTime = currentTime - this.startTime;
+
+            // Calculate remaining time
+            this.timeLeft = seconds * 1000 - this.elapsedTime;
+
             // Calculate time for the next update based on the remaining time
             const nextUpdateTime = Math.min(1000, this.timeLeft); // Update in 1s increments or less if close to 0
                 
             postMessage({ type: 'updateDisplay', time: Math.ceil(this.timeLeft / 1000) }); // Update the display
             await this.delay(nextUpdateTime); // Wait for delay
-
-            // Reduce the remaining time only if not paused
-            if (!this.isPaused) {
-                this.timeLeft -= nextUpdateTime;
-            }
         }
 
         if (this.timeLeft <= 0) {
@@ -57,8 +63,11 @@ class Timer {
 
     // Toggles the pause/resume state and sends the updated state back to the main thread
     togglePauseResume() {
-        if (this.isRunning){
+        if (this.isRunning) {
             this.isPaused = !this.isPaused;
+            if (!this.isPaused) {
+                this.startTime = Date.now() - this.elapsedTime; // Adjust start time when resuming
+            }
             postMessage({ type: 'togglePauseResume', isPaused: this.isPaused });
         } else {
             postMessage({ type: 'togglePauseResume', isPaused: false });
