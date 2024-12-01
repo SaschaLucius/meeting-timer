@@ -387,7 +387,7 @@
 
     let globalStartTime = null; // Global variable to store the start time
     let notificationEnabled = false; // Track notification permission status
-    const noSleepManager = new NoSleepManager();
+    const NO_SLEEP_MANAGER = new NoSleepManager();
 
     // Populate the select box with options from liberatingStructures
     window.onload = function() {
@@ -621,7 +621,7 @@
 
         const hide = document.getElementById("toHide");
         hide.style.display = "none";
-        noSleepManager.enable();
+        NO_SLEEP_MANAGER.enable();
 
         toggleButtons(true); // Disable buttons at the start
         document.getElementById("timerControls").style.display = "block"; // Show timer controls
@@ -635,7 +635,7 @@
 
             const hide = document.getElementById("toHide");
             hide.style.display = "flex";
-            noSleepManager.disable();
+            NO_SLEEP_MANAGER.disable();
 
             toggleButtons(false); // Enable buttons at the end
             document.getElementById("timerControls").style.display = "none"; // Hide timer controls
