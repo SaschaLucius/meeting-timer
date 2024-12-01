@@ -125,6 +125,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.12.0/NoSleep.min.js"></script>
+<script src="utils.js"></script>
 <script>
     const liberatingStructures={
         "Countdown":{ 
@@ -390,7 +391,6 @@
     // Populate the select box with options from liberatingStructures
     window.onload = function() {
         updatePredefinedTimers();
-        // ...existing code...
     };
 
     // ####### Helper Functions #######
@@ -408,40 +408,6 @@
                 btn.disabled = disable;
             }
         });
-    }
-
-    // Converts HH:MM:SS, MM:SS, or SS format to total seconds
-    function hmsToSeconds(hms) {
-        if(typeof hms === 'number'){
-            return hms;
-        }
-        const parts = hms.split(':').map(Number); // Convert each part to a number
-        let totalSeconds = 0;
-
-        if (parts.length === 3) {
-            // HH:MM:SS format
-            const [hours, minutes, seconds] = parts;
-            totalSeconds = hours * 3600 + minutes * 60 + seconds;
-        } else if (parts.length === 2) {
-            // MM:SS format
-            const [minutes, seconds] = parts;
-            totalSeconds = minutes * 60 + seconds;
-        } else if (parts.length === 1) {
-            // SS format
-            totalSeconds = parts[0];
-        }
-
-        return totalSeconds;
-    }
-
-    // Converts total seconds to HH:MM:SS format
-    function secondsToHMS(totalSeconds) {
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-
-        // Format each unit to be two digits
-        return [hours, minutes, seconds].map(unit => String(unit).padStart(2, '0')).join(':');
     }
 
     function logEvent(message) {
@@ -539,6 +505,8 @@
         document.body.appendChild(overlay);
     }
 
+    // ####### Woker Setup #######
+
     const timerWorker = new Worker("timeWorker.js");
 
     timerWorker.onmessage = function(event) {
@@ -566,6 +534,10 @@
 
     function addOneMinute() {
         timerWorker.postMessage({ command: 'addTime', seconds: 60 }); // Adds 60 seconds (1 minute)
+    }
+
+    function togglePauseResume() {
+        timerWorker.postMessage({ command: 'togglePauseResume' });
     }
 
     // ####### Button Handler #######
@@ -933,13 +905,8 @@
         alert(`Total Duration: ${hours}h ${minutes}m ${seconds}s`);
     }
 
-
     // Initialize root timer UI
     renderTimers(rootTimer, document.getElementById("timerBuilder"));
-
-    function togglePauseResume() {
-        timerWorker.postMessage({ command: 'togglePauseResume' });
-    }
 </script>
 
 </body>
