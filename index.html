@@ -593,10 +593,6 @@
         TIMER_WORKER.postMessage({ command: 'togglePauseResume' });
     }
 
-    function startTimer() {
-        TIMER_WORKER.postMessage({ command: 'start', seconds: 10 });  // Starts a 10-second timer
-    }
-
     function cancelTimer() {
         TIMER_WORKER.postMessage({ command: 'cancel' });
     }
