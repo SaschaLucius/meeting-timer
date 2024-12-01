@@ -93,7 +93,7 @@
                 <!--option value="" disabled selected>Select a timer</option-->
                 <!-- Options will be added here dynamically -->
             </select>
-            <button onclick="onclickCustomTimer();">Start</button>
+            <button onclick="onclickStartTimer();">Start</button>
         </div>
         
         <br/>
@@ -570,39 +570,7 @@
 
     // ####### Button Handler #######
 
-    async function onclickStartSingleTimer() {
-        const input = document.getElementById('inputTime');
-        const value = input.value;
-
-        startGlobalTimer();
-        await startTimer({ name: 'Countdown', duration: value});
-        /*
-         (async () => {
-            await startTimer({ name: 'Timer 1', duration: 5})
-        })();
-        */
-        endGlobalTimer();
-        showAlertBox('Countdown')
-    }
-
-    async function onclickStartPreDefinedTimer() {
-        // Get the selected Liberating Structure
-        const selectBox = document.getElementById('liberatingStructureSelect');
-        const selectedStructureKey = selectBox.value;
-        const selectedStructure = liberatingStructures[selectedStructureKey] || JSON.parse(localStorage.getItem('savedTimers'))[selectedStructureKey];
-
-        if (selectedStructure) {
-            const timerConfig = selectedStructure.timer || selectedStructure;
-            startGlobalTimer();
-            await startTimer(timerConfig);
-            endGlobalTimer();
-            showAlertBox(timerConfig.name);
-        } else {
-            console.error("Selected structure does not have a valid timer configuration.");
-        }
-    }
-
-    async function onclickCustomTimer() {
+    async function onclickStartTimer() {
         await requestNotificationPermission();
         const cleanedRoot = cleanUpTimer(rootTimer);
         startGlobalTimer();
