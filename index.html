@@ -508,9 +508,9 @@
 
     // ####### Woker Setup #######
 
-    const timerWorker = new Worker("timeWorker.js");
+    const TIMER_WORKER = new Worker("timeWorker.js");
 
-    timerWorker.onmessage = function(event) {
+    TIMER_WORKER.onmessage = function(event) {
         console.log("Main: Message received from worker:", event.data);
         const { type, time, isPaused } = event.data;
         switch (type) {
@@ -527,19 +527,19 @@
 
     // Functions to be called from onclick attributes
     function startTimer() {
-        timerWorker.postMessage({ command: 'start', seconds: 10 });  // Starts a 10-second timer
+        TIMER_WORKER.postMessage({ command: 'start', seconds: 10 });  // Starts a 10-second timer
     }
 
     function cancelTimer() {
-        timerWorker.postMessage({ command: 'cancel' });
+        TIMER_WORKER.postMessage({ command: 'cancel' });
     }
 
     function addOneMinute() {
-        timerWorker.postMessage({ command: 'addTime', seconds: 60 }); // Adds 60 seconds (1 minute)
+        TIMER_WORKER.postMessage({ command: 'addTime', seconds: 60 }); // Adds 60 seconds (1 minute)
     }
 
     function togglePauseResume() {
-        timerWorker.postMessage({ command: 'togglePauseResume' });
+        TIMER_WORKER.postMessage({ command: 'togglePauseResume' });
     }
 
     // ####### Button Handler #######
@@ -677,17 +677,17 @@
         updateDisplay({ name, time: remainingTime }); // Initial display update
         logEvent(`Starting '${name}' with ${duration}.`);
 
-        timerWorker.postMessage({ command: 'start', seconds: remainingTime });
+        TIMER_WORKER.postMessage({ command: 'start', seconds: remainingTime });
 
         // Wait for the timer to complete
         await new Promise(resolve => {
             const handleMessage = (event) => {
                 if (event.data.type === 'completed') {
-                    timerWorker.removeEventListener('message', handleMessage);
+                    TIMER_WORKER.removeEventListener('message', handleMessage);
                     resolve();
                 }
             };
-            timerWorker.addEventListener('message', handleMessage);
+            TIMER_WORKER.addEventListener('message', handleMessage);
         });
 
         logEvent(`Timer '${name}' completed!`);
