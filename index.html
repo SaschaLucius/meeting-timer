@@ -128,6 +128,33 @@
 <script src="utils.js"></script>
 <script src="noSleepManager.js"></script>
 <script>
+    class NotificationManager {
+        constructor() {
+            this.notificationEnabled = false;
+        }
+
+        async requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                console.log("This browser does not support notifications.");
+                return;
+            }
+            if (Notification.permission === "granted") {
+                this.notificationEnabled = true;
+            } else if (Notification.permission !== "denied") {
+                const permission = await Notification.requestPermission();
+                this.notificationEnabled = permission === "granted";
+            }
+        }
+
+        sendNotification(message) {
+            if (this.notificationEnabled && "Notification" in window) {
+                new Notification(message);
+            }
+        }
+    }
+
+    const NOTIFICATION_MANAGER = new NotificationManager();
+
     const liberatingStructures={
         "Countdown":{ 
             name:"Countdown",
@@ -386,7 +413,6 @@
     }
 
     let globalStartTime = null; // Global variable to store the start time
-    let notificationEnabled = false; // Track notification permission status
     const NO_SLEEP_MANAGER = new NoSleepManager();
 
     // Populate the select box with options from liberatingStructures
@@ -423,9 +449,7 @@
             console.log(message);
 
             // Display as a notification if permission is granted
-            if (notificationEnabled && "Notification" in window) {
-                new Notification(message);
-            }
+            NOTIFICATION_MANAGER.sendNotification(message);
         } catch (error) {
             console.error("Log event failed:", error);
         }
@@ -525,27 +549,10 @@
         }
     };
 
-    // Functions to be called from onclick attributes
-    function startTimer() {
-        TIMER_WORKER.postMessage({ command: 'start', seconds: 10 });  // Starts a 10-second timer
-    }
-
-    function cancelTimer() {
-        TIMER_WORKER.postMessage({ command: 'cancel' });
-    }
-
-    function addOneMinute() {
-        TIMER_WORKER.postMessage({ command: 'addTime', seconds: 60 }); // Adds 60 seconds (1 minute)
-    }
-
-    function togglePauseResume() {
-        TIMER_WORKER.postMessage({ command: 'togglePauseResume' });
-    }
-
     // ####### Button Handler #######
 
     async function onclickStartTimer() {
-        await requestNotificationPermission();
+        await NOTIFICATION_MANAGER.requestNotificationPermission();
         const cleanedRoot = cleanUpTimer(rootTimer);
         startGlobalTimer();
         await startTimer(cleanedRoot);
@@ -573,6 +580,38 @@
         showSelectedTimer();
     }
 
+    function displayTotalTime() {
+        const totalSeconds = calculateTotalTime(rootTimer);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        alert(`Total Duration: ${hours}h ${minutes}m ${seconds}s`);
+    }
+
+    function togglePauseResume() {
+        TIMER_WORKER.postMessage({ command: 'togglePauseResume' });
+    }
+
+    function startTimer() {
+        TIMER_WORKER.postMessage({ command: 'start', seconds: 10 });  // Starts a 10-second timer
+    }
+
+    function cancelTimer() {
+        TIMER_WORKER.postMessage({ command: 'cancel' });
+    }
+
+    function addOneMinute() {
+        TIMER_WORKER.postMessage({ command: 'addTime', seconds: 60 }); // Adds 60 seconds (1 minute)
+    }
+
+    function clearLog() {
+        const logContent = document.getElementById("logContent");
+        logContent.innerHTML = "";
+    }
+
+    // ####### Timer Selection #######
+
     function updatePredefinedTimers() {
         const selectBox = document.getElementById('liberatingStructureSelect');
         selectBox.innerHTML = ''; // Clear existing options
@@ -594,24 +633,6 @@
             selectBox.appendChild(option);
         }
         showSelectedTimer();
-    }
-
-    async function requestNotificationPermission() {
-        if (!("Notification" in window)) {
-            console.log("This browser does not support notifications.");
-            return;
-        }
-        if (Notification.permission === "granted") {
-            notificationEnabled = true;
-        } else if (Notification.permission !== "denied") {
-            const permission = await Notification.requestPermission();
-            notificationEnabled = permission === "granted";
-        }
-    }
-
-    function clearLog() {
-        const logContent = document.getElementById("logContent");
-        logContent.innerHTML = "";
     }
 
     // ####### Timer Functions #######
@@ -896,15 +917,6 @@
         }
 
         return totalTime;
-    }
-
-    function displayTotalTime() {
-        const totalSeconds = calculateTotalTime(rootTimer);
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-
-        alert(`Total Duration: ${hours}h ${minutes}m ${seconds}s`);
     }
 
     // Initialize root timer UI
