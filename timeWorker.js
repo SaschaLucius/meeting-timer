@@ -42,10 +42,15 @@ class Timer {
         }
 
         if (this.timeLeft <= 0) {
-            postMessage({ type: 'updateDisplay', time: 0 });
-            postMessage({ type: 'completed' }); // Send completed message
-            this.isRunning = false;
+            this.completeTimer();
         }
+    }
+
+    // Handles timer completion
+    completeTimer() {
+        postMessage({ type: 'updateDisplay', time: 0 });
+        postMessage({ type: 'completed' }); // Send completed message
+        this.isRunning = false;
     }
 
     // Cancels the timer and resets the time
