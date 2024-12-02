@@ -32,6 +32,26 @@ function secondsToHMS(totalSeconds) {
     return [hours, minutes, seconds].map(unit => String(unit).padStart(2, '0')).join(':');
 }
 
+function calculateTotalTime(timer) {
+    let totalTime = 0;
+
+    // Parse the timer's duration and convert to seconds, defaulting to 0 if empty
+    const durationInSeconds = timer.duration ? parseDuration(timer.duration) : 0;
+    
+    // Multiply by repetitions, defaulting to 1 if repetitions is not set or invalid
+    const repetitions = timer.repetitions && timer.repetitions > 1 ? timer.repetitions : 1;
+    totalTime += durationInSeconds * repetitions;
+
+    // Recursively add time for each sub-timer
+    if (Array.isArray(timer.timers) && timer.timers.length > 0) {
+        timer.timers.forEach(subTimer => {
+            totalTime += calculateTotalTime(subTimer) * repetitions;
+        });
+    }
+
+    return totalTime;
+}
+
 function showAlertBox(timerName) {
     // Remove any existing alert box
     const existingAlert = document.getElementById("customAlertBox");
