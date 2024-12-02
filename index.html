@@ -127,33 +127,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.12.0/NoSleep.min.js"></script>
 <script src="utils.js"></script>
 <script src="noSleepManager.js"></script>
+<script src="notificationManager.js"></script>
 <script src="timerDefinitions.js"></script>
 <script>
-    class NotificationManager {
-        constructor() {
-            this.notificationEnabled = false;
-        }
-
-        async requestNotificationPermission() {
-            if (!("Notification" in window)) {
-                console.log("This browser does not support notifications.");
-                return;
-            }
-            if (Notification.permission === "granted") {
-                this.notificationEnabled = true;
-            } else if (Notification.permission !== "denied") {
-                const permission = await Notification.requestPermission();
-                this.notificationEnabled = permission === "granted";
-            }
-        }
-
-        sendNotification(message) {
-            if (this.notificationEnabled && "Notification" in window) {
-                new Notification(message);
-            }
-        }
-    }
-
     const NOTIFICATION_MANAGER = new NotificationManager();
 
     let globalStartTime = null; // Global variable to store the start time
