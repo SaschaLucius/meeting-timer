@@ -36,11 +36,13 @@ function addSubTimer(timer) {
         timer.timers = [subTimer];
     }
     renderTimers(rootTimer, document.getElementById("timerBuilder"));
+    updateTotalDuration();
 }
 
 function deleteTimer(parent, timerIndex) {
     parent.timers.splice(timerIndex, 1);
     renderTimers(rootTimer, document.getElementById("timerBuilder"));
+    updateTotalDuration();
 }
 
 function renderTimers(timer, container, parent = null, index = null) {
