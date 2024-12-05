@@ -100,10 +100,8 @@
     
         <div>
             <div id="timerBuilder"></div>
-    
+            <div class="timer-info">Total Duration: <span id="totalDuration">HH:MM:SS</span></div>
             <button onclick="saveTimer()">Save</button>
-            <button onclick="displayTotalTime()">Calculate Duration</button>
-    
             <div id="errorMessage" style="color: red; margin-top: 5px;"></div>
         </div>
     
@@ -147,6 +145,12 @@
         if (name !== undefined) document.getElementById("timerName").innerText = name;
         if (time !== undefined) document.getElementById("remainingTime").innerText = secondsToHMS(time);
         if (repetitions !== undefined) document.getElementById("repetitionsLeft").innerText = repetitions;
+        updateTotalDuration(); // Update total duration whenever the display is updated
+    }
+
+    function updateTotalDuration() {
+        const totalSeconds = calculateTotalTime(rootTimer);
+        document.getElementById("totalDuration").innerText = secondsToHMS(totalSeconds);
     }
 
     function toggleButtons(disable) {
@@ -378,6 +382,7 @@
                 rootTimer = selectedStructure;
             }
             renderTimers(rootTimer, document.getElementById("timerBuilder"));
+            updateTotalDuration(); // Update total duration when a new timer is selected
             errorMessageElement.innerText = ""; // Clear any previous error message
         } catch (error) {
             errorMessageElement.innerText = "Invalid JSON structure. Please try again. " + error.message;

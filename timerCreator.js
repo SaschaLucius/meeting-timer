@@ -70,6 +70,7 @@ function renderTimers(timer, container, parent = null, index = null) {
     durationInput.value = timer.duration || "";
     durationInput.oninput = (e) => (timer.duration = e.target.value);
     durationInput.disabled = timer.timers && timer.timers.length > 0;
+    durationInput.onchange = (e) => updateTotalDuration();
 
     // Repetitions input
     const repetitionsInput = document.createElement("input");
@@ -78,6 +79,7 @@ function renderTimers(timer, container, parent = null, index = null) {
     repetitionsInput.value = timer.repetitions || "";
     repetitionsInput.min = 2;
     repetitionsInput.oninput = (e) => (timer.repetitions = e.target.value);
+    repetitionsInput.onchange = (e) => updateTotalDuration();
 
     mainDiv.append(nameInput, durationInput, repetitionsInput);
 
