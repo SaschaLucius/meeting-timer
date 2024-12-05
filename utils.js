@@ -36,7 +36,7 @@ function calculateTotalTime(timer) {
     let totalTime = 0;
 
     // Parse the timer's duration and convert to seconds, defaulting to 0 if empty
-    const durationInSeconds = timer.duration ? parseDuration(timer.duration) : 0;
+    const durationInSeconds = timer.duration ? hmsToSeconds(timer.duration) : 0;
     
     // Multiply by repetitions, defaulting to 1 if repetitions is not set or invalid
     const repetitions = timer.repetitions && timer.repetitions > 1 ? timer.repetitions : 1;
