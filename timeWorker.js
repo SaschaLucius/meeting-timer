@@ -25,6 +25,10 @@ class Timer {
             // Check if the timer is paused and wait until it's unpaused
             while (this.isPaused) {
                 await this.delay(100); // Small delay to avoid tight loop
+                if (this.timeLeft <= 0) {
+                    this.completeTimer();
+                    return;
+                }
             }
 
             // Calculate elapsed time
@@ -61,6 +65,7 @@ class Timer {
         this.timeLeft = 0;
         this.elapsedTime = 0;
         postMessage({ type: 'updateDisplay', time: 0 });
+        postMessage({ type: 'togglePauseResume', isPaused: false });
     }
 
     // Adds seconds to the current timer time
