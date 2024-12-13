@@ -65,7 +65,10 @@ class Timer {
 
     // Adds seconds to the current timer time
     addTime(seconds) {
-        this.timeLeft += seconds * 1000;
+        this.startTime += seconds * 1000; // Adjust start time to account for added time
+        this.elapsedTime = currentTime - this.startTime;
+        this.timeLeft = seconds * 1000 - this.elapsedTime;
+        postMessage({ type: 'updateDisplay', time: Math.ceil(this.timeLeft / 1000) }); // Update the display
     }
 
     // Toggles the pause/resume state and sends the updated state back to the main thread
