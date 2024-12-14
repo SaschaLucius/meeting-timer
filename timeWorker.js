@@ -20,6 +20,11 @@ class Timer {
          * Tracks the elapsed time in milliseconds
          */
         this.elapsedTime = 0;
+
+        /**
+         * Tracks the seconds for the timer
+         */
+        this.seconds = 0;
     }
 
     /**
@@ -42,6 +47,7 @@ class Timer {
         this.isRunning = true;
         this.isPaused = false;
         this.startTime = Date.now(); // Adjust start time if resumed
+        this.seconds = seconds;
 
         while (this.timeLeft > 0 && this.isRunning) {
             // Check if the timer is paused and wait until it's unpaused
@@ -54,7 +60,7 @@ class Timer {
             }
 
             // Calculate remaining time
-            this.timeLeft = seconds * 1000 - (Date.now() - this.startTime);
+            this.timeLeft = this.seconds * 1000 - (Date.now() - this.startTime);
 
             // Calculate time for the next update based on the remaining time
             const nextUpdateTime = Math.min(1000, this.timeLeft); // Update in 1s increments or less if close to 0
@@ -88,10 +94,11 @@ class Timer {
 
     // Adds seconds to the current timer time
     addTime(seconds) {
-        this.startTime += seconds * 1000; // Adjust start time to account for added time
-        this.elapsedTime = currentTime - this.startTime;
-        this.timeLeft = seconds * 1000 - this.elapsedTime;
-        postMessage({ type: 'updateDisplay', time: Math.ceil(this.timeLeft / 1000) }); // Update the display
+        if (this.isRunning) {
+            this.seconds += seconds;
+            this.timeLeft += seconds * 1000;
+            postMessage({ type: 'updateDisplay', time: Math.ceil(this.timeLeft / 1000) }); // Update the display
+        }
     }
 
     // Toggles the pause/resume state and sends the updated state back to the main thread
