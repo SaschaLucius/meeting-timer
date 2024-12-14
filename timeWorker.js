@@ -78,8 +78,8 @@ class Timer {
     completeTimer() {
         this.isRunning = false;
         this.elapsedTime = 0;
-        postMessage({ type: 'updateDisplay', time: 0 });
         postMessage({ type: 'completed' }); // Send completed message
+        postMessage({ type: 'updateDisplay', time: 0 });
     }
 
     // Cancels the timer and resets the time
