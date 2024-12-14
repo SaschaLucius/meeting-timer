@@ -1,25 +1,47 @@
 class Timer {
     constructor() {
-        this.timeLeft = 0;            // Time left in milliseconds
-        this.isRunning = false;       // Tracks if the timer is running
-        this.isPaused = false;        // Tracks if the timer is paused
-        this.startTime = null;        // Tracks the start time
-        this.elapsedTime = 0;         // Tracks the elapsed time
+        /**
+         * Time left in milliseconds
+         */
+        this.timeLeft = 0;
+        /**
+         * Tracks if the timer is running
+         */
+        this.isRunning = false;
+        /**
+         * Tracks if the timer is paused
+         */
+        this.isPaused = false;
+        /**
+         * Tracks the start time in milliseconds
+         */
+        this.startTime = null;
+        /**
+         * Tracks the elapsed time in milliseconds
+         */
+        this.elapsedTime = 0;
     }
 
-    // Helper function to create a delay
+    /**
+     * Helper function to create a delay
+     * @param {*} ms amount of delay in milliseconds
+     * @returns 
+     */
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // Starts the timer with the specified number of seconds
+    /**
+     * Starts the timer with the specified number of seconds
+     * @param {*} seconds number of seconds to run the timer
+     * @returns 
+     */
     async start(seconds) {
         if (this.isRunning) return;   // Prevent starting multiple intervals
         this.timeLeft = seconds * 1000;
         this.isRunning = true;
         this.isPaused = false;
-        this.startTime = Date.now() - this.elapsedTime; // Adjust start time if resumed
-        this.elapsedTime = 0;
+        this.startTime = Date.now(); // Adjust start time if resumed
 
         while (this.timeLeft > 0 && this.isRunning) {
             // Check if the timer is paused and wait until it's unpaused
@@ -31,12 +53,8 @@ class Timer {
                 }
             }
 
-            // Calculate elapsed time
-            const currentTime = Date.now();
-            this.elapsedTime = currentTime - this.startTime;
-
             // Calculate remaining time
-            this.timeLeft = seconds * 1000 - this.elapsedTime;
+            this.timeLeft = seconds * 1000 - (Date.now() - this.startTime);
 
             // Calculate time for the next update based on the remaining time
             const nextUpdateTime = Math.min(1000, this.timeLeft); // Update in 1s increments or less if close to 0
@@ -50,12 +68,12 @@ class Timer {
         }
     }
 
-    // Handles timer completion
+    // Handles natural timer completion
     completeTimer() {
-        postMessage({ type: 'updateDisplay', time: 0 });
-        postMessage({ type: 'completed' }); // Send completed message
         this.isRunning = false;
         this.elapsedTime = 0;
+        postMessage({ type: 'updateDisplay', time: 0 });
+        postMessage({ type: 'completed' }); // Send completed message
     }
 
     // Cancels the timer and resets the time
@@ -78,11 +96,17 @@ class Timer {
 
     // Toggles the pause/resume state and sends the updated state back to the main thread
     togglePauseResume() {
+        console.log('Timer', this.isRunning, this.isPaused);
         if (this.isRunning) {
-            this.isPaused = !this.isPaused;
-            if (!this.isPaused) {
+            if(this.isPaused) {
                 this.startTime = Date.now() - this.elapsedTime; // Adjust start time when resuming
+                this.elapsedTime = 0; // Reset elapsed time after manipulation of start time
+                this.isPaused = false;
+            } else {
+                this.elapsedTime = Date.now() - this.startTime;
+                this.isPaused = true;
             }
+
             postMessage({ type: 'togglePauseResume', isPaused: this.isPaused });
         } else {
             postMessage({ type: 'togglePauseResume', isPaused: false });
