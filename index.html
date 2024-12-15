@@ -141,10 +141,11 @@
 
     // ####### Helper Functions #######
 
-    function updateDisplay({ name, time, repetitions }) {
+    function updateDisplay({ name, time, repetitions, description }) {
         if (name !== undefined) document.getElementById("timerName").innerText = name;
         if (time !== undefined) document.getElementById("remainingTime").innerText = secondsToHMS(time);
         if (repetitions !== undefined) document.getElementById("repetitionsLeft").innerText = repetitions;
+        if (description !== undefined) document.getElementById("timerDescription").innerText = description;
         updateTotalDuration(); // Update total duration whenever the display is updated
     }
 
@@ -310,7 +311,7 @@
     }
 
     async function startTimer(timer) {
-        const { name, duration, repetitions, timers, groups} = timer;
+        const { name, repetitions, timers} = timer;
 
         const errorMessageElement = document.getElementById("errorMessage");
         errorMessageElement.innerText = "";
@@ -320,7 +321,7 @@
                 logEvent(`Starting '${name}' (${repetitions} repetitions).`);
                 for (let currentRep = repetitions; currentRep > 0; currentRep--) {
                     updateDisplay({ repetitions: currentRep });
-                    await startTimer({name:`${name} (${repetitions-currentRep+1}/${repetitions})`, duration, timers, groups});
+                    await startTimer({...timer, repetitions: undefined, name:`${name} (${repetitions-currentRep+1}/${repetitions})`});
                 }
                 return;
             }
@@ -337,11 +338,12 @@
     }
 
     async function startSingleTimer(timer) {
-        const { name, duration } = timer;
+        const { name, duration, description } = timer;
+        console.log("Starting timer:", description);
 
         let remainingTime = hmsToSeconds(duration); // Corrected to start at full duration
 
-        updateDisplay({ name, time: remainingTime }); // Initial display update
+        updateDisplay({ name, time: remainingTime, description }); // Initial display update
         logEvent(`Starting '${name}' with ${duration}.`);
 
         TIMER_WORKER.postMessage({ command: 'start', seconds: remainingTime });
@@ -361,7 +363,7 @@
     }
 
     async function startSeriesOfTimers(timer) {
-        const { name, timers, repetitions} = timer;
+        const { name, timers} = timer;
         logEvent(`Starting series '${name}'.`);
         for (let i = 0; i < timers.length; i++) {
             await startTimer(timers[i]);

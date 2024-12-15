@@ -2,7 +2,8 @@
 let rootTimer = {
     name: "",
     duration: "00:00:00",
-    timers: []
+    timers: [],
+    description: ""
 };
 
 function addTimer(parent = rootTimer) {
@@ -10,7 +11,8 @@ function addTimer(parent = rootTimer) {
         name: "",
         duration: "",
         repetitions: "",
-        timers: []
+        timers: [],
+        description: ""
     };
     parent.duration = "";
     if(parent.timers){
@@ -27,7 +29,8 @@ function addSubTimer(timer) {
         name: "",
         duration: "",
         repetitions: "",
-        timers: []
+        timers: [],
+        description: ""
     };
     timer.duration = "";
     if(timer.timers){
@@ -85,6 +88,15 @@ function renderTimers(timer, container, parent = null, index = null) {
 
     mainDiv.append(nameInput, durationInput, repetitionsInput);
 
+    // Description input
+    const descriptionInput = document.createElement("input");
+    descriptionInput.placeholder = "Description";
+    descriptionInput.value = timer.description || "";
+    descriptionInput.oninput = (e) => (timer.description = e.target.value);
+    descriptionInput.style.width = "95%";
+
+    mainDiv.appendChild(descriptionInput);
+
     // List of sub-timers
     const timerList = document.createElement("div");
     timerList.className = "timer-list";
@@ -127,6 +139,7 @@ function cleanUpTimer(timer) {
     }
     if (timer.duration) cleanedTimer.duration = timer.duration;
     if (timer.repetitions && timer.repetitions > 1) cleanedTimer.repetitions = timer.repetitions;
+    if (timer.description) cleanedTimer.description = timer.description;
 
     if (timer.timers && timer.timers.length > 0) {
         cleanedTimer.timers = timer.timers.map(cleanUpTimer);

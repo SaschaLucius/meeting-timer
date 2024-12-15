@@ -1,31 +1,33 @@
-const TIMER_DEFINITIONS={
-    "Countdown":{ 
-        name:"Countdown",
-        description:'',
-        timer:{ name: 'Countdown', duration: '5:00'}
+const TIMER_DEFINITIONS = {
+    "Countdown": { 
+        name: "Countdown",
+        description: '',
+        timer: { name: 'Countdown', duration: '5:00' }
     },
-    "Wicket Questions":{ 
-        name:"Wicked Questions",
-        description:'"Wicked Questions" is a Liberating Structure designed to surface and explore paradoxes that groups face when navigating complex challenges. This structure helps reveal the “both/and” thinking necessary for innovation and avoids simplistic “either/or” responses. By articulating paradoxical forces influencing behavior, teams can engage in strategic thinking that confronts messy realities, sparks creativity, and balances competing needs.',
-        timer:{name:"Wicked Questions",
+    "Wicked Questions": { 
+        name: "Wicked Questions",
+        description: '"Wicked Questions" is a Liberating Structure designed to surface and explore paradoxes that groups face when navigating complex challenges. This structure helps reveal the “both/and” thinking necessary for innovation and avoids simplistic “either/or” responses. By articulating paradoxical forces influencing behavior, teams can engage in strategic thinking that confronts messy realities, sparks creativity, and balances competing needs.',
+        timer: {
+            name: "Wicked Questions",
             timers: [
-                { name: 'Introduce the concept', duration: '5:00'},
-                { name: 'Each participant generates pairs of paradoxes', duration: '5:00'},
-                { name: 'Each group selects its most impactful', duration: '1:00'},
-                { name: 'Selected Wicked Questions are shared with the whole group', duration: '5:00'},
-                { name: 'Whole group picks out the most powerful ones and further refines the Wicked Questions.', duration: '10:00'},
-        ]}
+                { name: 'Introduce the concept', duration: '5:00', description: 'Introduction to the concept of Wicked Questions.' },
+                { name: 'Each participant generates pairs of paradoxes', duration: '5:00', description: 'Participants generate pairs of paradoxes.' },
+                { name: 'Each group selects its most impactful', duration: '1:00', description: 'Groups select the most impactful paradoxes.' },
+                { name: 'Selected Wicked Questions are shared with the whole group', duration: '5:00', description: 'Sharing selected Wicked Questions with the whole group.' },
+                { name: 'Whole group picks out the most powerful ones and further refines the Wicked Questions.', duration: '10:00', description: 'Refining the most powerful Wicked Questions.' }
+            ]
+        }
     },
-    "1-2-4-All":{
-        name:"1-2-4-All",
+    "1-2-4-All": {
+        name: "1-2-4-All",
         description: '"1-2-4-All" engages everyone in generating ideas by first reflecting individually, then discussing in pairs, then groups of four, and finally as a whole group. It encourages widespread contribution and converges on key ideas quickly.',
-        timer:{
+        timer: {
             name: "1-2-4-All",
             timers: [
-                { name: 'Individual reflection', duration: '1:00' },
-                { name: 'Pair discussion', duration: '2:00' },
-                { name: 'Share with foursome', duration: '4:00' },
-                { name: 'Group discussion', duration: '5:00' }
+                { name: 'Individual reflection', duration: '1:00', description: 'Participants reflect individually.' },
+                { name: 'Pair discussion', duration: '2:00', description: 'Participants discuss in pairs.' },
+                { name: 'Share with foursome', duration: '4:00', description: 'Participants share ideas in groups of four.' },
+                { name: 'Group discussion', duration: '5:00', description: 'Whole group discussion.' }
             ]
         }
     },
