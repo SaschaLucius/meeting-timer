@@ -77,6 +77,8 @@
 </head>
 <body>
 
+<audio id="audio" src="finish.mp3" preload="auto"></audio>
+
 <div class="container">
     <h1>Meeting Timer</h1>
     <div class="timer">
@@ -209,6 +211,7 @@
         await startTimer(cleanedRoot);
         endGlobalTimer();
         showAlertBox(cleanedRoot.name);
+        audio.play();
     }
 
     function saveTimer() {
