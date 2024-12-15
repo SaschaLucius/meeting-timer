@@ -96,7 +96,7 @@ function renderTimers(timer, container, parent = null, index = null) {
     descriptionInput.placeholder = "Description";
     descriptionInput.value = timer.description || "";
     descriptionInput.oninput = (e) => (timer.description = e.target.value);
-    descriptionInput.style.width = "82%";
+    descriptionInput.style.width = "calc(75% + 48px)";
 
     mainDiv.appendChild(descriptionInput);
 
