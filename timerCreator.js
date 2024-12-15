@@ -67,6 +67,7 @@ function renderTimers(timer, container, parent = null, index = null) {
     nameInput.placeholder = "Name";
     nameInput.value = timer.name || "";
     nameInput.required = true;
+    nameInput.style.width = "25%";
     nameInput.oninput = (e) => (timer.name = e.target.value);
 
     // Duration input
@@ -75,6 +76,7 @@ function renderTimers(timer, container, parent = null, index = null) {
     durationInput.value = timer.duration || "";
     durationInput.oninput = (e) => (timer.duration = e.target.value);
     durationInput.disabled = timer.timers && timer.timers.length > 0;
+    durationInput.style.width = "25%";
     durationInput.onchange = (e) => updateTotalDuration();
 
     // Repetitions input
@@ -83,6 +85,7 @@ function renderTimers(timer, container, parent = null, index = null) {
     repetitionsInput.type = "number";
     repetitionsInput.value = timer.repetitions || "";
     repetitionsInput.min = 2;
+    repetitionsInput.style.width = "25%";
     repetitionsInput.oninput = (e) => (timer.repetitions = e.target.value);
     repetitionsInput.onchange = (e) => updateTotalDuration();
 
@@ -93,7 +96,7 @@ function renderTimers(timer, container, parent = null, index = null) {
     descriptionInput.placeholder = "Description";
     descriptionInput.value = timer.description || "";
     descriptionInput.oninput = (e) => (timer.description = e.target.value);
-    descriptionInput.style.width = "95%";
+    descriptionInput.style.width = "82%";
 
     mainDiv.appendChild(descriptionInput);
 
