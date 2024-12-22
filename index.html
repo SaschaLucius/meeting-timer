@@ -165,11 +165,10 @@
         });
     }
 
-    function logEvent(message) {
+    function logEvent(message, time = new Date().toLocaleTimeString()) {
         try {
             const logContent = document.getElementById("logContent");
             const logItem = document.createElement("div");
-            const time = new Date().toLocaleTimeString();
             logItem.className = "log-item";
             logItem.innerText = `[${time}] ${message}`;
             logContent.appendChild(logItem);
@@ -192,10 +191,13 @@
         const { type, time, isPaused } = event.data;
         switch (type) {
             case 'updateDisplay':
-                updateDisplay({ time });
+                updateDisplay(event.data);
                 break;
             case 'togglePauseResume':
                 document.getElementById("pauseResumeButton").innerText = isPaused ? "Resume" : "Pause";
+                break;
+            case 'logEvent':
+                logEvent(event.data.message, event.data.time);
                 break;
             default:
                 console.log("Main: Unhandled message recieved:", event.data);
@@ -314,45 +316,9 @@
     }
 
     async function startTimer(timer) {
-        const { name, repetitions, timers} = timer;
-
-        const errorMessageElement = document.getElementById("errorMessage");
-        errorMessageElement.innerText = "";
-
-        try {
-            if(repetitions > 1){
-                logEvent(`Starting '${name}' (${repetitions} repetitions).`);
-                for (let currentRep = repetitions; currentRep > 0; currentRep--) {
-                    updateDisplay({ repetitions: currentRep });
-                    await startTimer({...timer, repetitions: undefined, name:`${name} (${repetitions-currentRep+1}/${repetitions})`});
-                }
-                return;
-            }
-
-            if(timers){
-                await startSeriesOfTimers(timer)
-            } else {
-                await startSingleTimer(timer)
-            }
-        } catch (error) {
-            errorMessageElement.innerText = "Please try again. " + error.message;
-            console.error("JSON Parse Error:", error);
-        }
-    }
-
-    async function startSingleTimer(timer) {
-        const { name, duration, description } = timer;
-        console.log("Starting timer:", description);
-
-        let remainingTime = hmsToSeconds(duration); // Corrected to start at full duration
-
-        updateDisplay({ name, time: remainingTime, description }); // Initial display update
-        logEvent(`Starting '${name}' with ${duration}.`);
-
-        TIMER_WORKER.postMessage({ command: 'start', seconds: remainingTime });
-
-        // Wait for the timer to complete
-        await new Promise(resolve => {
+        TIMER_WORKER.postMessage({ command: 'startTimer', timer });
+         // Wait for the timer to complete
+         await new Promise(resolve => {
             const handleMessage = (event) => {
                 if (event.data.type === 'completed') {
                     TIMER_WORKER.removeEventListener('message', handleMessage);
@@ -363,15 +329,6 @@
         });
 
         logEvent(`Timer '${name}' completed!`);
-    }
-
-    async function startSeriesOfTimers(timer) {
-        const { name, timers} = timer;
-        logEvent(`Starting series '${name}'.`);
-        for (let i = 0; i < timers.length; i++) {
-            await startTimer(timers[i]);
-        }
-        logEvent(`Series '${name}' completed!`);
     }
 
     function showSelectedTimer() {

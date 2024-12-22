@@ -65,7 +65,7 @@ class Timer {
             // Calculate time for the next update based on the remaining time
             const nextUpdateTime = Math.min(1000, this.timeLeft); // Update in 1s increments or less if close to 0
                 
-            postMessage({ type: 'updateDisplay', time: Math.ceil(this.timeLeft / 1000) }); // Update the display
+            postUpdateDisplay({ time: Math.ceil(this.timeLeft / 1000) }); // Update the display
             await this.delay(nextUpdateTime); // Wait for delay
         }
 
@@ -78,8 +78,8 @@ class Timer {
     completeTimer() {
         this.isRunning = false;
         this.elapsedTime = 0;
-        postMessage({ type: 'completed' }); // Send completed message
-        postMessage({ type: 'updateDisplay', time: 0 });
+        postMessage({ type: 'stepCompleted' }); // Send completed message
+        postUpdateDisplay({ time: 0 });
     }
 
     // Cancels the timer and resets the time
@@ -88,8 +88,8 @@ class Timer {
         this.isPaused = false;
         this.timeLeft = 0;
         this.elapsedTime = 0;
-        postMessage({ type: 'updateDisplay', time: 0 });
-        postMessage({ type: 'togglePauseResume', isPaused: false });
+        postUpdateDisplay({ time: 0 });
+        postTogglePauseResume(false);
     }
 
     // Adds seconds to the current timer time
@@ -97,7 +97,7 @@ class Timer {
         if (this.isRunning) {
             this.seconds += seconds;
             this.timeLeft += seconds * 1000;
-            postMessage({ type: 'updateDisplay', time: Math.ceil(this.timeLeft / 1000) }); // Update the display
+            postUpdateDisplay({ time: Math.ceil(this.timeLeft / 1000) }); // Update the display
         }
     }
 
@@ -114,18 +114,105 @@ class Timer {
                 this.isPaused = true;
             }
 
-            postMessage({ type: 'togglePauseResume', isPaused: this.isPaused });
+            postTogglePauseResume(this.isPaused);
         } else {
-            postMessage({ type: 'togglePauseResume', isPaused: false });
+            postTogglePauseResume(false);
         }
     }
 }
 
 const TIMER_INSTANCE = new Timer();
 
+// Converts HH:MM:SS, MM:SS, or SS format to total seconds
+function hmsToSeconds(hms) {
+    if (typeof hms === 'number') {
+        return hms;
+    }
+    const parts = hms.split(':').map(Number); // Convert each part to a number
+    let totalSeconds = 0;
+
+    if (parts.length === 3) {
+        // HH:MM:SS format
+        const [hours, minutes, seconds] = parts;
+        totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    } else if (parts.length === 2) {
+        // MM:SS format
+        const [minutes, seconds] = parts;
+        totalSeconds = minutes * 60 + seconds;
+    } else if (parts.length === 1) {
+        // SS format
+        totalSeconds = parts[0];
+    }
+
+    return totalSeconds;
+}
+
+function postUpdateDisplay({ name, time, repetitions, description }) {
+    postMessage({ type: 'updateDisplay', name, time, repetitions, description });
+}
+
+function postTogglePauseResume(isPaused) {
+    postMessage({ type: 'togglePauseResume', isPaused });
+}
+
+function postLogEvent(message) {
+    const time = new Date().toLocaleTimeString();
+    postMessage({ type: 'logEvent', message, time});
+}
+
+async function startTimer(timer, rootTimer = false) {
+    const { name, repetitions, timers} = timer;
+    try {
+        if(repetitions > 1){
+            postLogEvent(`Starting '${name}' (${repetitions} repetitions).`);
+            for (let currentRep = repetitions; currentRep > 0; currentRep--) {
+                postUpdateDisplay({ repetitions: currentRep });
+                await startTimer({...timer, repetitions: undefined, name:`${name} (${repetitions-currentRep+1}/${repetitions})`});
+            }
+            return;
+        }
+
+        if(timers){
+            await startSeriesOfTimers(timer)
+        } else {
+            await startSingleTimer(timer)
+        }
+        if(rootTimer){
+            postMessage({ type: 'completed' }); // Send completed message
+        }
+    } catch (error) {
+        console.error("JSON Parse Error:", error);
+    }
+}
+
+async function startSingleTimer(timer) {
+    const { name, duration, description } = timer;
+    console.log("Starting timer:", description);
+
+    let remainingTime = hmsToSeconds(duration); // Corrected to start at full duration
+
+    postUpdateDisplay({ name, time: remainingTime, description }); // Initial display update
+    postLogEvent(`Starting '${name}' with ${duration}.`);
+    
+
+    // Wait for the timer to complete
+    await TIMER_INSTANCE.start(remainingTime);
+
+    postLogEvent(`Timer '${name}' completed!`);
+}
+
+async function startSeriesOfTimers(timer) {
+    const { name, timers} = timer;
+    postLogEvent(`Starting series '${name}'.`);
+    for (let i = 0; i < timers.length; i++) {
+        await startTimer(timers[i]);
+    }
+    postLogEvent(`Series '${name}' completed!`);
+}
+
 onmessage = function(event) {
     console.log('Worker: Command received from Main:', event.data);
-    const { command, seconds } = event.data;
+    const { command, seconds, timer } = event.data;
     switch (command) {
         case 'start':
             TIMER_INSTANCE.start(seconds);
@@ -139,6 +226,9 @@ onmessage = function(event) {
         case 'togglePauseResume':
             TIMER_INSTANCE.togglePauseResume();
             break;
+        case 'startTimer':
+                startTimer(timer, true);
+                break;
         default:
             console.error('Worker: Unhandled command received:', command);
             break;
