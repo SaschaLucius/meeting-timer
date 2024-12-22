@@ -79,6 +79,7 @@ class Timer {
         this.isRunning = false;
         this.elapsedTime = 0;
         postMessage({ type: 'stepCompleted' }); // Send completed message
+        sendNotification(`Timer Step completed!`);
         postUpdateDisplay({ time: 0 });
     }
 
@@ -179,6 +180,7 @@ async function startTimer(timer, rootTimer = false) {
         }
         if(rootTimer){
             postMessage({ type: 'completed' }); // Send completed message
+            sendNotification(`Timer '${name}' completed!`);
         }
     } catch (error) {
         console.error("JSON Parse Error:", error);
@@ -208,6 +210,12 @@ async function startSeriesOfTimers(timer) {
         await startTimer(timers[i]);
     }
     postLogEvent(`Series '${name}' completed!`);
+}
+
+function sendNotification(message) {
+    if (Notification.permission === "granted") {
+        new Notification(message);
+    }
 }
 
 onmessage = function(event) {

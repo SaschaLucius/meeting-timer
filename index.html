@@ -174,9 +174,6 @@
             logContent.appendChild(logItem);
             logContent.scrollTop = logContent.scrollHeight;
             console.log(message);
-
-            // Display as a notification if permission is granted
-            NOTIFICATION_MANAGER.sendNotification(message);
         } catch (error) {
             console.error("Log event failed:", error);
         }
