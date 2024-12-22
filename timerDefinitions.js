@@ -20,40 +20,51 @@ const TIMER_DEFINITIONS = {
     },
     "1-2-4-All": {
         name: "1-2-4-All",
-        description: '"1-2-4-All" engages everyone in generating ideas by first reflecting individually, then discussing in pairs, then groups of four, and finally as a whole group. It encourages widespread contribution and converges on key ideas quickly.',
+        description: "\"1-2-4-All\" engages everyone in generating ideas by first reflecting individually, then discussing in pairs, then groups of four, and finally as a whole group. It encourages widespread contribution and quickly converges on key ideas through a structured process.",
         timer: {
             name: "1-2-4-All",
             timers: [
-                { name: 'Individual reflection', duration: '1:00', description: 'Participants reflect individually.' },
-                { name: 'Pair discussion', duration: '2:00', description: 'Participants discuss in pairs.' },
-                { name: 'Share with foursome', duration: '4:00', description: 'Participants share ideas in groups of four.' },
-                { name: 'Group discussion', duration: '5:00', description: 'Whole group discussion.' }
+                { name: "Silent self-reflection", duration: "1:00", description: "Individuals reflect silently on a shared challenge framed as a question (e.g., 'What opportunities do you see for making progress on this challenge?')." },
+                { name: "Pair discussion", duration: "2:00", description: "Participants discuss and build on ideas from self-reflection in pairs." },
+                { name: "Share in foursomes", duration: "4:00", description: "Participants share and develop ideas from their pairs in groups of four, identifying similarities and differences." },
+                { name: "Whole group discussion", duration: "5:00", description: "Each group shares one standout idea with the whole group. Repeat as needed." }
+            ]
+        }
+    },
+    "15% Solution": {
+        name: "15% Solution",
+        description: "\"15% Solution\" helps participants identify actions within their control that they can take immediately to create progress. It shifts focus away from barriers and toward actionable steps, empowering individuals and teams to discover their potential.",
+        timer: {
+            name: "15% Solution",
+            timers: [
+                { name: "Generate individual 15% Solutions", duration: "5:00", "description": "Each person works alone to create a list of their own 15% Solutions." },
+                { name: "Share in small groups", duration: "3:00", repetitions: 3, "description": "Participants take turns sharing their ideas with a group of 2 to 4 members, one person at a time." },
+                { name: "Group consultation", duration: "5:00", repetitions: 3, "description": "Group members provide feedback, ask clarifying questions, and offer advice for each person's 15% Solutions." }
             ]
         }
     },
     "TRIZ": {
         name: "TRIZ",
-        description: '"TRIZ" is a problem-solving Liberating Structure that uses reverse brainstorming. Participants imagine ways to achieve the worst possible outcome and then identify how these pitfalls might be avoided or reversed.',
+        description: "\"TRIZ\" is a problem-solving Liberating Structure that uses reverse brainstorming. Participants imagine ways to achieve the worst possible outcome and then identify how these pitfalls might be avoided or reversed. It creates space for innovation by identifying and stopping counterproductive behaviors.",
         timer: {
             name: "TRIZ",
             timers: [
-                { name: 'Identify the worst outcome imaginable', duration: '5:00' },
-                { name: 'Brainstorm ways to achieve that outcome', duration: '5:00' },
-                { name: 'Reflect on how current practices might be contributing', duration: '3:00' },
-                { name: 'Plan actions to avoid those pitfalls', duration: '5:00' }
+                { name: "Introduction and identify unwanted result", duration: "5:00", description: "Introduce TRIZ, identify an unwanted result, and confirm the group's agreement." },
+                { name: "Brainstorm ways to achieve the unwanted result", duration: "10:00", description: "Use 1-2-4-All to list all actions that could lead to the unwanted result." },
+                { name: "Identify current practices contributing to the result", duration: "10:00", description: "Use 1-2-4-All to identify current actions or behaviors similar to those on the first list." },
+                { name: "Plan actions to stop harmful practices", duration: "10:00", description: "Use 1-2-4-All to create first steps to eliminate identified counterproductive actions or behaviors." }
             ]
         }
     },
     "Impromptu Networking": {
         name: "Impromptu Networking",
-        description: '"Impromptu Networking" encourages participants to meet new people and share ideas rapidly. It’s designed to quickly get everyone’s ideas into the room and energize participants at the start of a session.',
+        description: "\"Impromptu Networking\" encourages participants to meet new people and share ideas rapidly. It helps surface diverse perspectives, build connections, and energize participants at the start of a session.",
         timer: {
             name: "Impromptu Networking",
             timers: [
-                { name: 'Introduce concept and instructions', duration: '2:00' },
-                { name: 'Round 1: Pair up and discuss', duration: '3:00' },
-                { name: 'Round 2: Switch partners and discuss', duration: '3:00' },
-                { name: 'Round 3: Switch partners again and discuss', duration: '3:00' }
+                { name: "Round 1", duration: "5:00", description: "Two participants take turns answering the challenge question (2 minutes per person)." },
+                { name: "Round 2", duration: "5:00", description: "Participants switch partners and repeat the process with a new connection." },
+                { name: "Round 3", duration: "5:00", description: "Participants meet a third partner to continue sharing and building ideas." }
             ]
         }
     },
