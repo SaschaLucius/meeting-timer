@@ -15,14 +15,15 @@
         timers: [],
         description: ""
     };
-    const subTimer = {
+    
+    function addSubTimer() {
+        const subTimer = {
             name: "",
             duration: "",
             repetitions: "",
             timers: [],
             description: ""
         };
-    function addSubTimer() {
         timer.duration = "";
         if(timer.timers){
             timer.timers.push(subTimer);
@@ -31,7 +32,7 @@
         }
     }
 
-    export let deleteMyself = () => {}
+    export let deleteMyself = () => {};
 
 </script>
 
@@ -48,7 +49,10 @@
       {#if timer.timers !== undefined && timer.timers.length > 0}
         {#each timer.timers as item, i}
             <div class="sub-timer">
-                <Self bind:timer={timer.timers[i]} deleteMyself={() => timer.timers?.splice(i, 1)}></Self>
+                <Self bind:timer={timer.timers[i]} deleteMyself={() => {
+                    timer.timers?.splice(i, 1)
+                    timer.timers = timer.timers
+                }}></Self>
         </div>
         {/each}
       
