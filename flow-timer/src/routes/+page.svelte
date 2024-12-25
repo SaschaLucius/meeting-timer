@@ -1,2 +1,330 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+    import NotificationManager from '$lib/notificationManager.js';
+    import NoSleep from '$lib/NoSleep';
+    import TimerBuilder from '$lib/TimerBuilder';
+
+    const NOTIFICATION_MANAGER = new NotificationManager();
+
+    let globalStartTime = null; // Global variable to store the start time
+    const NO_SLEEP_MANAGER = new NoSleepManager();
+
+    // Populate the select box with options from liberatingStructures
+    window.onload = function() {
+        updatePredefinedTimers();
+    };
+
+    // ####### Helper Functions #######
+
+    function updateDisplay({ name, time, repetitions, description }) {
+        if (name !== undefined) document.getElementById("timerName").innerText = name;
+        if (time !== undefined) document.getElementById("remainingTime").innerText = secondsToHMS(time);
+        if (repetitions !== undefined) document.getElementById("repetitionsLeft").innerText = repetitions;
+        if (description !== undefined) document.getElementById("timerDescription").innerText = description;
+    }
+
+    function toggleButtons(disable) {
+        document.querySelectorAll("button").forEach(btn => {
+            const hasKeepEnabled = btn.hasAttribute("keepEnabled");
+            if (!hasKeepEnabled) {
+                btn.disabled = disable;
+            }
+        });
+    }
+
+    function logEvent(message, time = new Date().toLocaleTimeString()) {
+        try {
+            const logContent = document.getElementById("logContent");
+            const logItem = document.createElement("div");
+            logItem.className = "log-item";
+            logItem.innerText = `[${time}] ${message}`;
+            logContent.appendChild(logItem);
+            logContent.scrollTop = logContent.scrollHeight;
+            console.log(message);
+        } catch (error) {
+            console.error("Log event failed:", error);
+        }
+    }
+
+    // ####### Woker Setup #######
+    const TIMER_WORKER = new Worker(new URL('./timeWorker.js', import.meta.url));
+
+    TIMER_WORKER.onmessage = function(event) {
+        console.log("Main: Message received from worker:", event.data);
+        const { type, time, isPaused } = event.data;
+        switch (type) {
+            case 'updateDisplay':
+                updateDisplay(event.data);
+                break;
+            case 'togglePauseResume':
+                document.getElementById("pauseResumeButton").innerText = isPaused ? "Resume" : "Pause";
+                break;
+            case 'logEvent':
+                logEvent(event.data.message, event.data.time);
+                break;
+            default:
+                console.log("Main: Unhandled message recieved:", event.data);
+        }
+    };
+
+    // ####### Button Handler #######
+
+    async function onclickStartTimer() {
+        await NOTIFICATION_MANAGER.requestNotificationPermission();
+        const cleanedRoot = cleanUpTimer(rootTimer);
+        startGlobalTimer();
+        await startTimer(cleanedRoot);
+        endGlobalTimer();
+        showAlertBox(cleanedRoot.name);
+        audio.play();
+    }
+
+    function saveTimer() {
+        const cleanedRoot = cleanUpTimer(rootTimer);
+        const savedTimers = JSON.parse(localStorage.getItem('savedTimers')) || {};
+
+        if (savedTimers[cleanedRoot.name]) {
+            if (!confirm(`Timer '${cleanedRoot.name}' already exists. Do you want to overwrite it?`)) {
+                return; // Exit if the user declines to overwrite
+            }
+        }
+
+        savedTimers[cleanedRoot.name] = cleanedRoot;
+        localStorage.setItem('savedTimers', JSON.stringify(savedTimers));
+        updatePredefinedTimers();
+
+        // Select the newly saved timer in the selection
+        const selectBox = document.getElementById('liberatingStructureSelect');
+        selectBox.value = cleanedRoot.name;
+        showSelectedTimer();
+    }
+
+    function displayTotalTime() {
+        const totalSeconds = calculateTotalTime(rootTimer);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        alert(`Total Duration: ${hours}h ${minutes}m ${seconds}s`);
+    }
+
+    function togglePauseResume() {
+        TIMER_WORKER.postMessage({ command: 'togglePauseResume' });
+    }
+
+    function cancelTimer() {
+        TIMER_WORKER.postMessage({ command: 'cancel' });
+    }
+
+    function addOneMinute() {
+        TIMER_WORKER.postMessage({ command: 'addTime', seconds: 60 }); // Adds 60 seconds (1 minute)
+    }
+
+    function clearLog() {
+        const logContent = document.getElementById("logContent");
+        logContent.innerHTML = "";
+    }
+
+    // ####### Timer Selection #######
+
+    function updatePredefinedTimers() {
+        const selectBox = document.getElementById('liberatingStructureSelect');
+        selectBox.innerHTML = ''; // Clear existing options
+
+        // Add predefined timers from liberatingStructures
+        for (const key in TIMER_DEFINITIONS) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = TIMER_DEFINITIONS[key].name;
+            selectBox.appendChild(option);
+        }
+
+        // Add saved timers from local storage
+        const savedTimers = JSON.parse(localStorage.getItem('savedTimers')) || {};
+        for (const key in savedTimers) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = savedTimers[key].name;
+            selectBox.appendChild(option);
+        }
+        showSelectedTimer();
+    }
+
+    // ####### Timer Functions #######
+
+    function startGlobalTimer() {
+        globalStartTime = Date.now(); // Start the global timer
+
+        const hide = document.getElementById("toHide");
+        hide.style.display = "none";
+        NO_SLEEP_MANAGER.enable();
+
+        toggleButtons(true); // Disable buttons at the start
+        document.getElementById("timerControls").style.display = "block"; // Show timer controls
+    }
+
+    function endGlobalTimer() {
+        if (globalStartTime !== null) {
+            const elapsedTime = Math.floor((Date.now() - globalStartTime) / 1000); // Calculate elapsed time in seconds
+            logEvent(`Total time elapsed: ${elapsedTime} seconds.`);
+            globalStartTime = null; // Reset the global timer
+
+            const hide = document.getElementById("toHide");
+            hide.style.display = "flex";
+            NO_SLEEP_MANAGER.disable();
+
+            toggleButtons(false); // Enable buttons at the end
+            document.getElementById("timerControls").style.display = "none"; // Hide timer controls
+        }
+    }
+
+    async function startTimer(timer) {
+        TIMER_WORKER.postMessage({ command: 'startTimer', timer });
+        // Wait for the timer to complete
+        await new Promise(resolve => {
+            const handleMessage = (event) => {
+                if (event.data.type === 'completed') {
+                    TIMER_WORKER.removeEventListener('message', handleMessage);
+                    resolve();
+                }
+            };
+            TIMER_WORKER.addEventListener('message', handleMessage);
+        });
+
+        logEvent(`Timer '${name}' completed!`);
+    }
+
+    function showSelectedTimer() {
+        const selectBox = document.getElementById('liberatingStructureSelect');
+        const selectedStructureKey = selectBox.value;
+        const selectedStructure = TIMER_DEFINITIONS[selectedStructureKey] || JSON.parse(localStorage.getItem('savedTimers'))[selectedStructureKey];
+        const errorMessageElement = document.getElementById("errorMessage");
+
+        try {
+            if (selectedStructure && selectedStructure.timer) {
+                rootTimer = selectedStructure.timer;
+            } else {
+                rootTimer = selectedStructure;
+            }
+            renderTimers(rootTimer, document.getElementById("timerBuilder"));
+            errorMessageElement.innerText = ""; // Clear any previous error message
+        } catch (error) {
+            errorMessageElement.innerText = "Invalid JSON structure. Please try again. " + error.message;
+            console.error("JSON Parse Error:", error);
+        }
+    }
+
+    // Initialize root timer UI
+    renderTimers(rootTimer, document.getElementById("timerBuilder"));
+</script>
+
+<!--script src="NoSleep.js"></script> https://github.com/richtr/NoSleep.js -->
+<!--script src="utils.js"></script>
+<script src="noSleepManager.js"></script>
+<script src="notificationManager.js"></script>
+<script src="timerDefinitions.js"></script>
+<script src="timerCreator.js"></script-->
+
+<audio id="audio" src="finish.mp3" preload="auto"></audio>
+
+<div class="container">
+    <h1>Meeting Timer</h1>
+    <div class="timer">
+        <div class="timer-name"><span id="timerName">-</span></div>
+        <div class="timer-description">Description: <span id="timerDescription">-</span></div>
+        <div class="timer-info">Remaining Time: <span id="remainingTime">HH:MM:SS</span></div>
+        <div class="timer-info">Repetitions Left: <span id="repetitionsLeft">0</span></div>
+    </div>
+
+    <div class="container" id="toHide">    
+        <div>
+            <label for="liberatingStructureSelect">Timer:</label>
+            <select id="liberatingStructureSelect" onchange={() => showSelectedTimer()}>
+                <!--option value="" disabled selected>Select a timer</option-->
+                <!-- Options will be added here dynamically -->
+            </select>
+            <button onclick={() => onclickStartTimer()}>Start</button>
+        </div>
+        
+        <br/>
+    
+        <TimerBuilder></TimerBuilder>
+    
+        <br/>
+    
+    </div>
+    
+    <div id="timerControls" style="display: none;">        
+        <button type="button" keepEnabled style="width: 80px;" id="pauseResumeButton" onclick={() => togglePauseResume()}>Pause</button>
+        <button type="button" keepEnabled onclick={() => cancelTimer()}>Next</button>
+        <button type="button" keepEnabled onclick={() => addOneMinute()}>Add 1 Minute</button>
+    </div>
+    
+    
+    <h2>Log</h2>
+    <button type="button" keepEnabled onclick={() => clearLog()}>Clear</button>
+    <div class="logContent" id="logContent">
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 720px;
+        margin: auto;
+    }
+    .timer {
+        margin-bottom: 20px;
+        padding: 20px;
+        text-align: center;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .timer-name {
+        font-size: 24px;
+    }
+    .timer-info {
+        font-size: 18px;
+    }
+    .logContent {
+        margin-top: 10px;
+        max-height: 200px;
+        overflow-y: scroll;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 100%;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .log-item {
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #555;
+    }
+    button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+    button { margin: 5px; padding: 5px 10px; }
+</style>
