@@ -126,3 +126,5 @@ function showAlertBox(timerName) {
     // Add overlay to the body
     document.body.appendChild(overlay);
 }
+
+export { hmsToSeconds, secondsToHMS, calculateTotalTime, showAlertBox };
