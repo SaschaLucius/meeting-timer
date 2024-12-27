@@ -10,7 +10,7 @@
     }
     export let timer: Timer = {
         name: "",
-        duration: "00:00:00",
+        duration: "",
         repetitions: "",
         timers: [],
         description: ""

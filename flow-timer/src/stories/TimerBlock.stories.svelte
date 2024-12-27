@@ -4,7 +4,7 @@
 
   // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
   const { Story } = defineMeta({
-    title: 'Example/TimerBlock',
+    title: 'TimerBlock',
     component: TimerBlock,
     tags: ['autodocs']
   });
@@ -13,10 +13,19 @@
 <!-- More on writing stories with args: https://storybook.js.org/docs/writing-stories/args -->
 <Story name="Default" args={{ }}/>
 
-<Story name="Child 1" args={{ timer: { 
+<Story name="No Child" args={{ timer: { 
+  name: "Countdown",
+  description: 'this is a description',
+  duration: '5:00',
+  repetitions: 3
+} }} />
+
+<Story name="Childs 1" args={{ timer: { 
   name: "Countdown",
   description: '',
-  timer: { name: 'Countdown', duration: '5:00' }
+  timers: [
+                { name: 'Introduce the concept', duration: '5:00', description: 'Introduction to the concept of Wicked Questions.' },
+            ]
 } }} />
 
 <Story name="Childs 2" args={{ timer: { 
@@ -28,6 +37,13 @@
             ]
 } }} />
 
-<Story name="SubChild 1" args={{ timer: {} }} />
-
-<Story name="SubChilds 2" args={{ timer: {} }} />
+<Story name="SubChilds" args={{ timer: { 
+  name: "Countdown",
+  description: '',
+  timers: [
+                { name: 'Introduce the concept1', timers: [
+                  { name: 'Introduce the concept2', duration: '5:00', description: 'Introduction to the concept of Wicked Questions.' }
+                  ] 
+              }
+            ]
+} }} />

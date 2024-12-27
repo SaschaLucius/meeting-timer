@@ -4,7 +4,7 @@
 
   // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
   const { Story } = defineMeta({
-    title: 'Example/TimerDisplay',
+    title: 'TimerDisplay',
     component: TimerDisplay,
     tags: ['autodocs']
   });
@@ -15,7 +15,7 @@
 
 <Story name="With Values" args={{
   name: "Countdown",
-  description: '',
+  description: 'is is a description',
   time: 300,
   repetitions: 3
 } } />
