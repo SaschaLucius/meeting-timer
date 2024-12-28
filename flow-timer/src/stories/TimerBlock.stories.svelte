@@ -16,7 +16,7 @@
 <Story name="No Child" args={{ timer: { 
   name: "Countdown",
   description: 'this is a description',
-  duration: '5:00',
+  duration: 300,
   repetitions: 3
 } }} />
 
@@ -24,7 +24,7 @@
   name: "Countdown",
   description: '',
   timers: [
-                { name: 'Introduce the concept', duration: '5:00', description: 'Introduction to the concept of Wicked Questions.' },
+                { name: 'Introduce the concept', duration: 300, description: 'Introduction to the concept of Wicked Questions.' },
             ]
 } }} />
 
@@ -32,8 +32,8 @@
   name: "Countdown",
   description: '',
   timers: [
-                { name: 'Introduce the concept', duration: '5:00', description: 'Introduction to the concept of Wicked Questions.' },
-                { name: 'Each participant generates pairs of paradoxes', duration: '5:00', description: 'Participants generate pairs of paradoxes.' },
+                { name: 'Introduce the concept', duration: 300, description: 'Introduction to the concept of Wicked Questions.' },
+                { name: 'Each participant generates pairs of paradoxes', duration: 300, description: 'Participants generate pairs of paradoxes.' },
             ]
 } }} />
 
@@ -42,7 +42,7 @@
   description: '',
   timers: [
                 { name: 'Introduce the concept1', timers: [
-                  { name: 'Introduce the concept2', duration: '5:00', description: 'Introduction to the concept of Wicked Questions.' }
+                  { name: 'Introduce the concept2', duration: 300, description: 'Introduction to the concept of Wicked Questions.' }
                   ] 
               }
             ]
