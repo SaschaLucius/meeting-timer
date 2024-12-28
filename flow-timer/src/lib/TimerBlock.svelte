@@ -4,21 +4,21 @@
 	interface Timer {
 		name: string;
 		duration?: number;
-		repetitions?: string;
+		repetitions?: number;
 		timers?: Timer[] | undefined;
 		description?: string;
 	}
 	export let timer: Timer = {
 		name: '',
 		duration: undefined,
-		repetitions: '',
+		repetitions: undefined,
 		timers: [],
 		description: ''
 	};
 
 	export let editable = true;
 
-	// Converts HH:MM:SS, MM:SS, or SS format to total seconds
+	// Converts HH:mm:ss, mm:ss, or ss format to total seconds
 	function hmsToSeconds(hms: string | undefined): number | undefined {
 		if (hms === undefined) {
 			return undefined;
@@ -30,7 +30,7 @@
 		let totalSeconds = 0;
 
 		if (parts.length === 3) {
-			// HH:MM:SS format
+			// HH:mm:ss format
 			const [hours, minutes, seconds] = parts;
 			totalSeconds = hours * 3600 + minutes * 60 + seconds;
 		} else if (parts.length === 2) {
@@ -45,7 +45,7 @@
 		return totalSeconds;
 	}
 
-	// Converts total seconds to HH:MM:SS format
+	// Converts total seconds to HH:mm:ss format
 	function secondsToHMS(totalSeconds: number | undefined): string {
 		if (totalSeconds === undefined) return '';
 		const hours = Math.floor(totalSeconds / 3600);
@@ -60,7 +60,7 @@
 		const subTimer = {
 			name: '',
 			duration: timer.duration,
-			repetitions: '',
+			repetitions: undefined,
 			timers: [],
 			description: ''
 		};
@@ -83,16 +83,16 @@
 	{/if}
 	<input placeholder="Name" bind:value={timer.name} required style="width: 25%;" />
 	<input
-		placeholder="Duration HH:MM:SS"
+		placeholder="Duration in HH:mm:ss"
 		value={secondsToHMS(timer.duration)}
-		onblur={(event) => (timer.duration = hmsToSeconds(event.target?.value))}
+		onblur={(event) => (timer.duration = hmsToSeconds((event.target as HTMLInputElement)?.value))}
 		disabled={timer.timers !== undefined && timer.timers.length > 0}
 		style="width: 25%;"
 	/>
 	<input
 		placeholder="Repetitions"
 		type="number"
-		min="2"
+		min="1"
 		bind:value={timer.repetitions}
 		style="width: 25%;"
 	/>
