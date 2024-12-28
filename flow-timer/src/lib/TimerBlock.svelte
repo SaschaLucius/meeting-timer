@@ -59,7 +59,7 @@
 	function addSubTimer() {
 		const subTimer = {
 			name: '',
-			duration: undefined,
+			duration: timer.duration,
 			repetitions: '',
 			timers: [],
 			description: ''
@@ -84,7 +84,7 @@
 	<input placeholder="Name" bind:value={timer.name} required style="width: 25%;" />
 	<input
 		placeholder="Duration HH:MM:SS"
-		bind:value={() => secondsToHMS(timer.duration), () => {}}
+		value={secondsToHMS(timer.duration)}
 		onblur={(event) => (timer.duration = hmsToSeconds(event.target?.value))}
 		disabled={timer.timers !== undefined && timer.timers.length > 0}
 		style="width: 25%;"
