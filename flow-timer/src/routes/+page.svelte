@@ -5,16 +5,18 @@
 	import TimerDisplay from '$lib/TimerDisplay.svelte';
 	import Log from '$lib/Log.svelte';
 	import { onMount } from 'svelte';
-    import TIMER_DEFINITIONS from '$lib/timerDefinitions';
-    import {showAlertBox} from '$lib/utils';
+	import TIMER_DEFINITIONS from '$lib/timerDefinitions';
+	import { showAlertBox } from '$lib/utils';
+	import Bell from '$lib/Bell.svelte';
 
 	const NOTIFICATION_MANAGER = new NotificationManager();
 
 	let globalStartTime = null; // Global variable to store the start time
 	let noSleepEnabled = false;
-    let rootTimer = {};
-    let timerDisplay = undefined;
-    let log = undefined;
+	let rootTimer = {};
+	let timerDisplay = undefined;
+	let log = undefined;
+	let bell = undefined;
 
 	// Populate the select box with options from liberatingStructures
 
@@ -36,13 +38,13 @@
 				const { type, time, isPaused } = event.data;
 				switch (type) {
 					case 'updateDisplay':
-                    timerDisplay.updateDisplay(event.data);
+						timerDisplay.updateDisplay(event.data);
 						break;
 					case 'togglePauseResume':
 						document.getElementById('pauseResumeButton').innerText = isPaused ? 'Resume' : 'Pause';
 						break;
 					case 'logEvent':
-                    log.logEvent(event.data.message, event.data.time);
+						log.logEvent(event.data.message, event.data.time);
 						break;
 					default:
 						console.error('Main: Unhandled message recieved:', event.data);
@@ -70,7 +72,7 @@
 		await startTimer(rootTimer);
 		endGlobalTimer();
 		showAlertBox(rootTimer.name);
-		audio.play();
+		bell.play();
 	}
 
 	function togglePauseResume() {
@@ -192,9 +194,8 @@
 <script src="timerDefinitions.js"></script>
 <script src="timerCreator.js"></script-->
 
-<audio id="audio" src="finish.mp3" preload="auto"></audio>
-
 <NoSleep bind:enabled={noSleepEnabled} />
+<Bell bind:this={bell} />
 
 <div class="container">
 	<h1>Meeting Timer</h1>
