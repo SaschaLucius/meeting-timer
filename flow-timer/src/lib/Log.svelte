@@ -41,4 +41,25 @@
 		font-size: 14px;
 		color: #555;
 	}
+    button {
+		padding: 10px 20px;
+		margin: 5px;
+		border: none;
+		background-color: #007bff;
+		color: #fff;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 16px;
+	}
+	button:hover {
+		background-color: #0056b3;
+	}
+	button:disabled {
+		background-color: #ccc;
+		cursor: not-allowed;
+	}
+	button {
+		margin: 5px;
+		padding: 5px 10px;
+	}
 </style>

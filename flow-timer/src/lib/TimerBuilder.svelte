@@ -1,6 +1,20 @@
 <script lang="ts">
 	import TimerBlock from './TimerBlock.svelte';
 
+    interface Timer {
+		name: string;
+		duration?: number;
+		repetitions?: number;
+		timers?: Timer[];
+		description?: string;
+	}
+
+    export let editable = true;
+
+    export let timer: Timer = { name: 'Timer', timers: [] };
+
+	$: totalDuration = calculateTotalTime(timer);
+
 	// Converts total seconds to HH:mm:ss format
 	function secondsToHMS(totalSeconds: number | undefined): string {
 		if (totalSeconds === undefined) return '';
@@ -11,18 +25,6 @@
 		// Format each unit to be two digits
 		return [hours, minutes, seconds].map((unit) => String(unit).padStart(2, '0')).join(':');
 	}
-
-	interface Timer {
-		name: string;
-		duration?: number;
-		repetitions?: number;
-		timers?: Timer[];
-		description?: string;
-	}
-
-	export let timer: Timer = { name: 'Timer', timers: [] };
-
-	$: totalDuration = calculateTotalTime(timer);
 
 	function calculateTotalTime(timer: Timer) {
 		let totalTime = 0;
@@ -83,7 +85,7 @@
 </script>
 
 <div>
-	<TimerBlock bind:timer />
+	<TimerBlock bind:timer bind:editable={editable} />
 	<div class="timer-info">
 		Total Duration: <span id="totalDuration">{secondsToHMS(totalDuration)}</span>
 	</div>

@@ -267,3 +267,5 @@ const TIMER_DEFINITIONS = {
         }
     }
 }
+
+export default TIMER_DEFINITIONS;

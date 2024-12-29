@@ -5,11 +5,16 @@
 	import TimerDisplay from '$lib/TimerDisplay.svelte';
 	import Log from '$lib/Log.svelte';
 	import { onMount } from 'svelte';
+    import TIMER_DEFINITIONS from '$lib/timerDefinitions';
+    import {showAlertBox} from '$lib/utils';
 
 	const NOTIFICATION_MANAGER = new NotificationManager();
 
 	let globalStartTime = null; // Global variable to store the start time
 	let noSleepEnabled = false;
+    let rootTimer = {};
+    let timerDisplay = undefined;
+    let log = undefined;
 
 	// Populate the select box with options from liberatingStructures
 
@@ -31,13 +36,13 @@
 				const { type, time, isPaused } = event.data;
 				switch (type) {
 					case 'updateDisplay':
-						updateDisplay(event.data);
+                    timerDisplay.updateDisplay(event.data);
 						break;
 					case 'togglePauseResume':
 						document.getElementById('pauseResumeButton').innerText = isPaused ? 'Resume' : 'Pause';
 						break;
 					case 'logEvent':
-						logEvent(event.data.message, event.data.time);
+                    log.logEvent(event.data.message, event.data.time);
 						break;
 					default:
 						console.error('Main: Unhandled message recieved:', event.data);
@@ -61,11 +66,10 @@
 
 	async function onclickStartTimer() {
 		await NOTIFICATION_MANAGER.requestNotificationPermission();
-		const cleanedRoot = cleanUpTimer(rootTimer);
 		startGlobalTimer();
-		await startTimer(cleanedRoot);
+		await startTimer(rootTimer);
 		endGlobalTimer();
-		showAlertBox(cleanedRoot.name);
+		showAlertBox(rootTimer.name);
 		audio.play();
 	}
 
@@ -127,7 +131,7 @@
 	function endGlobalTimer() {
 		if (globalStartTime !== null) {
 			const elapsedTime = Math.floor((Date.now() - globalStartTime) / 1000); // Calculate elapsed time in seconds
-			logEvent(`Total time elapsed: ${elapsedTime} seconds.`);
+			log.logEvent(`Total time elapsed: ${elapsedTime} seconds.`);
 			globalStartTime = null; // Reset the global timer
 
 			const hide = document.getElementById('toHide');
@@ -152,7 +156,7 @@
 			TIMER_WORKER.addEventListener('message', handleMessage);
 		});
 
-		logEvent(`Timer '${name}' completed!`);
+		log.logEvent(`Timer '${name}' completed!`);
 	}
 
 	function showSelectedTimer() {
@@ -169,7 +173,7 @@
 			} else {
 				rootTimer = selectedStructure;
 			}
-			renderTimers(rootTimer, document.getElementById('timerBuilder'));
+			//renderTimers(rootTimer, document.getElementById('timerBuilder'));
 			errorMessageElement.innerText = ''; // Clear any previous error message
 		} catch (error) {
 			errorMessageElement.innerText = 'Invalid JSON structure. Please try again. ' + error.message;
@@ -194,7 +198,7 @@
 
 <div class="container">
 	<h1>Meeting Timer</h1>
-	<TimerDisplay></TimerDisplay>
+	<TimerDisplay bind:this={timerDisplay}></TimerDisplay>
 
 	<div class="container" id="toHide">
 		<div>
@@ -208,7 +212,7 @@
 
 		<br />
 
-		<TimerBuilder></TimerBuilder>
+		<TimerBuilder bind:timer={rootTimer}></TimerBuilder>
 
 		<br />
 	</div>
@@ -226,8 +230,7 @@
 	</div>
 
 	<h2>Log</h2>
-	<button type="button" keepEnabled onclick={() => clearLog()}>Clear</button>
-	<Log></Log>
+	<Log bind:this={log}></Log>
 </div>
 
 <style>
