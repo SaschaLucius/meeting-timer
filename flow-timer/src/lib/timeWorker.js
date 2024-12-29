@@ -123,30 +123,6 @@ class Timer {
 
 const TIMER_INSTANCE = new Timer();
 
-// Converts HH:MM:SS, MM:SS, or SS format to total seconds
-function hmsToSeconds(hms) {
-    if (typeof hms === 'number') {
-        return hms;
-    }
-    const parts = hms.split(':').map(Number); // Convert each part to a number
-    let totalSeconds = 0;
-
-    if (parts.length === 3) {
-        // HH:MM:SS format
-        const [hours, minutes, seconds] = parts;
-        totalSeconds = hours * 3600 + minutes * 60 + seconds;
-    } else if (parts.length === 2) {
-        // MM:SS format
-        const [minutes, seconds] = parts;
-        totalSeconds = minutes * 60 + seconds;
-    } else if (parts.length === 1) {
-        // SS format
-        totalSeconds = parts[0];
-    }
-
-    return totalSeconds;
-}
-
 function postUpdateDisplay({ name, time, repetitions, description }) {
     postMessage({ type: 'updateDisplay', name, time, repetitions, description });
 }
@@ -190,14 +166,12 @@ async function startSingleTimer(timer) {
     const { name, duration, description } = timer;
     console.log("Starting timer:", description);
 
-    let remainingTime = hmsToSeconds(duration); // Corrected to start at full duration
-
-    postUpdateDisplay({ name, time: remainingTime, description }); // Initial display update
+    postUpdateDisplay({ name, time: duration, description }); // Initial display update
     postLogEvent(`Starting '${name}' with ${duration}.`);
     
 
     // Wait for the timer to complete
-    await TIMER_INSTANCE.start(remainingTime);
+    await TIMER_INSTANCE.start(duration);
     sendNotification(`Timer '${name}' completed!`);
     postLogEvent(`Timer '${name}' completed!`);
 }
