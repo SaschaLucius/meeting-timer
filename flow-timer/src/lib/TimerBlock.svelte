@@ -123,7 +123,7 @@
 	{#if editable}
 		<button onclick={addSubTimer}>+</button>
 	{/if}
-	<button onclick={() => isHidden =!isHidden}>{isHidden?'Show':'Hide'}</button>
+	<button onclick={() => (isHidden = !isHidden)}>{isHidden ? 'Show' : 'Hide'}</button>
 </div>
 
 <style>
@@ -134,7 +134,6 @@
 		border-radius: 8px;
 		background-color: #f9f9f9;
 	}
-
 	.delete-button {
 		color: red;
 		font-weight: bold;
@@ -142,7 +141,6 @@
 		float: right;
 		margin-left: 8px;
 	}
-
 	.timer-block input {
 		display: inline-block;
 		margin: 8px 4px;
@@ -151,17 +149,14 @@
 		border-radius: 4px;
 		font-size: 14px;
 	}
-
 	.timer-block .timer-list {
 		margin-top: 16px;
 		padding-left: 16px;
 		border-left: 2px solid #ddd;
 	}
-
 	.timer-block .sub-timer {
 		margin-bottom: 16px;
 	}
-
 	.timer-block button {
 		margin: 8px 4px;
 		padding: 8px 12px;
@@ -172,7 +167,6 @@
 		color: white;
 		cursor: pointer;
 	}
-
 	.timer-block button:hover {
 		background-color: #0056b3;
 	}
