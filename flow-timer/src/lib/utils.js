@@ -1,56 +1,4 @@
-// Converts HH:MM:SS, MM:SS, or SS format to total seconds
-function hmsToSeconds(hms) {
-    if (typeof hms === 'number') {
-        return hms;
-    }
-    const parts = hms.split(':').map(Number); // Convert each part to a number
-    let totalSeconds = 0;
 
-    if (parts.length === 3) {
-        // HH:MM:SS format
-        const [hours, minutes, seconds] = parts;
-        totalSeconds = hours * 3600 + minutes * 60 + seconds;
-    } else if (parts.length === 2) {
-        // MM:SS format
-        const [minutes, seconds] = parts;
-        totalSeconds = minutes * 60 + seconds;
-    } else if (parts.length === 1) {
-        // SS format
-        totalSeconds = parts[0];
-    }
-
-    return totalSeconds;
-}
-
-// Converts total seconds to HH:MM:SS format
-function secondsToHMS(totalSeconds) {
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    // Format each unit to be two digits
-    return [hours, minutes, seconds].map(unit => String(unit).padStart(2, '0')).join(':');
-}
-
-function calculateTotalTime(timer) {
-    let totalTime = 0;
-
-    // Parse the timer's duration and convert to seconds, defaulting to 0 if empty
-    const durationInSeconds = timer.duration ? hmsToSeconds(timer.duration) : 0;
-    
-    // Multiply by repetitions, defaulting to 1 if repetitions is not set or invalid
-    const repetitions = timer.repetitions && timer.repetitions > 1 ? timer.repetitions : 1;
-    totalTime += durationInSeconds * repetitions;
-
-    // Recursively add time for each sub-timer
-    if (Array.isArray(timer.timers) && timer.timers.length > 0) {
-        timer.timers.forEach(subTimer => {
-            totalTime += calculateTotalTime(subTimer) * repetitions;
-        });
-    }
-
-    return totalTime;
-}
 
 function showAlertBox(timerName) {
     // Remove any existing alert box
@@ -127,4 +75,4 @@ function showAlertBox(timerName) {
     document.body.appendChild(overlay);
 }
 
-export { hmsToSeconds, secondsToHMS, calculateTotalTime, showAlertBox };
+export { showAlertBox };
