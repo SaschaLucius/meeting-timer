@@ -16,6 +16,8 @@
 		description: ''
 	};
 
+	let isHidden = false;
+
 	export let editable = true;
 
 	// Converts HH:mm:ss, mm:ss, or ss format to total seconds
@@ -103,7 +105,7 @@
 	/>
 	<div class="timer-list">
 		<!-- Sub-timers will be nested here -->
-		{#if timer.timers !== undefined && timer.timers.length > 0}
+		{#if !isHidden && timer.timers !== undefined && timer.timers.length > 0}
 			{#each timer.timers as item, i}
 				<div class="sub-timer">
 					<Self
@@ -121,7 +123,7 @@
 	{#if editable}
 		<button onclick={addSubTimer}>+</button>
 	{/if}
-	<button>Hide</button>
+	<button onclick={() => isHidden =!isHidden}>{isHidden?'Show':'Hide'}</button>
 </div>
 
 <style>
