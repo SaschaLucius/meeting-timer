@@ -2,7 +2,7 @@ const TIMER_DEFINITIONS = {
     "Countdown": { 
         name: "Countdown",
         description: '',
-        timer: { name: 'Countdown', duration: '5:00' }
+        timer: { name: 'Countdown', duration: 300 }
     },
     "Wicked Questions": { 
         name: "Wicked Questions",
@@ -10,11 +10,11 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Wicked Questions",
             timers: [
-                { name: 'Introduce the concept', duration: '5:00', description: 'Introduction to the concept of Wicked Questions.' },
-                { name: 'Each participant generates pairs of paradoxes', duration: '5:00', description: 'Participants generate pairs of paradoxes.' },
-                { name: 'Each group selects its most impactful', duration: '1:00', description: 'Groups select the most impactful paradoxes.' },
-                { name: 'Selected Wicked Questions are shared with the whole group', duration: '5:00', description: 'Sharing selected Wicked Questions with the whole group.' },
-                { name: 'Whole group picks out the most powerful ones and further refines the Wicked Questions.', duration: '10:00', description: 'Refining the most powerful Wicked Questions.' }
+                { name: 'Introduce the concept', duration: 300, description: 'Introduction to the concept of Wicked Questions.' },
+                { name: 'Each participant generates pairs of paradoxes', duration: 300, description: 'Participants generate pairs of paradoxes.' },
+                { name: 'Each group selects its most impactful', duration: 60, description: 'Groups select the most impactful paradoxes.' },
+                { name: 'Selected Wicked Questions are shared with the whole group', duration: 300, description: 'Sharing selected Wicked Questions with the whole group.' },
+                { name: 'Whole group picks out the most powerful ones and further refines the Wicked Questions.', duration: 600, description: 'Refining the most powerful Wicked Questions.' }
             ]
         }
     },
@@ -24,10 +24,10 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "1-2-4-All",
             timers: [
-                { name: "Silent self-reflection", duration: "1:00", description: "Individuals reflect silently on a shared challenge framed as a question (e.g., 'What opportunities do you see for making progress on this challenge?')." },
-                { name: "Pair discussion", duration: "2:00", description: "Participants discuss and build on ideas from self-reflection in pairs." },
-                { name: "Share in foursomes", duration: "4:00", description: "Participants share and develop ideas from their pairs in groups of four, identifying similarities and differences." },
-                { name: "Whole group discussion", duration: "5:00", description: "Each group shares one standout idea with the whole group. Repeat as needed." }
+                { name: "Silent self-reflection", duration: 60, description: "Individuals reflect silently on a shared challenge framed as a question (e.g., 'What opportunities do you see for making progress on this challenge?')." },
+                { name: "Pair discussion", duration: 120, description: "Participants discuss and build on ideas from self-reflection in pairs." },
+                { name: "Share in foursomes", duration: 240, description: "Participants share and develop ideas from their pairs in groups of four, identifying similarities and differences." },
+                { name: "Whole group discussion", duration: 300, description: "Each group shares one standout idea with the whole group. Repeat as needed." }
             ]
         }
     },
@@ -37,9 +37,9 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "15% Solution",
             timers: [
-                { name: "Generate individual 15% Solutions", duration: "5:00", "description": "Each person works alone to create a list of their own 15% Solutions." },
-                { name: "Share in small groups", duration: "3:00", repetitions: 3, "description": "Participants take turns sharing their ideas with a group of 2 to 4 members, one person at a time." },
-                { name: "Group consultation", duration: "5:00", repetitions: 3, "description": "Group members provide feedback, ask clarifying questions, and offer advice for each person's 15% Solutions." }
+                { name: "Generate individual 15% Solutions", duration: 300, description: "Each person works alone to create a list of their own 15% Solutions." },
+                { name: "Share in small groups", duration: 180, repetitions: 3, description: "Participants take turns sharing their ideas with a group of 2 to 4 members, one person at a time." },
+                { name: "Group consultation", duration: 300, repetitions: 3, description: "Group members provide feedback, ask clarifying questions, and offer advice for each person's 15% Solutions." }
             ]
         }
     },
@@ -49,10 +49,10 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "TRIZ",
             timers: [
-                { name: "Introduction and identify unwanted result", duration: "5:00", description: "Introduce TRIZ, identify an unwanted result, and confirm the group's agreement." },
-                { name: "Brainstorm ways to achieve the unwanted result", duration: "10:00", description: "Use 1-2-4-All to list all actions that could lead to the unwanted result." },
-                { name: "Identify current practices contributing to the result", duration: "10:00", description: "Use 1-2-4-All to identify current actions or behaviors similar to those on the first list." },
-                { name: "Plan actions to stop harmful practices", duration: "10:00", description: "Use 1-2-4-All to create first steps to eliminate identified counterproductive actions or behaviors." }
+                { name: "Introduction and identify unwanted result", duration: 300, description: "Introduce TRIZ, identify an unwanted result, and confirm the group's agreement." },
+                { name: "Brainstorm ways to achieve the unwanted result", duration: 600, description: "Use 1-2-4-All to list all actions that could lead to the unwanted result." },
+                { name: "Identify current practices contributing to the result", duration: 600, description: "Use 1-2-4-All to identify current actions or behaviors similar to those on the first list." },
+                { name: "Plan actions to stop harmful practices", duration: 600, description: "Use 1-2-4-All to create first steps to eliminate identified counterproductive actions or behaviors." }
             ]
         }
     },
@@ -62,9 +62,9 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Impromptu Networking",
             timers: [
-                { name: "Round 1", duration: "5:00", description: "Two participants take turns answering the challenge question (2 minutes per person)." },
-                { name: "Round 2", duration: "5:00", description: "Participants switch partners and repeat the process with a new connection." },
-                { name: "Round 3", duration: "5:00", description: "Participants meet a third partner to continue sharing and building ideas." }
+                { name: "Round 1", duration: 300, description: "Two participants take turns answering the challenge question (2 minutes per person)." },
+                { name: "Round 2", duration: 300, description: "Participants switch partners and repeat the process with a new connection." },
+                { name: "Round 3", duration: 300, description: "Participants meet a third partner to continue sharing and building ideas." }
             ]
         }
     },
@@ -74,10 +74,10 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Nine Whys",
             timers: [
-                { name: 'Introduce the concept', duration: '2:00' },
-                { name: 'Participants pair up and ask each other "why"', duration: '4:00' },
-                { name: 'Switch roles and repeat', duration: '4:00' },
-                { name: 'Whole group sharing of insights', duration: '5:00' }
+                { name: 'Introduce the concept', duration: 120 },
+                { name: 'Participants pair up and ask each other "why"', duration: 240 },
+                { name: 'Switch roles and repeat', duration: 240 },
+                { name: 'Whole group sharing of insights', duration: 300 }
             ]
         }
     },
@@ -87,11 +87,11 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "25/10 Crowdsourcing",
             timers: [
-                { name: 'Generate ideas individually', duration: '5:00' },
-                { name: 'Scoring round 1', duration: '2:00' },
-                { name: 'Scoring round 2', duration: '2:00' },
-                { name: 'Scoring round 3', duration: '2:00' },
-                { name: 'Announce top ideas', duration: '2:00' }
+                { name: 'Generate ideas individually', duration: 300 },
+                { name: 'Scoring round 1', duration: 120 },
+                { name: 'Scoring round 2', duration: 120 },
+                { name: 'Scoring round 3', duration: 120 },
+                { name: 'Announce top ideas', duration: 120 }
             ]
         }
     },
@@ -101,9 +101,9 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "What, So What, Now What?",
             timers: [
-                { name: 'Reflection on "What?" (What happened?)', duration: '3:00' },
-                { name: 'Discussion on "So What?" (What does it mean?)', duration: '4:00' },
-                { name: 'Planning on "Now What?" (What next?)', duration: '5:00' }
+                { name: 'Reflection on "What?" (What happened?)', duration: 180 },
+                { name: 'Discussion on "So What?" (What does it mean?)', duration: 240 },
+                { name: 'Planning on "Now What?" (What next?)', duration: 300 }
             ]
         }
     },
@@ -113,10 +113,10 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Appreciative Interviews",
             timers: [
-                { name: 'Introduce the activity and goals', duration: '3:00' },
-                { name: 'Participants pair up and interview each other', duration: '7:00' },
-                { name: 'Switch roles and repeat', duration: '7:00' },
-                { name: 'Whole group shares highlights', duration: '5:00' }
+                { name: 'Introduce the activity and goals', duration: 180 },
+                { name: 'Participants pair up and interview each other', duration: 420 },
+                { name: 'Switch roles and repeat', duration: 420 },
+                { name: 'Whole group shares highlights', duration: 300 }
             ]
         }
     },
@@ -126,10 +126,10 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Celebrity Interview",
             timers: [
-                { name: 'Setup and explain process', duration: '3:00' },
-                { name: 'Celebrity shares their insights', duration: '5:00' },
-                { name: 'Open for audience questions', duration: '10:00' },
-                { name: 'Reflections and takeaways', duration: '5:00' }
+                { name: 'Setup and explain process', duration: 180 },
+                { name: 'Celebrity shares their insights', duration: 300 },
+                { name: 'Open for audience questions', duration: 600 },
+                { name: 'Reflections and takeaways', duration: 300 }
             ]
         }
     },
@@ -139,11 +139,11 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Shift and Share",
             timers: [
-                { name: 'Setup and instructions', duration: '3:00' },
-                { name: 'Presenter 1 shares and receives feedback', duration: '5:00' },
-                { name: 'Presenter 2 shares and receives feedback', duration: '5:00' },
-                { name: 'Presenter 3 shares and receives feedback', duration: '5:00' },
-                { name: 'Whole group reflections', duration: '5:00' }
+                { name: 'Setup and instructions', duration: 180 },
+                { name: 'Presenter 1 shares and receives feedback', duration: 300 },
+                { name: 'Presenter 2 shares and receives feedback', duration: 300 },
+                { name: 'Presenter 3 shares and receives feedback', duration: 300 },
+                { name: 'Whole group reflections', duration: 300 }
             ]
         }
     },
@@ -153,10 +153,10 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Min Specs",
             timers: [
-                { name: 'Introduce the concept', duration: '3:00' },
-                { name: 'Identify essential success criteria', duration: '5:00' },
-                { name: 'Discuss and refine criteria in small groups', duration: '5:00' },
-                { name: 'Share refined criteria with the whole group', duration: '5:00' }
+                { name: 'Introduce the concept', duration: 180 },
+                { name: 'Identify essential success criteria', duration: 300 },
+                { name: 'Discuss and refine criteria in small groups', duration: 300 },
+                { name: 'Share refined criteria with the whole group', duration: 300 }
             ]
         }
     },
@@ -166,10 +166,10 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Drawing Together",
             timers: [
-                { name: 'Explain concept and objectives', duration: '3:00' },
-                { name: 'Individuals start sketches', duration: '5:00' },
-                { name: 'Small groups combine and refine sketches', duration: '7:00' },
-                { name: 'Whole group shares final drawings', duration: '5:00' }
+                { name: 'Explain concept and objectives', duration: 180 },
+                { name: 'Individuals start sketches', duration: 300 },
+                { name: 'Small groups combine and refine sketches', duration: 420 },
+                { name: 'Whole group shares final drawings', duration: 300 }
             ]
         }
     },
@@ -179,11 +179,11 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Purpose to Practice",
             timers: [
-                { name: 'Define purpose', duration: '5:00' },
-                { name: 'Identify guiding principles', duration: '5:00' },
-                { name: 'List key participants and their roles', duration: '5:00' },
-                { name: 'Outline structure and key actions', duration: '5:00' },
-                { name: 'Develop initial practices', duration: '5:00' }
+                { name: 'Define purpose', duration: 300 },
+                { name: 'Identify guiding principles', duration: 300 },
+                { name: 'List key participants and their roles', duration: 300 },
+                { name: 'Outline structure and key actions', duration: 300 },
+                { name: 'Develop initial practices', duration: 300 }
             ]
         }
     },
@@ -193,10 +193,10 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "User Experience Fishbowl",
             timers: [
-                { name: 'Set up fishbowl seating', duration: '3:00' },
-                { name: 'User demonstration of product/process', duration: '10:00' },
-                { name: 'Observers take notes and reflect', duration: '5:00' },
-                { name: 'Group shares observations and insights', duration: '7:00' }
+                { name: 'Set up fishbowl seating', duration: 180 },
+                { name: 'User demonstration of product/process', duration: 600 },
+                { name: 'Observers take notes and reflect', duration: 300 },
+                { name: 'Group shares observations and insights', duration: 420 }
             ]
         }
     },
@@ -206,11 +206,11 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Mad Tea",
             timers: [
-                { name: 'Introduce the activity and form pairs', duration: '3:00' },
-                { name: 'Round 1: Respond to prompt', duration: '1:00' },
-                { name: 'Round 2: Switch partners and respond to prompt', duration: '1:00' },
-                { name: 'Round 3: Switch partners and respond to prompt', duration: '1:00' },
-                { name: 'Group debrief and highlight key insights', duration: '5:00' }
+                { name: 'Introduce the activity and form pairs', duration: 180 },
+                { name: 'Round 1: Respond to prompt', duration: 60 },
+                { name: 'Round 2: Switch partners and respond to prompt', duration: 60 },
+                { name: 'Round 3: Switch partners and respond to prompt', duration: 60 },
+                { name: 'Group debrief and highlight key insights', duration: 300 }
             ]
         }
     },
@@ -220,10 +220,10 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Conversation Café",
             timers: [
-                { name: 'Round 1: Introduce topic and set ground rules', duration: '3:00' },
-                { name: 'Round 2: Open sharing in rounds', duration: '10:00' },
-                { name: 'Round 3: Group discusses emerging themes', duration: '7:00' },
-                { name: 'Reflection and takeaway round', duration: '5:00' }
+                { name: 'Round 1: Introduce topic and set ground rules', duration: 180 },
+                { name: 'Round 2: Open sharing in rounds', duration: 600 },
+                { name: 'Round 3: Group discusses emerging themes', duration: 420 },
+                { name: 'Reflection and takeaway round', duration: 300 }
             ]
         }
     },
@@ -233,17 +233,17 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Treuka Consulting",
             timers: [
-                { name: 'Invite participants to think of a question they would like to ask as a client.', duration: '1:00' },
+                { name: 'Invite participants to think of a question they would like to ask as a client.', duration: 60 },
                 {
                     name: "Client Triads",
                     repetitions: 3,
                     timers: [
-                        { name: 'Client poses their question to the group.', duration: '3:00' },
-                        { name: 'Consultants ask clarifying questions to the client.', duration: '3:00' },
-                        { name: 'Client turns around, facing away from the consultants.', duration: '1:00' },
-                        { name: 'Consultants discuss and develop ideas, suggestions, and advice.', duration: '5:00' },
-                        { name: 'Client turns back to the group and shares what they found most valuable from the experience.', duration: '2:00' },
-                        { name: 'Group moves to the next client and repeats the steps.', duration: '10:00' },
+                        { name: 'Client poses their question to the group.', duration: 180 },
+                        { name: 'Consultants ask clarifying questions to the client.', duration: 180 },
+                        { name: 'Client turns around, facing away from the consultants.', duration: 60 },
+                        { name: 'Consultants discuss and develop ideas, suggestions, and advice.', duration: 300 },
+                        { name: 'Client turns back to the group and shares what they found most valuable from the experience.', duration: 120 },
+                        { name: 'Group moves to the next client and repeats the steps.', duration: 600 },
                     ]
                 }
             ]
@@ -255,14 +255,14 @@ const TIMER_DEFINITIONS = {
         timer: {
             name: "Pomodoro Technique",
             timers: [
-                { name: 'Work Session 1', duration: '25:00' },
-                { name: 'Short Break 1', duration: '5:00' },
-                { name: 'Work Session 2', duration: '25:00' },
-                { name: 'Short Break 2', duration: '5:00' },
-                { name: 'Work Session 3', duration: '25:00' },
-                { name: 'Short Break 3', duration: '5:00' },
-                { name: 'Work Session 4', duration: '25:00' },
-                { name: 'Long Break', duration: '15:00' }
+                { name: 'Work Session 1', duration: 1500 },
+                { name: 'Short Break 1', duration: 300 },
+                { name: 'Work Session 2', duration: 1500 },
+                { name: 'Short Break 2', duration: 300 },
+                { name: 'Work Session 3', duration: 1500 },
+                { name: 'Short Break 3', duration: 300 },
+                { name: 'Work Session 4', duration: 1500 },
+                { name: 'Long Break', duration: 900 }
             ]
         }
     }
