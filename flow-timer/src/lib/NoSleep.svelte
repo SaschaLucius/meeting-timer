@@ -1,14 +1,21 @@
 <script lang="ts">
 	import NoSleep from 'nosleep.js';
+	import { onMount } from 'svelte';
     export let enabled = false;
 
-	const noSleep = new NoSleep();
+	let noSleep: NoSleep;
+
+	onMount(() => {
+		noSleep = new NoSleep();
+	});
 
 	$: {
-		if (enabled) {
-			noSleep.enable();
-		} else {
-			noSleep.disable();
-		}
+        if (noSleep !== undefined) {
+            if (enabled) {
+                noSleep.enable();
+            } else {
+                noSleep.disable();
+            }
+        }
 	}
 </script>
