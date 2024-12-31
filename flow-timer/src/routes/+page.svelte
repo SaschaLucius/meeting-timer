@@ -187,13 +187,6 @@
 	//renderTimers(rootTimer, document.getElementById('timerBuilder'));
 </script>
 
-<!--script src="NoSleep.js"></script> https://github.com/richtr/NoSleep.js -->
-<!--script src="utils.js"></script>
-<script src="noSleepManager.js"></script>
-<script src="notificationManager.js"></script>
-<script src="timerDefinitions.js"></script>
-<script src="timerCreator.js"></script-->
-
 <NoSleep bind:enabled={noSleepEnabled} />
 <Bell bind:this={bell} />
 

@@ -1,5 +1,3 @@
-
-
 function showAlertBox(timerName) {
     // Remove any existing alert box
     const existingAlert = document.getElementById("customAlertBox");
@@ -60,8 +58,6 @@ function showAlertBox(timerName) {
     cleanButton.style.borderRadius = "5px";
     cleanButton.style.cursor = "pointer";
     cleanButton.onclick = () => {
-        clearLog(); // Assumes clearLog() is defined elsewhere to clear the timer log
-        updateDisplay({name:'-',time:0,repetitions:0})
         document.body.removeChild(overlay);
     };
 
