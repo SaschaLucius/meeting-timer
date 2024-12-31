@@ -1,8 +1,8 @@
 <script lang="ts">
-	let logItems: { time: string; message: string }[] = [];
+	let logItems: { time: Date; message: string }[] = [];
 	let logContent: HTMLDivElement;
 
-	export function logEvent(message: string, time: string = new Date().toLocaleTimeString()) {
+	export function logEvent(message: string, time: Date = new Date()) {
 		try {
 			logItems = [...logItems, { time, message }];
 			logContent.scrollTop = logContent.scrollHeight;
@@ -20,7 +20,7 @@
 <button type="button" onclick={() => clearLog()}>Clear</button>
 <div class="logContent" id="logContent" bind:this={logContent}>
 	{#each logItems as logItem}
-		<div class="log-item">{`[${logItem.time}] ${logItem.message}`}</div>
+		<div class="log-item">{`[${logItem.time.toLocaleTimeString()}] ${logItem.message}`}</div>
 	{/each}
 </div>
 
