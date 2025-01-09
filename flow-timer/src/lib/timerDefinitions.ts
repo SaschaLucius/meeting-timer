@@ -269,8 +269,8 @@ const TIMER_DEFINITIONS = {
     "Tabata": {
         name: "Tabata",
         timer: {
-            name: "Pomodoro Technique",
-            description: 'Tabata is a high-intensity interval training (HIIT) workout that consists of 8 rounds of 20 seconds of intense exercise followed by 10 seconds of rest. This method is designed to improve cardiovascular fitness and burn calories in a short amount of time.',
+            name: "Tabata",
+            description: 'Tabata is a high-intensity interval training (HIIT) workout. This method is designed to improve cardiovascular fitness and burn calories in a short amount of time.',
             repetitions: 8,
             timers: [
                 { name: 'Rest/Preparation', duration: 10 },
