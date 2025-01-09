@@ -5,9 +5,9 @@
 	import TimerDisplay from '$lib/TimerDisplay.svelte';
 	import Log from '$lib/Log.svelte';
 	import { onMount } from 'svelte';
-	import TIMER_DEFINITIONS from '$lib/timerDefinitions';
 	import { showAlertBox } from '$lib/utils';
 	import Bell from '$lib/Bell.svelte';
+	import TimerSector from '$lib/TimerSector.svelte';
 
 	const NOTIFICATION_MANAGER = new NotificationManager();
 
@@ -17,12 +17,6 @@
 	let timerDisplay = undefined;
 	let log = undefined;
 	let bell = undefined;
-
-	// Populate the select box with options from liberatingStructures
-
-	onMount(() => {
-		updatePredefinedTimers();
-	});
 
 	let TIMER_WORKER;
 	onMount(async () => {
@@ -92,31 +86,6 @@
 		logContent.innerHTML = '';
 	}
 
-	// ####### Timer Selection #######
-
-	function updatePredefinedTimers() {
-		const selectBox = document.getElementById('liberatingStructureSelect');
-		selectBox.innerHTML = ''; // Clear existing options
-
-		// Add predefined timers from liberatingStructures
-		for (const key in TIMER_DEFINITIONS) {
-			const option = document.createElement('option');
-			option.value = key;
-			option.textContent = TIMER_DEFINITIONS[key].name;
-			selectBox.appendChild(option);
-		}
-
-		// Add saved timers from local storage
-		const savedTimers = JSON.parse(localStorage.getItem('savedTimers')) || {};
-		for (const key in savedTimers) {
-			const option = document.createElement('option');
-			option.value = key;
-			option.textContent = savedTimers[key].name;
-			selectBox.appendChild(option);
-		}
-		showSelectedTimer();
-	}
-
 	// ####### Timer Functions #######
 
 	function startGlobalTimer() {
@@ -161,28 +130,6 @@
 		log.logEvent(`Timer '${name}' completed!`);
 	}
 
-	function showSelectedTimer() {
-		const selectBox = document.getElementById('liberatingStructureSelect');
-		const selectedStructureKey = selectBox.value;
-		const selectedStructure =
-			TIMER_DEFINITIONS[selectedStructureKey] ||
-			JSON.parse(localStorage.getItem('savedTimers'))[selectedStructureKey];
-		const errorMessageElement = document.getElementById('errorMessage');
-
-		try {
-			if (selectedStructure && selectedStructure.timer) {
-				rootTimer = selectedStructure.timer;
-			} else {
-				rootTimer = selectedStructure;
-			}
-			//renderTimers(rootTimer, document.getElementById('timerBuilder'));
-			errorMessageElement.innerText = ''; // Clear any previous error message
-		} catch (error) {
-			errorMessageElement.innerText = 'Invalid JSON structure. Please try again. ' + error.message;
-			console.error('JSON Parse Error:', error);
-		}
-	}
-
 	// Initialize root timer UI
 	//renderTimers(rootTimer, document.getElementById('timerBuilder'));
 </script>
@@ -196,11 +143,7 @@
 
 	<div class="container" id="toHide">
 		<div>
-			<label for="liberatingStructureSelect">Timer:</label>
-			<select id="liberatingStructureSelect" onchange={() => showSelectedTimer()}>
-				<!--option value="" disabled selected>Select a timer</option-->
-				<!-- Options will be added here dynamically -->
-			</select>
+			<TimerSector bind:rootTimer={rootTimer}></TimerSector>
 			<button onclick={() => onclickStartTimer()}>Start</button>
 		</div>
 
