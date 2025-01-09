@@ -132,7 +132,7 @@ function postTogglePauseResume(isPaused) {
 }
 
 function postLogEvent(message) {
-    const time = new Date().toLocaleTimeString();
+    const time = new Date();
     postMessage({ type: 'logEvent', message, time});
 }
 
