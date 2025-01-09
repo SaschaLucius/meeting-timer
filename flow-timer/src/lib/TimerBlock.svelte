@@ -101,7 +101,7 @@
 	<input
 		placeholder="Description"
 		bind:value={timer.description}
-		style="width: calc(75% + 48px);"
+		style="width: calc(75% + 60px);"
 	/>
 	<div class="timer-list">
 		<!-- Sub-timers will be nested here -->
