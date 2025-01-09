@@ -1,8 +1,54 @@
 <script>
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+	import TIMER_DEFINITIONS from '$lib/timerDefinitions';
 	export let timer;
+
+	$: {
+		if (browser) {
+			const cleanedRoot = cleanUpTimer(timer);
+			const savedTimers = JSON.parse(localStorage.getItem('savedTimers') + '') || {};
+			if (savedTimers[cleanedRoot.name]) {
+				if (deepCompare(savedTimers[cleanedRoot.name], cleanedRoot)) {
+					buttonLabel = 'Delete';
+				} else {
+					buttonLabel = 'Overwrite';
+				}
+			} else {
+				buttonLabel = 'Save';
+			}
+		}
+	}
+
+	function deepCompare(arg1, arg2) {
+		// false if not equals otherwise true
+		if (Object.prototype.toString.call(arg1) === Object.prototype.toString.call(arg2)) {
+			if (
+				Object.prototype.toString.call(arg1) === '[object Object]' ||
+				Object.prototype.toString.call(arg1) === '[object Array]'
+			) {
+				if (Object.keys(arg1).length !== Object.keys(arg2).length) {
+					return false;
+				}
+				return Object.keys(arg1).every(function (key) {
+					return deepCompare(arg1[key], arg2[key]);
+				});
+			}
+			return arg1 === arg2;
+		}
+		return false;
+	}
+
+	let buttonLabel = 'Save';
 
 	function saveTimer() {
 		const cleanedRoot = cleanUpTimer(timer);
+
+		if (TIMER_DEFINITIONS[cleanedRoot.name]) {
+			confirm(`Predefined Timer '${cleanedRoot.name}' already exists. Please change Name!`);
+			return; // Exit if the user declines to overwrite
+		}
+
 		const savedTimers = JSON.parse(localStorage.getItem('savedTimers') + '') || {};
 
 		if (savedTimers[cleanedRoot.name]) {
@@ -13,10 +59,18 @@
 
 		savedTimers[cleanedRoot.name] = cleanedRoot;
 		localStorage.setItem('savedTimers', JSON.stringify(savedTimers));
+		buttonLabel = 'Delete';
+	}
 
-		// Select the newly saved timer in the selection
-		// const selectBox = document.getElementById('liberatingStructureSelect');
-		// TODO selectBox.value = cleanedRoot.name;
+	function deleteTimer() {
+		const cleanedRoot = cleanUpTimer(timer);
+		const savedTimers = JSON.parse(localStorage.getItem('savedTimers') + '') || {};
+
+		if (savedTimers[cleanedRoot.name]) {
+			delete savedTimers[cleanedRoot.name];
+			localStorage.setItem('savedTimers', JSON.stringify(savedTimers));
+			buttonLabel = 'Save';
+		}
 	}
 
 	function cleanUpTimer(timer) {
@@ -39,7 +93,12 @@
 	}
 </script>
 
-<button onclick={() => saveTimer()}>Save</button>
+<button
+	on:click={() =>
+		buttonLabel === 'Save' || buttonLabel === 'Overwrite' ? saveTimer() : deleteTimer()}
+>
+	{buttonLabel}
+</button>
 
 <style>
 	button {
