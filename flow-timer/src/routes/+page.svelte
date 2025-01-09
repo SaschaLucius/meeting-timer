@@ -138,7 +138,7 @@
 <Bell bind:this={bell} />
 
 <div class="container">
-	<h1>Meeting Timer</h1>
+	<h1>Flow Timer</h1>
 	<TimerDisplay bind:this={timerDisplay}></TimerDisplay>
 
 	<div class="container" id="toHide">
