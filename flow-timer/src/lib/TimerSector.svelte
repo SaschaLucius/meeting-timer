@@ -15,15 +15,13 @@
 	const predefinedTimers = [];
 	for (const key in TIMER_DEFINITIONS) {
 		predefinedTimers.push({
-			key,
-			name: TIMER_DEFINITIONS[key].name,
+            ...TIMER_DEFINITIONS[key],
 			prefix: '\u23F1' // Clock emoji
 		});
 	}
 
 	$: savedTimers = Object.keys($savedTimersStore).map((key) => ({
-		key,
-		name: $savedTimersStore[key].name,
+		...$savedTimersStore[key],
 		prefix: '\u270F' // Pencil emoji
 	}));
 
@@ -31,10 +29,10 @@
 	$: {
 		combinedTimers = predefinedTimers
 			.concat(savedTimers)
-			.sort((a, b) => a.key.localeCompare(b.key))
+			.sort((a, b) => a.name.localeCompare(b.name))
 			.map((timer) => ({
 				...timer,
-				selected: timer.key === $currentTimer
+				selected: timer.name === $currentTimer
 			}));
 
 		showSelectedTimer();
@@ -63,7 +61,7 @@
 <label for="liberatingStructureSelect">Timer:</label>
 <select id="liberatingStructureSelect" bind:value onchange={showSelectedTimer}>
 	{#each combinedTimers as timer}
-		<option value={timer.key} key={timer.key} selected={timer.selected}>
+		<option value={timer.name} key={timer.name} selected={timer.selected}>
 			{timer.prefix}: {timer.name}
 		</option>
 	{/each}

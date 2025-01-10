@@ -2,14 +2,7 @@
 	import SaveButton from './SaveButton.svelte';
 	import TimerBlock from './TimerBlock.svelte';
 	import { rootTimer } from '$lib/stores/timers';
-
-    interface Timer {
-		name: string;
-		duration?: number;
-		repetitions?: number;
-		timers?: Timer[];
-		description?: string;
-	}
+	import type { Timer } from '$lib/types/timer';
 
     export let editable = true;
 

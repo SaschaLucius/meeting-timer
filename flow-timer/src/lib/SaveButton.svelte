@@ -5,10 +5,9 @@
     import { rootTimer, currentTimer, savedTimers } from '$lib/stores/timers';
 
 	$: {
-		if (browser) {
-			const cleanedRoot = cleanUpTimer($rootTimer);
-			if ($savedTimers[cleanedRoot.name]) {
-				if (deepCompare($savedTimers[cleanedRoot.name], cleanedRoot)) {
+		if (browser && $rootTimer) {
+			if ($savedTimers[$rootTimer.name]) {
+				if (deepCompare($savedTimers[$rootTimer.name], $rootTimer)) {
 					buttonLabel = 'Delete';
 				} else {
 					buttonLabel = 'Overwrite';
@@ -41,56 +40,35 @@
 	let buttonLabel = 'Save';
 
 	function saveTimer() {
-		const cleanedRoot = cleanUpTimer($rootTimer);
-
-		if (TIMER_DEFINITIONS[cleanedRoot.name]) {
-			confirm(`Predefined Timer '${cleanedRoot.name}' already exists. Please change Name!`);
+        if(!$rootTimer){
+            return;
+        }
+        if (TIMER_DEFINITIONS[$rootTimer.name]) {
+			confirm(`Predefined Timer '${$rootTimer.name}' already exists. Please change Name!`);
 			return; // Exit
 		}
 
-		if ($savedTimers[cleanedRoot.name]) {
-			if (!confirm(`Timer '${cleanedRoot.name}' already exists. Do you want to overwrite it?`)) {
+		if ($savedTimers[$rootTimer.name]) {
+			if (!confirm(`Timer '${$rootTimer.name}' already exists. Do you want to overwrite it?`)) {
 				return; // Exit if the user declines to overwrite
 			}
 		}
 
         const temp = $savedTimers;
-		temp[cleanedRoot.name] = cleanedRoot;
+		temp[$rootTimer.name] = $rootTimer;
         $savedTimers = temp;
-        $currentTimer = cleanedRoot.name;
-        console.log($currentTimer);
+        $currentTimer = $rootTimer.name;
 		buttonLabel = 'Delete';
 	}
 
 	function deleteTimer() {
-		const cleanedRoot = cleanUpTimer($rootTimer);
-
-		if ($savedTimers[cleanedRoot.name]) {
+		if ($rootTimer && $savedTimers[$rootTimer.name]) {
             const temp = $savedTimers;
-			delete temp[cleanedRoot.name];
+			delete temp[$rootTimer.name];
             $savedTimers = temp;
             $currentTimer = '';
 			buttonLabel = 'Save';
 		}
-	}
-
-	function cleanUpTimer(timer) {
-		const cleanedTimer = { name: timer.name };
-
-		if (timer.duration && timer.timers && timer.timers.length > 0) {
-			console.log(`${timer.name} cannot have both duration and sub-timers together`);
-			delete timer.duration;
-		}
-		if (timer.duration) cleanedTimer.duration = timer.duration;
-		if (timer.repetitions && Number(timer.repetitions) > 1)
-			cleanedTimer.repetitions = timer.repetitions;
-		if (timer.description) cleanedTimer.description = timer.description;
-
-		if (timer.timers && timer.timers.length > 0) {
-			cleanedTimer.timers = timer.timers.map(cleanUpTimer);
-		}
-
-		return cleanedTimer;
 	}
 </script>
 

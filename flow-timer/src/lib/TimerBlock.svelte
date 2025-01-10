@@ -1,20 +1,9 @@
 <script lang="ts">
 	import Self from './TimerBlock.svelte';
+	import type { Timer } from '$lib/types/timer';
+	import { getSubTimer } from '$lib/types/timer';
 
-	interface Timer {
-		name: string;
-		duration?: number;
-		repetitions?: number;
-		timers?: Timer[] | undefined;
-		description?: string;
-	}
-	export let timer: Timer = {
-		name: '',
-		duration: undefined,
-		repetitions: undefined,
-		timers: [],
-		description: ''
-	};
+	export let timer: Timer;
 
 	let isHidden = false;
 
@@ -59,18 +48,11 @@
 	}
 
 	function addSubTimer() {
-		const subTimer = {
-			name: '',
-			duration: timer.duration,
-			repetitions: undefined,
-			timers: [],
-			description: ''
-		};
 		timer.duration = undefined;
 		if (timer.timers) {
-			timer.timers.push(subTimer);
+			timer.timers.push(getSubTimer(timer.duration));
 		} else {
-			timer.timers = [subTimer];
+			timer.timers = [getSubTimer(timer.duration)];
 		}
 	}
 
@@ -86,9 +68,9 @@
 	<input placeholder="Name" bind:value={timer.name} required style="width: 25%;" />
 	<input
 		placeholder="Duration in HH:mm:ss"
-		value={secondsToHMS(timer.duration)}
+		value={secondsToHMS(timer?.duration)}
 		onblur={(event) => (timer.duration = hmsToSeconds((event.target as HTMLInputElement)?.value))}
-		disabled={timer.timers !== undefined && timer.timers.length > 0}
+		disabled={timer?.timers !== undefined && timer.timers.length > 0}
 		style="width: 25%;"
 	/>
 	<input
@@ -105,7 +87,7 @@
 	/>
 	<div class="timer-list">
 		<!-- Sub-timers will be nested here -->
-		{#if !isHidden && timer.timers !== undefined && timer.timers.length > 0}
+		{#if !isHidden && timer !== undefined && timer.timers !== undefined && timer.timers.length > 0}
 			{#each timer.timers as item, i}
 				<div class="sub-timer">
 					<Self
@@ -123,7 +105,9 @@
 	{#if editable}
 		<button onclick={addSubTimer}>+</button>
 	{/if}
-	<button onclick={() => (isHidden = !isHidden)}>{isHidden ? `Show (${timer.timers?.length || 0})` : 'Hide'}</button>
+	<button onclick={() => (isHidden = !isHidden)}
+		>{isHidden ? `Show (${timer.timers?.length || 0})` : 'Hide'}</button
+	>
 </div>
 
 <style>
