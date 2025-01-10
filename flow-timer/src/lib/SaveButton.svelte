@@ -2,14 +2,13 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import TIMER_DEFINITIONS from '$lib/timerDefinitions';
-    import { rootTimer } from '$lib/stores/timers';
+    import { rootTimer, currentTimer, savedTimers } from '$lib/stores/timers';
 
 	$: {
 		if (browser) {
 			const cleanedRoot = cleanUpTimer($rootTimer);
-			const savedTimers = JSON.parse(localStorage.getItem('savedTimers') + '') || {};
-			if (savedTimers[cleanedRoot.name]) {
-				if (deepCompare(savedTimers[cleanedRoot.name], cleanedRoot)) {
+			if ($savedTimers[cleanedRoot.name]) {
+				if (deepCompare($savedTimers[cleanedRoot.name], cleanedRoot)) {
 					buttonLabel = 'Delete';
 				} else {
 					buttonLabel = 'Overwrite';
@@ -46,29 +45,31 @@
 
 		if (TIMER_DEFINITIONS[cleanedRoot.name]) {
 			confirm(`Predefined Timer '${cleanedRoot.name}' already exists. Please change Name!`);
-			return; // Exit if the user declines to overwrite
+			return; // Exit
 		}
 
-		const savedTimers = JSON.parse(localStorage.getItem('savedTimers') + '') || {};
-
-		if (savedTimers[cleanedRoot.name]) {
+		if ($savedTimers[cleanedRoot.name]) {
 			if (!confirm(`Timer '${cleanedRoot.name}' already exists. Do you want to overwrite it?`)) {
 				return; // Exit if the user declines to overwrite
 			}
 		}
 
-		savedTimers[cleanedRoot.name] = cleanedRoot;
-		localStorage.setItem('savedTimers', JSON.stringify(savedTimers));
+        const temp = $savedTimers;
+		temp[cleanedRoot.name] = cleanedRoot;
+        $savedTimers = temp;
+        $currentTimer = cleanedRoot.name;
+        console.log($currentTimer);
 		buttonLabel = 'Delete';
 	}
 
 	function deleteTimer() {
 		const cleanedRoot = cleanUpTimer($rootTimer);
-		const savedTimers = JSON.parse(localStorage.getItem('savedTimers') + '') || {};
 
-		if (savedTimers[cleanedRoot.name]) {
-			delete savedTimers[cleanedRoot.name];
-			localStorage.setItem('savedTimers', JSON.stringify(savedTimers));
+		if ($savedTimers[cleanedRoot.name]) {
+            const temp = $savedTimers;
+			delete temp[cleanedRoot.name];
+            $savedTimers = temp;
+            $currentTimer = '';
 			buttonLabel = 'Save';
 		}
 	}

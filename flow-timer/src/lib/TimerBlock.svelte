@@ -123,7 +123,7 @@
 	{#if editable}
 		<button onclick={addSubTimer}>+</button>
 	{/if}
-	<button onclick={() => (isHidden = !isHidden)}>{isHidden ? `Show (${timer.timers.length})` : 'Hide'}</button>
+	<button onclick={() => (isHidden = !isHidden)}>{isHidden ? `Show (${timer.timers?.length || 0})` : 'Hide'}</button>
 </div>
 
 <style>

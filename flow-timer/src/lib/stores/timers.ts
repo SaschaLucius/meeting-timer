@@ -9,6 +9,12 @@ interface Timer {
     description?: string;
 }
 
-export const rootTimer = writable<Timer>();
-export const currentTimer = writable<string>('');
+export const rootTimer = writable<Timer>({
+    name: '',
+    duration: undefined,
+    repetitions: undefined,
+    timers: [],
+    description: ''
+});
+export const currentTimer = writable<string>('1-2-4-All');
 export const savedTimers = persisted('savedTimers', {});
