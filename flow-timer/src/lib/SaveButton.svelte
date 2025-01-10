@@ -1,8 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import TIMER_DEFINITIONS from '$lib/timerDefinitions';
-    import { rootTimer, currentTimer, savedTimers } from '$lib/stores/timers';
+	import {getTimerDefinitions} from '$lib/timerDefinitions';
+    import { rootTimer, currentTimer, savedTimers, defaultTimerName } from '$lib/stores/timers';
 
 	$: {
 		if (browser && $rootTimer) {
@@ -43,7 +43,7 @@
         if(!$rootTimer){
             return;
         }
-        if (TIMER_DEFINITIONS[$rootTimer.name]) {
+        if (getTimerDefinitions()[$rootTimer.name]) {
 			confirm(`Predefined Timer '${$rootTimer.name}' already exists. Please change Name!`);
 			return; // Exit
 		}
@@ -66,7 +66,7 @@
             const temp = $savedTimers;
 			delete temp[$rootTimer.name];
             $savedTimers = temp;
-            $currentTimer = '';
+            $currentTimer = defaultTimerName;
 			buttonLabel = 'Save';
 		}
 	}

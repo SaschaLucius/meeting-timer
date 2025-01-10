@@ -60,54 +60,56 @@
 </script>
 
 <div class="timer-block">
-	{#if editable}
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		<span class="delete-button" onclick={deleteMyself}>×</span>
-	{/if}
-	<input placeholder="Name" bind:value={timer.name} required style="width: 25%;" />
-	<input
-		placeholder="Duration in HH:mm:ss"
-		value={secondsToHMS(timer?.duration)}
-		onblur={(event) => (timer.duration = hmsToSeconds((event.target as HTMLInputElement)?.value))}
-		disabled={timer?.timers !== undefined && timer.timers.length > 0}
-		style="width: 25%;"
-	/>
-	<input
-		placeholder="Repetitions"
-		type="number"
-		min="1"
-		bind:value={timer.repetitions}
-		style="width: 25%;"
-	/>
-	<input
-		placeholder="Description"
-		bind:value={timer.description}
-		style="width: calc(75% + 60px);"
-	/>
-	<div class="timer-list">
-		<!-- Sub-timers will be nested here -->
-		{#if !isHidden && timer !== undefined && timer.timers !== undefined && timer.timers.length > 0}
-			{#each timer.timers as item, i}
-				<div class="sub-timer">
-					<Self
-						bind:timer={timer.timers[i]}
-						deleteMyself={() => {
-							timer.timers?.splice(i, 1);
-							timer.timers = timer.timers;
-						}}
-						{editable}
-					></Self>
-				</div>
-			{/each}
+	{#if timer}
+		{#if editable}
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
+			<span class="delete-button" onclick={deleteMyself}>×</span>
 		{/if}
-	</div>
-	{#if editable}
-		<button onclick={addSubTimer}>+</button>
+		<input placeholder="Name" bind:value={timer.name} required style="width: 25%;" />
+		<input
+			placeholder="Duration in HH:mm:ss"
+			value={secondsToHMS(timer?.duration)}
+			onblur={(event) => (timer.duration = hmsToSeconds((event.target as HTMLInputElement)?.value))}
+			disabled={timer?.timers !== undefined && timer.timers.length > 0}
+			style="width: 25%;"
+		/>
+		<input
+			placeholder="Repetitions"
+			type="number"
+			min="1"
+			bind:value={timer.repetitions}
+			style="width: 25%;"
+		/>
+		<input
+			placeholder="Description"
+			bind:value={timer.description}
+			style="width: calc(75% + 60px);"
+		/>
+		<div class="timer-list">
+			<!-- Sub-timers will be nested here -->
+			{#if !isHidden && timer !== undefined && timer.timers !== undefined && timer.timers.length > 0}
+				{#each timer.timers as item, i}
+					<div class="sub-timer">
+						<Self
+							bind:timer={timer.timers[i]}
+							deleteMyself={() => {
+								timer.timers?.splice(i, 1);
+								timer.timers = timer.timers;
+							}}
+							{editable}
+						></Self>
+					</div>
+				{/each}
+			{/if}
+		</div>
+		{#if editable}
+			<button onclick={addSubTimer}>+</button>
+		{/if}
+		<button onclick={() => (isHidden = !isHidden)}
+			>{isHidden ? `Show (${timer.timers?.length || 0})` : 'Hide'}</button
+		>
 	{/if}
-	<button onclick={() => (isHidden = !isHidden)}
-		>{isHidden ? `Show (${timer.timers?.length || 0})` : 'Hide'}</button
-	>
 </div>
 
 <style>

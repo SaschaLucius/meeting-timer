@@ -1,46 +1,38 @@
 <script>
-	import TIMER_DEFINITIONS from '$lib/timerDefinitions';
+	import {getTimerDefinitions} from '$lib/timerDefinitions';
 	import { onMount } from 'svelte';
 	import { rootTimer, currentTimer, savedTimers as savedTimersStore } from '$lib/stores/timers';
 	import { browser } from '$app/environment';
-
-	// Populate the select box with options from liberatingStructures
-
-	let value;
 
 	onMount(() => {
 		showSelectedTimer();
 	});
 
-	const predefinedTimers = [];
-	for (const key in TIMER_DEFINITIONS) {
-		predefinedTimers.push({
-            ...TIMER_DEFINITIONS[key],
-			prefix: '\u23F1' // Clock emoji
-		});
-	}
-
-	$: savedTimers = Object.keys($savedTimersStore).map((key) => ({
-		...$savedTimersStore[key],
-		prefix: '\u270F' // Pencil emoji
-	}));
-
 	let combinedTimers = [];
 	$: {
-		combinedTimers = predefinedTimers
-			.concat(savedTimers)
+		console.log('savedTimersStore', $currentTimer);
+		const TIMER_DEFINITIONS = getTimerDefinitions();
+		combinedTimers = Object.keys(TIMER_DEFINITIONS)
+			.map((key) => ({
+				...TIMER_DEFINITIONS[key],
+				prefix: '\u270F' // Pencil emoji
+			}))
+			.concat(
+				Object.keys($savedTimersStore).map((key) => ({
+					...$savedTimersStore[key],
+					prefix: '\u270F' // Pencil emoji
+				}))
+			)
 			.sort((a, b) => a.name.localeCompare(b.name))
 			.map((timer) => ({
-				...timer,
-				selected: timer.name === $currentTimer
+				...timer
 			}));
 
 		showSelectedTimer();
 	}
 
 	function showSelectedTimer() {
-		$currentTimer = value;
-		const selectedStructure = TIMER_DEFINITIONS[value] || $savedTimersStore[value];
+		const selectedStructure = getTimerDefinitions()[$currentTimer] || $savedTimersStore[$currentTimer];
 		//const errorMessageElement = document.getElementById('errorMessage');
 
 		try {
@@ -49,7 +41,6 @@
 			} else {
 				$rootTimer = selectedStructure;
 			}
-			//renderTimers(rootTimer, document.getElementById('timerBuilder'));
 			//errorMessageElement.innerText = ''; // Clear any previous error message
 		} catch (error) {
 			//errorMessageElement.innerText = 'Invalid JSON structure. Please try again. ' + error.message;
@@ -58,10 +49,10 @@
 	}
 </script>
 
-<label for="liberatingStructureSelect">Timer:</label>
-<select id="liberatingStructureSelect" bind:value onchange={showSelectedTimer}>
+<label for="select">Timer:</label>
+<select id="select" bind:value={$currentTimer} onchange={showSelectedTimer}>
 	{#each combinedTimers as timer}
-		<option value={timer.name} key={timer.name} selected={timer.selected}>
+		<option value={timer.name}>
 			{timer.prefix}: {timer.name}
 		</option>
 	{/each}
