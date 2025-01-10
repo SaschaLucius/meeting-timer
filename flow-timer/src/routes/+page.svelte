@@ -35,7 +35,7 @@
 						timerDisplay.updateDisplay(event.data);
 						break;
 					case 'togglePauseResume':
-						document.getElementById('pauseResumeButton').innerText = isPaused ? 'Resume' : 'Pause';
+						document.getElementById('pauseResumeButton').innerText = isPaused ? '\u23F5' : '\u23F8';
 						break;
 					case 'logEvent':
 						log.logEvent(event.data.message, event.data.time);
@@ -158,12 +158,11 @@
 		<button
 			type="button"
 			keepEnabled
-			style="width: 80px;"
 			id="pauseResumeButton"
-			onclick={() => togglePauseResume()}>Pause</button
+			onclick={() => togglePauseResume()}>{'\u23F8'}</button
 		>
-		<button type="button" keepEnabled onclick={() => cancelTimer()}>Next</button>
-		<button type="button" keepEnabled onclick={() => addOneMinute()}>Add 1 Minute</button>
+		<button type="button" keepEnabled onclick={() => cancelTimer()}>{'\u23ED'}</button>
+		<button type="button" keepEnabled onclick={() => addOneMinute()}>+1:00</button>
 	</div>
 
 	<h2>Log</h2>
