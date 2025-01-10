@@ -2,11 +2,11 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import TIMER_DEFINITIONS from '$lib/timerDefinitions';
-	export let timer;
+    import { rootTimer } from '$lib/stores/timers';
 
 	$: {
 		if (browser) {
-			const cleanedRoot = cleanUpTimer(timer);
+			const cleanedRoot = cleanUpTimer($rootTimer);
 			const savedTimers = JSON.parse(localStorage.getItem('savedTimers') + '') || {};
 			if (savedTimers[cleanedRoot.name]) {
 				if (deepCompare(savedTimers[cleanedRoot.name], cleanedRoot)) {
@@ -42,7 +42,7 @@
 	let buttonLabel = 'Save';
 
 	function saveTimer() {
-		const cleanedRoot = cleanUpTimer(timer);
+		const cleanedRoot = cleanUpTimer($rootTimer);
 
 		if (TIMER_DEFINITIONS[cleanedRoot.name]) {
 			confirm(`Predefined Timer '${cleanedRoot.name}' already exists. Please change Name!`);
@@ -63,7 +63,7 @@
 	}
 
 	function deleteTimer() {
-		const cleanedRoot = cleanUpTimer(timer);
+		const cleanedRoot = cleanUpTimer($rootTimer);
 		const savedTimers = JSON.parse(localStorage.getItem('savedTimers') + '') || {};
 
 		if (savedTimers[cleanedRoot.name]) {

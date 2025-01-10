@@ -1,10 +1,10 @@
 <script>
 	import TIMER_DEFINITIONS from '$lib/timerDefinitions';
 	import { onMount } from 'svelte';
+    import { rootTimer } from '$lib/stores/timers';
 
 	// Populate the select box with options from liberatingStructures
 
-	export let rootTimer = {};
     let selectElement;
 
 	onMount(() => {
@@ -21,9 +21,9 @@
 
 		try {
 			if (selectedStructure && selectedStructure.timer) {
-				rootTimer = selectedStructure.timer;
+				$rootTimer = selectedStructure.timer;
 			} else {
-				rootTimer = selectedStructure;
+				$rootTimer = selectedStructure;
 			}
 			//renderTimers(rootTimer, document.getElementById('timerBuilder'));
 			errorMessageElement.innerText = ''; // Clear any previous error message

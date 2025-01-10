@@ -8,12 +8,12 @@
 	import { showAlertBox } from '$lib/utils';
 	import Bell from '$lib/Bell.svelte';
 	import TimerSector from '$lib/TimerSector.svelte';
+	import { rootTimer } from '$lib/stores/timers';
 
 	const NOTIFICATION_MANAGER = new NotificationManager();
 
 	let globalStartTime = null; // Global variable to store the start time
 	let noSleepEnabled = false;
-	let rootTimer = {};
 	let timerDisplay = undefined;
 	let log = undefined;
 	let bell = undefined;
@@ -63,9 +63,9 @@
 	async function onclickStartTimer() {
 		await NOTIFICATION_MANAGER.requestNotificationPermission();
 		startGlobalTimer();
-		await startTimer(rootTimer);
+		await startTimer($rootTimer);
 		endGlobalTimer();
-		showAlertBox(rootTimer.name);
+		showAlertBox($rootTimer.name);
 		bell.play();
 	}
 
@@ -143,13 +143,13 @@
 
 	<div class="container" id="toHide">
 		<div>
-			<TimerSector bind:rootTimer={rootTimer}></TimerSector>
+			<TimerSector/>
 			<button onclick={() => onclickStartTimer()}>Start</button>
 		</div>
 
 		<br />
 
-		<TimerBuilder bind:timer={rootTimer}></TimerBuilder>
+		<TimerBuilder/>
 
 		<br />
 	</div>
