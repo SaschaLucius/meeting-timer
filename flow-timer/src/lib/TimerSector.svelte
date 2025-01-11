@@ -15,7 +15,7 @@
 		combinedTimers = Object.keys(TIMER_DEFINITIONS)
 			.map((key) => ({
 				...TIMER_DEFINITIONS[key],
-				prefix: '\u270F' // Pencil emoji
+				prefix: '\u23F1' // Clock emoji
 			}))
 			.concat(
 				Object.keys($savedTimersStore).map((key) => ({
