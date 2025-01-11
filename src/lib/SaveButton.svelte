@@ -5,15 +5,11 @@
 	import { rootTimer, currentTimer, savedTimers, defaultTimerName } from '$lib/stores/timers';
 	import { deepEquals } from '$lib/types/timer';
 
-	let buttonLabel;
-	$: {console.log('savedTimers',$savedTimers[$rootTimer.name])
-		console.log('rootTimer',$rootTimer)
-		buttonLabel = $savedTimers[$rootTimer.name]
-			? deepEquals($savedTimers[$rootTimer.name], $rootTimer)
-				? 'Delete'
-				: 'Overwrite'
-			: 'Save';
-	}
+	$: buttonLabel = $savedTimers[$rootTimer.name]
+		? deepEquals($savedTimers[$rootTimer.name], $rootTimer)
+			? 'Delete'
+			: 'Overwrite'
+		: 'Save';
 
 	function saveTimer() {
 		if (!$rootTimer) {
