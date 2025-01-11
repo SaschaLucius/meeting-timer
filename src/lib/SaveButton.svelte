@@ -4,47 +4,44 @@
 	import { getTimerDefinitions } from '$lib/timerDefinitions';
 	import { rootTimer, currentTimer, savedTimers, defaultTimerName } from '$lib/stores/timers';
 
-	$: {
-		if (browser && $rootTimer) {
-			if ($savedTimers[$rootTimer.name]) {
-				if (deepCompare($savedTimers[$rootTimer.name], $rootTimer)) {
-					buttonLabel = 'Delete';
-				} else {
-					buttonLabel = 'Overwrite';
-				}
-			} else {
-				buttonLabel = 'Save';
+	$: buttonLabel = $savedTimers[$rootTimer.name] ? deepEquals($savedTimers[$rootTimer.name], $rootTimer)? 'Delete' : 'Overwrite' : 'Save';
+
+	function deepEquals(arg1, arg2) {
+		console.log('deepEquals', arg1, arg2);
+		if (arg1.name !== arg2.name) {
+			return false;
+		}
+		if (arg1.duration !== arg2.duration) {
+			return false;
+		}
+		if (arg1.repetitions !== arg2.repetitions) {
+			return false;
+		}
+		if (arg1.description !== arg2.description) {
+			return false;
+		}
+		if (arg1.timers?.length !== arg2.timers?.length) {
+			return false;
+		}
+		for (let i = 0; i < (arg1.timers?.length || 0); i++) {
+			if (!deepEquals(arg1.timers[i], arg2.timers[i])) {
+				return false;
 			}
 		}
+		console.log('true');
+		return true;
 	}
-
-	function deepCompare(arg1, arg2) {
-		// false if not equals otherwise true
-		if (Object.prototype.toString.call(arg1) === Object.prototype.toString.call(arg2)) {
-			if (
-				Object.prototype.toString.call(arg1) === '[object Object]' ||
-				Object.prototype.toString.call(arg1) === '[object Array]'
-			) {
-				if (Object.keys(arg1).length !== Object.keys(arg2).length) {
-					return false;
-				}
-				return Object.keys(arg1).every(function (key) {
-					return deepCompare(arg1[key], arg2[key]);
-				});
-			}
-			return arg1 === arg2;
-		}
-		return false;
-	}
-
-	let buttonLabel = 'Save';
 
 	function saveTimer() {
 		if (!$rootTimer) {
 			return;
 		}
+		if ($rootTimer.name === '') {
+			alert(`Timer needs to have a name. Please change Name!`);
+			return;
+		}
 		if (getTimerDefinitions()[$rootTimer.name]) {
-			confirm(`Predefined Timer '${$rootTimer.name}' already exists. Please change Name!`);
+			alert(`Predefined Timer '${$rootTimer.name}' already exists. Please change Name!`);
 			return; // Exit
 		}
 
