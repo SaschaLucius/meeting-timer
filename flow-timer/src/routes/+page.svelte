@@ -143,23 +143,20 @@
 
 	<div class="container" id="toHide">
 		<div>
-			<TimerSector/>
+			<TimerSector />
 			<button onclick={() => onclickStartTimer()}>Start</button>
 		</div>
 
 		<br />
 
-		<TimerBuilder/>
+		<TimerBuilder />
 
 		<br />
 	</div>
 
 	<div id="timerControls" style="display: none;">
-		<button
-			type="button"
-			keepEnabled
-			id="pauseResumeButton"
-			onclick={() => togglePauseResume()}>{'\u23F8'}</button
+		<button type="button" keepEnabled id="pauseResumeButton" onclick={() => togglePauseResume()}
+			>{'\u23F8'}</button
 		>
 		<button type="button" keepEnabled onclick={() => cancelTimer()}>{'\u23ED'}</button>
 		<button type="button" keepEnabled onclick={() => addOneMinute()}>+1:00</button>

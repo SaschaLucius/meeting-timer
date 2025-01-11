@@ -4,7 +4,7 @@
 	import { rootTimer } from '$lib/stores/timers';
 	import type { Timer } from '$lib/types/timer';
 
-    export let editable = true;
+	export let editable = true;
 
 	$: totalDuration = calculateTotalTime($rootTimer);
 
@@ -41,7 +41,7 @@
 </script>
 
 <div>
-	<TimerBlock bind:timer={$rootTimer} bind:editable={editable} />
+	<TimerBlock bind:timer={$rootTimer} bind:editable />
 	<div class="timer-info">
 		Total Duration: <span id="totalDuration">{secondsToHMS(totalDuration)}</span>
 	</div>

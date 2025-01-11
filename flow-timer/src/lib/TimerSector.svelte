@@ -1,5 +1,5 @@
 <script>
-	import {getTimerDefinitions} from '$lib/timerDefinitions';
+	import { getTimerDefinitions } from '$lib/timerDefinitions';
 	import { onMount } from 'svelte';
 	import { rootTimer, currentTimer, savedTimers as savedTimersStore } from '$lib/stores/timers';
 	import { browser } from '$app/environment';
@@ -32,7 +32,8 @@
 	}
 
 	function showSelectedTimer() {
-		const selectedStructure = getTimerDefinitions()[$currentTimer] || $savedTimersStore[$currentTimer];
+		const selectedStructure =
+			getTimerDefinitions()[$currentTimer] || $savedTimersStore[$currentTimer];
 		//const errorMessageElement = document.getElementById('errorMessage');
 
 		try {

@@ -41,7 +41,7 @@
 		font-size: 14px;
 		color: #555;
 	}
-    button {
+	button {
 		padding: 10px 20px;
 		margin: 5px;
 		border: none;

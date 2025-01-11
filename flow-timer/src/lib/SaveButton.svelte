@@ -1,8 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import {getTimerDefinitions} from '$lib/timerDefinitions';
-    import { rootTimer, currentTimer, savedTimers, defaultTimerName } from '$lib/stores/timers';
+	import { getTimerDefinitions } from '$lib/timerDefinitions';
+	import { rootTimer, currentTimer, savedTimers, defaultTimerName } from '$lib/stores/timers';
 
 	$: {
 		if (browser && $rootTimer) {
@@ -40,10 +40,10 @@
 	let buttonLabel = 'Save';
 
 	function saveTimer() {
-        if(!$rootTimer){
-            return;
-        }
-        if (getTimerDefinitions()[$rootTimer.name]) {
+		if (!$rootTimer) {
+			return;
+		}
+		if (getTimerDefinitions()[$rootTimer.name]) {
 			confirm(`Predefined Timer '${$rootTimer.name}' already exists. Please change Name!`);
 			return; // Exit
 		}
@@ -54,19 +54,19 @@
 			}
 		}
 
-        const temp = $savedTimers;
+		const temp = $savedTimers;
 		temp[$rootTimer.name] = $rootTimer;
-        $savedTimers = temp;
-        $currentTimer = $rootTimer.name;
+		$savedTimers = temp;
+		$currentTimer = $rootTimer.name;
 		buttonLabel = 'Delete';
 	}
 
 	function deleteTimer() {
 		if ($rootTimer && $savedTimers[$rootTimer.name]) {
-            const temp = $savedTimers;
+			const temp = $savedTimers;
 			delete temp[$rootTimer.name];
-            $savedTimers = temp;
-            $currentTimer = defaultTimerName;
+			$savedTimers = temp;
+			$currentTimer = defaultTimerName;
 			buttonLabel = 'Save';
 		}
 	}
