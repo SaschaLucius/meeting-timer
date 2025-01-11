@@ -9,7 +9,7 @@
 		? deepEquals($savedTimers[$rootTimer.name], $rootTimer)
 			? 'Delete'
 			: 'Overwrite'
-		: 'Save';
+		: 'Save Copy';
 
 	function saveTimer() {
 		if (!$rootTimer) {
@@ -29,8 +29,6 @@
 				return; // Exit if the user declines to overwrite
 			}
 		}
-		console.log('root', $rootTimer);
-		console.log('saved', $savedTimers);
 
 		const temp = $savedTimers;
 		temp[$rootTimer.name] = $rootTimer;
