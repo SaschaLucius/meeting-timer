@@ -35,7 +35,7 @@
 
 <div class="timer">
 	<div class="timer-name"><span id="timerName">{name}</span></div>
-	<div class="timer-description">Description: <span id="timerDescription">{description}</span></div>
+	<div class="timer-description"><span id="timerDescription">{description}</span></div>
 	<div class="timer-info">Remaining Time: <span id="remainingTime">{secondsToHMS(time)}</span></div>
 	<div class="timer-info">Repetitions Left: <span id="repetitionsLeft">{repetitions}</span></div>
 </div>
