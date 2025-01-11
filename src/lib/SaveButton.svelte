@@ -3,33 +3,16 @@
 	import { browser } from '$app/environment';
 	import { getTimerDefinitions } from '$lib/timerDefinitions';
 	import { rootTimer, currentTimer, savedTimers, defaultTimerName } from '$lib/stores/timers';
+	import { deepEquals } from '$lib/types/timer';
 
-	$: buttonLabel = $savedTimers[$rootTimer.name] ? deepEquals($savedTimers[$rootTimer.name], $rootTimer)? 'Delete' : 'Overwrite' : 'Save';
-
-	function deepEquals(arg1, arg2) {
-		console.log('deepEquals', arg1, arg2);
-		if (arg1.name !== arg2.name) {
-			return false;
-		}
-		if (arg1.duration !== arg2.duration) {
-			return false;
-		}
-		if (arg1.repetitions !== arg2.repetitions) {
-			return false;
-		}
-		if (arg1.description !== arg2.description) {
-			return false;
-		}
-		if (arg1.timers?.length !== arg2.timers?.length) {
-			return false;
-		}
-		for (let i = 0; i < (arg1.timers?.length || 0); i++) {
-			if (!deepEquals(arg1.timers[i], arg2.timers[i])) {
-				return false;
-			}
-		}
-		console.log('true');
-		return true;
+	let buttonLabel;
+	$: {console.log('savedTimers',$savedTimers[$rootTimer.name])
+		console.log('rootTimer',$rootTimer)
+		buttonLabel = $savedTimers[$rootTimer.name]
+			? deepEquals($savedTimers[$rootTimer.name], $rootTimer)
+				? 'Delete'
+				: 'Overwrite'
+			: 'Save';
 	}
 
 	function saveTimer() {
@@ -50,12 +33,13 @@
 				return; // Exit if the user declines to overwrite
 			}
 		}
+		console.log('root', $rootTimer);
+		console.log('saved', $savedTimers);
 
 		const temp = $savedTimers;
 		temp[$rootTimer.name] = $rootTimer;
 		$savedTimers = temp;
 		$currentTimer = $rootTimer.name;
-		buttonLabel = 'Delete';
 	}
 
 	function deleteTimer() {
@@ -64,15 +48,11 @@
 			delete temp[$rootTimer.name];
 			$savedTimers = temp;
 			$currentTimer = defaultTimerName;
-			buttonLabel = 'Save';
 		}
 	}
 </script>
 
-<button
-	on:click={() =>
-		buttonLabel === 'Save' || buttonLabel === 'Overwrite' ? saveTimer() : deleteTimer()}
->
+<button on:click={() => (buttonLabel === 'Delete' ? deleteTimer() : saveTimer())}>
 	{buttonLabel}
 </button>
 

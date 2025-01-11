@@ -41,7 +41,7 @@
 						log.logEvent(event.data.message, event.data.time);
 						break;
 					default:
-						console.error('Main: Unhandled message recieved:', event.data);
+						console.warn('Main: Unhandled message recieved:', event.data);
 				}
 			};
 		}

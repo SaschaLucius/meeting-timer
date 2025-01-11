@@ -10,7 +10,6 @@
 
 	let combinedTimers = [];
 	$: {
-		console.log('savedTimersStore', $currentTimer);
 		const TIMER_DEFINITIONS = getTimerDefinitions();
 		combinedTimers = Object.keys(TIMER_DEFINITIONS)
 			.map((key) => ({
@@ -38,9 +37,9 @@
 
 		try {
 			if (selectedStructure && selectedStructure.timer) {
-				$rootTimer = selectedStructure.timer;
+				$rootTimer = structuredClone(selectedStructure.timer);
 			} else {
-				$rootTimer = selectedStructure;
+				$rootTimer = structuredClone(selectedStructure);
 			}
 			//errorMessageElement.innerText = ''; // Clear any previous error message
 		} catch (error) {

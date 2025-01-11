@@ -103,7 +103,6 @@ class Timer {
 
 	// Toggles the pause/resume state and sends the updated state back to the main thread
 	togglePauseResume() {
-		console.log('Timer', this.isRunning, this.isPaused);
 		if (this.isRunning) {
 			if (this.isPaused) {
 				this.startTime = Date.now() - this.elapsedTime; // Adjust start time when resuming
@@ -168,7 +167,6 @@ async function startTimer(timer, rootTimer = false) {
 
 async function startSingleTimer(timer) {
 	const { name, duration, description } = timer;
-	console.log('Starting timer:', description);
 
 	postUpdateDisplay({ name, time: duration, description }); // Initial display update
 	postLogEvent(`Starting '${name}' with ${duration}.`);
@@ -214,7 +212,7 @@ onmessage = function (event) {
 			startTimer(timer, true);
 			break;
 		default:
-			console.error('Worker: Unhandled command received:', command);
+			console.warn('Worker: Unhandled command received:', command);
 			break;
 	}
 };
