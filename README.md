@@ -1,19 +1,5 @@
 # flow-timer
- A set of Timers to help with your flows
-
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
+This timer web app is designed to help you efficiently manage your meeting schedules and other time-based activities. Unlike standard interval timers, it offers unparalleled flexibility, allowing you to create single timers, sequences of timers, or even recursive timers tailored to your needs. The app also includes a library of predefined timers for popular use cases, such as Pomodoro (health), Liberating Structures (meetings), and Tabata (sports). As a Progressive Web App (PWA), it can be installed directly on your device, ensuring a seamless and offline-capable experience.
 
 ## Developing
 
