@@ -64,7 +64,11 @@
 		{#if editable}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
-			<span class="delete-button" onclick={deleteMyself}>×</span>
+			<span
+				class="delete-button"
+				title={timer?.timers?.length ? 'Delete Block and all Child Blocks' : 'Delete Block'}
+				onclick={deleteMyself}>×</span
+			>
 		{/if}
 		<input placeholder="Name" bind:value={timer.name} required style="width: 25%;" />
 		<input
@@ -107,9 +111,12 @@
 			{/if}
 		</div>
 		{#if editable}
-			<button onclick={addSubTimer}>+</button>
+			<button title="Add Child Block" onclick={addSubTimer}>+</button>
 		{/if}
-		<button onclick={() => (isHidden = !isHidden)} disabled={timer?.timers === undefined || timer.timers.length === 0}>
+		<button
+			onclick={() => (isHidden = !isHidden)}
+			disabled={timer?.timers === undefined || timer.timers.length === 0}
+		>
 			{isHidden ? `Show (${timer.timers?.length || 0})` : 'Hide'}
 		</button>
 	{/if}
