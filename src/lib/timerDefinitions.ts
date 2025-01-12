@@ -41,10 +41,10 @@ export function getTimerDefinitions() {
 		},
 		'1-2-4-All': {
 			name: '1-2-4-All',
-			description:
-				'"1-2-4-All" engages everyone in generating ideas by first reflecting individually, then discussing in pairs, then groups of four, and finally as a whole group. It encourages widespread contribution and quickly converges on key ideas through a structured process.',
 			timer: {
 				name: '1-2-4-All',
+				description:
+					'"1-2-4-All" engages everyone in generating ideas by first reflecting individually, then discussing in pairs, then groups of four, and finally as a whole group. It encourages widespread contribution and quickly converges on key ideas through a structured process.',
 				timers: [
 					{
 						name: 'Silent self-reflection',
@@ -74,10 +74,10 @@ export function getTimerDefinitions() {
 		},
 		'15% Solution': {
 			name: '15% Solution',
-			description:
-				'"15% Solution" helps participants identify actions within their control that they can take immediately to create progress. It shifts focus away from barriers and toward actionable steps, empowering individuals and teams to discover their potential.',
 			timer: {
 				name: '15% Solution',
+				description:
+					'"15% Solution" helps participants identify actions within their control that they can take immediately to create progress. It shifts focus away from barriers and toward actionable steps, empowering individuals and teams to discover their potential.',
 				timers: [
 					{
 						name: 'Generate individual 15% Solutions',
@@ -103,10 +103,10 @@ export function getTimerDefinitions() {
 		},
 		TRIZ: {
 			name: 'TRIZ',
-			description:
-				'"TRIZ" is a problem-solving Liberating Structure that uses reverse brainstorming. Participants imagine ways to achieve the worst possible outcome and then identify how these pitfalls might be avoided or reversed. It creates space for innovation by identifying and stopping counterproductive behaviors.',
 			timer: {
 				name: 'TRIZ',
+				description:
+					'"TRIZ" is a problem-solving Liberating Structure that uses reverse brainstorming. Participants imagine ways to achieve the worst possible outcome and then identify how these pitfalls might be avoided or reversed. It creates space for innovation by identifying and stopping counterproductive behaviors.',
 				timers: [
 					{
 						name: 'Introduction and identify unwanted result',
@@ -136,10 +136,10 @@ export function getTimerDefinitions() {
 		},
 		'Impromptu Networking': {
 			name: 'Impromptu Networking',
-			description:
-				'"Impromptu Networking" encourages participants to meet new people and share ideas rapidly. It helps surface diverse perspectives, build connections, and energize participants at the start of a session.',
 			timer: {
 				name: 'Impromptu Networking',
+				description:
+					'"Impromptu Networking" encourages participants to meet new people and share ideas rapidly. It helps surface diverse perspectives, build connections, and energize participants at the start of a session.',
 				timers: [
 					{
 						name: 'Round 1',
@@ -163,10 +163,10 @@ export function getTimerDefinitions() {
 		},
 		'Nine Whys': {
 			name: 'Nine Whys',
-			description:
-				'"Nine Whys" helps participants explore the deeper purpose behind their work. By asking "why" repeatedly, they uncover fundamental motivations and underlying assumptions, fostering a stronger sense of purpose.',
 			timer: {
 				name: 'Nine Whys',
+				description:
+					'"Nine Whys" helps participants explore the deeper purpose behind their work. By asking "why" repeatedly, they uncover fundamental motivations and underlying assumptions, fostering a stronger sense of purpose.',
 				timers: [
 					{ name: 'Introduce the concept', duration: 120 },
 					{ name: 'Participants pair up and ask each other "why"', duration: 240 },
@@ -177,10 +177,10 @@ export function getTimerDefinitions() {
 		},
 		'25/10 Crowdsourcing': {
 			name: '25/10 Crowdsourcing',
-			description:
-				'"25/10 Crowdsourcing" helps identify the most popular ideas among a group quickly. Ideas are generated individually and then scored by others through multiple rounds of scoring, which reveals top ideas.',
 			timer: {
 				name: '25/10 Crowdsourcing',
+				description:
+					'"25/10 Crowdsourcing" helps identify the most popular ideas among a group quickly. Ideas are generated individually and then scored by others through multiple rounds of scoring, which reveals top ideas.',
 				timers: [
 					{ name: 'Generate ideas individually', duration: 300 },
 					{ name: 'Scoring round 1', duration: 120 },
@@ -192,10 +192,10 @@ export function getTimerDefinitions() {
 		},
 		'What, So What, Now What?': {
 			name: 'What, So What, Now What?',
-			description:
-				'"What, So What, Now What?" guides groups through reflective questions to process experiences, identify insights, and plan actionable steps forward. This structure is helpful for debriefing activities and projects.',
 			timer: {
 				name: 'What, So What, Now What?',
+				description:
+					'"What, So What, Now What?" guides groups through reflective questions to process experiences, identify insights, and plan actionable steps forward. This structure is helpful for debriefing activities and projects.',
 				timers: [
 					{ name: 'Reflection on "What?" (What happened?)', duration: 180 },
 					{ name: 'Discussion on "So What?" (What does it mean?)', duration: 240 },
@@ -205,10 +205,10 @@ export function getTimerDefinitions() {
 		},
 		'Appreciative Interviews': {
 			name: 'Appreciative Interviews',
-			description:
-				'"Appreciative Interviews" invites participants to share their personal successes and strengths, creating a positive foundation for group discussions and future actions. It strengthens relationships by exploring meaningful personal stories.',
 			timer: {
 				name: 'Appreciative Interviews',
+				description:
+					'"Appreciative Interviews" invites participants to share their personal successes and strengths, creating a positive foundation for group discussions and future actions. It strengthens relationships by exploring meaningful personal stories.',
 				timers: [
 					{ name: 'Introduce the activity and goals', duration: 180 },
 					{ name: 'Participants pair up and interview each other', duration: 420 },
@@ -219,10 +219,10 @@ export function getTimerDefinitions() {
 		},
 		'Celebrity Interview': {
 			name: 'Celebrity Interview',
-			description:
-				'"Celebrity Interview" uses a panel format to spotlight an expert or “celebrity” who is interviewed by the group. This structure allows for in-depth exploration of specific knowledge or experiences in a lively and engaging way.',
 			timer: {
 				name: 'Celebrity Interview',
+				description:
+					'"Celebrity Interview" uses a panel format to spotlight an expert or “celebrity” who is interviewed by the group. This structure allows for in-depth exploration of specific knowledge or experiences in a lively and engaging way.',
 				timers: [
 					{ name: 'Setup and explain process', duration: 180 },
 					{ name: 'Celebrity shares their insights', duration: 300 },
@@ -233,10 +233,10 @@ export function getTimerDefinitions() {
 		},
 		'Shift and Share': {
 			name: 'Shift and Share',
-			description:
-				'"Shift and Share" enables group members to present their ideas, projects, or skills in small rotating groups, giving everyone a chance to showcase their work and gain diverse feedback efficiently.',
 			timer: {
 				name: 'Shift and Share',
+				description:
+					'"Shift and Share" enables group members to present their ideas, projects, or skills in small rotating groups, giving everyone a chance to showcase their work and gain diverse feedback efficiently.',
 				timers: [
 					{ name: 'Setup and instructions', duration: 180 },
 					{ name: 'Presenter 1 shares and receives feedback', duration: 300 },
@@ -248,10 +248,10 @@ export function getTimerDefinitions() {
 		},
 		'Min Specs': {
 			name: 'Min Specs',
-			description:
-				'"Min Specs" helps teams identify the minimum requirements for a successful outcome, enabling them to eliminate unnecessary work and focus on essential elements.',
 			timer: {
 				name: 'Min Specs',
+				description:
+					'"Min Specs" helps teams identify the minimum requirements for a successful outcome, enabling them to eliminate unnecessary work and focus on essential elements.',
 				timers: [
 					{ name: 'Introduce the concept', duration: 180 },
 					{ name: 'Identify essential success criteria', duration: 300 },
@@ -262,10 +262,10 @@ export function getTimerDefinitions() {
 		},
 		'Drawing Together': {
 			name: 'Drawing Together',
-			description:
-				'"Drawing Together" encourages groups to collaboratively create a visual representation of their ideas or plans, making abstract ideas concrete and fostering collective ownership of the outcome.',
 			timer: {
 				name: 'Drawing Together',
+				description:
+					'"Drawing Together" encourages groups to collaboratively create a visual representation of their ideas or plans, making abstract ideas concrete and fostering collective ownership of the outcome.',
 				timers: [
 					{ name: 'Explain concept and objectives', duration: 180 },
 					{ name: 'Individuals start sketches', duration: 300 },
@@ -276,10 +276,10 @@ export function getTimerDefinitions() {
 		},
 		'Purpose to Practice': {
 			name: 'Purpose to Practice',
-			description:
-				'"Purpose to Practice" helps groups design and plan initiatives by aligning on purpose, principles, participants, structure, and practices. It provides a comprehensive roadmap for collaborative action.',
 			timer: {
 				name: 'Purpose to Practice',
+				description:
+					'"Purpose to Practice" helps groups design and plan initiatives by aligning on purpose, principles, participants, structure, and practices. It provides a comprehensive roadmap for collaborative action.',
 				timers: [
 					{ name: 'Define purpose', duration: 300 },
 					{ name: 'Identify guiding principles', duration: 300 },
@@ -291,10 +291,10 @@ export function getTimerDefinitions() {
 		},
 		'User Experience Fishbowl': {
 			name: 'User Experience Fishbowl',
-			description:
-				'"User Experience Fishbowl" allows participants to observe real users as they interact with a product or process, gaining valuable insights into usability and user needs through direct observation and guided reflection.',
 			timer: {
 				name: 'User Experience Fishbowl',
+				description:
+					'"User Experience Fishbowl" allows participants to observe real users as they interact with a product or process, gaining valuable insights into usability and user needs through direct observation and guided reflection.',
 				timers: [
 					{ name: 'Set up fishbowl seating', duration: 180 },
 					{ name: 'User demonstration of product/process', duration: 600 },
@@ -305,10 +305,10 @@ export function getTimerDefinitions() {
 		},
 		'Mad Tea': {
 			name: 'Mad Tea',
-			description:
-				'"Mad Tea" is a high-energy structured conversation that enables participants to quickly exchange ideas and viewpoints by responding to prompts in rotating pairs. It encourages fast-paced engagement and fresh perspectives.',
 			timer: {
 				name: 'Mad Tea',
+				description:
+					'"Mad Tea" is a high-energy structured conversation that enables participants to quickly exchange ideas and viewpoints by responding to prompts in rotating pairs. It encourages fast-paced engagement and fresh perspectives.',
 				timers: [
 					{ name: 'Introduce the activity and form pairs', duration: 180 },
 					{ name: 'Round 1: Respond to prompt', duration: 60 },
@@ -320,10 +320,10 @@ export function getTimerDefinitions() {
 		},
 		'Conversation Café': {
 			name: 'Conversation Café',
-			description:
-				'"Conversation Café" provides a space for open, meaningful discussions on complex topics. Using structured rounds, it encourages deep listening, shared understanding, and collective insight.',
 			timer: {
 				name: 'Conversation Café',
+				description:
+					'"Conversation Café" provides a space for open, meaningful discussions on complex topics. Using structured rounds, it encourages deep listening, shared understanding, and collective insight.',
 				timers: [
 					{ name: 'Round 1: Introduce topic and set ground rules', duration: 180 },
 					{ name: 'Round 2: Open sharing in rounds', duration: 600 },
@@ -334,10 +334,10 @@ export function getTimerDefinitions() {
 		},
 		'Treuka Consulting': {
 			name: 'Treuka Consulting',
-			description:
-				'The Treuka Consulting method is a structured, collaborative approach designed to help clients clarify key objectives, identify core challenges, co-create solutions, and define actionable steps. This process aims to ensure a deep understanding of the client’s needs, deliver tailored advice, and support effective implementation strategies.',
 			timer: {
 				name: 'Treuka Consulting',
+				description:
+					'The Treuka Consulting method is a structured, collaborative approach designed to help clients clarify key objectives, identify core challenges, co-create solutions, and define actionable steps. This process aims to ensure a deep understanding of the client’s needs, deliver tailored advice, and support effective implementation strategies.',
 				timers: [
 					{
 						name: 'Invite participants to think of a question they would like to ask as a client.',
@@ -366,10 +366,10 @@ export function getTimerDefinitions() {
 		},
 		'Pomodoro Technique': {
 			name: 'Pomodoro Technique',
-			description:
-				'The Pomodoro Technique is a time management method that encourages focused work sessions followed by short breaks. Each session is called a "Pomodoro," lasting typically 25 minutes, with a 5-minute break afterward. After completing four Pomodoros, a longer break is taken. This method enhances productivity and helps maintain concentration.',
 			timer: {
 				name: 'Pomodoro Technique',
+				description:
+					'The Pomodoro Technique is a time management method that encourages focused work sessions followed by short breaks. Each session is called a "Pomodoro," lasting typically 25 minutes, with a 5-minute break afterward. After completing four Pomodoros, a longer break is taken. This method enhances productivity and helps maintain concentration.',
 				timers: [
 					{ name: 'Work Session 1', duration: 1500 },
 					{ name: 'Short Break 1', duration: 300 },
@@ -384,10 +384,10 @@ export function getTimerDefinitions() {
 		},
 		Tabata: {
 			name: 'Tabata',
-			description:
-				'Tabata is a high-intensity interval training (HIIT) workout. This method is designed to improve cardiovascular fitness and burn calories in a short amount of time.',
 			timer: {
 				name: 'Tabata',
+				description:
+					'Tabata is a high-intensity interval training (HIIT) workout. This method is designed to improve cardiovascular fitness and burn calories in a short amount of time.',
 				repetitions: 8,
 				timers: [
 					{ name: 'Rest/Preparation', duration: 10 },
