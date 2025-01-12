@@ -9,6 +9,7 @@
 	import TimerSector from '$lib/TimerSector.svelte';
 	import { rootTimer } from '$lib/stores/timers';
 	import { page } from '$app/stores';
+	import { building } from '$app/environment';
 
 	const NOTIFICATION_MANAGER = new NotificationManager();
 
@@ -18,6 +19,7 @@
 	let log = undefined;
 	let bell = undefined;
 	let hideElements = false;
+	let debugMode = building ? true : $page.url.searchParams.has('debug');
 
 	let TIMER_WORKER;
 	onMount(async () => {
@@ -142,7 +144,7 @@
 		</div>
 	{/if}
 
-	{#if $page.url.searchParams.has('debug')}
+	{#if debugMode}
 		<h2>Log</h2>
 		<Log bind:this={log}></Log>
 	{/if}
