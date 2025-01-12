@@ -4,6 +4,13 @@
 	export let repetitions: number = 0;
 	export let description: string = '-';
 
+	export function resetDisplay(){
+		name = '-';
+		time = 0;
+		repetitions = 0;
+		description = '-';
+	};
+
 	export function updateDisplay({
 		name: newName,
 		time: newTime,

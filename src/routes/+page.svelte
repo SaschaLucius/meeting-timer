@@ -5,7 +5,6 @@
 	import TimerDisplay from '$lib/TimerDisplay.svelte';
 	import Log from '$lib/Log.svelte';
 	import { onMount } from 'svelte';
-	import { showAlertBox } from '$lib/utils';
 	import Bell from '$lib/Bell.svelte';
 	import TimerSector from '$lib/TimerSector.svelte';
 	import { rootTimer } from '$lib/stores/timers';
@@ -65,8 +64,9 @@
 		startGlobalTimer();
 		await startTimer($rootTimer);
 		endGlobalTimer();
-		showAlertBox($rootTimer.name);
+		alert(`The timer "${$rootTimer.name}" has finished!`)
 		bell.play();
+		timerDisplay.resetDisplay();
 	}
 
 	function togglePauseResume() {
