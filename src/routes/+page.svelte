@@ -8,6 +8,7 @@
 	import Bell from '$lib/Bell.svelte';
 	import TimerSector from '$lib/TimerSector.svelte';
 	import { rootTimer } from '$lib/stores/timers';
+	import { page } from '$app/stores';
 
 	const NOTIFICATION_MANAGER = new NotificationManager();
 
@@ -16,6 +17,7 @@
 	let timerDisplay = undefined;
 	let log = undefined;
 	let bell = undefined;
+	let hideElements = false;
 
 	let TIMER_WORKER;
 	onMount(async () => {
@@ -37,7 +39,7 @@
 						document.getElementById('pauseResumeButton').innerText = isPaused ? '\u23F5' : '\u23F8';
 						break;
 					case 'logEvent':
-						log.logEvent(event.data.message, event.data.time);
+						log?.logEvent(event.data.message, event.data.time);
 						break;
 					default:
 						console.warn('Main: Unhandled message recieved:', event.data);
@@ -46,17 +48,6 @@
 		}
 	});
 
-	// ####### Helper Functions ########
-
-	function toggleButtons(disable) {
-		document.querySelectorAll('button').forEach((btn) => {
-			const hasKeepEnabled = btn.hasAttribute('keepEnabled');
-			if (!hasKeepEnabled) {
-				btn.disabled = disable;
-			}
-		});
-	}
-
 	// ####### Button Handler #######
 
 	async function onclickStartTimer() {
@@ -64,7 +55,7 @@
 		startGlobalTimer();
 		await startTimer($rootTimer);
 		endGlobalTimer();
-		alert(`The timer "${$rootTimer.name}" has finished!`)
+		alert(`The timer "${$rootTimer.name}" has finished!`);
 		bell.play();
 		timerDisplay.resetDisplay();
 	}
@@ -81,36 +72,22 @@
 		TIMER_WORKER.postMessage({ command: 'addTime', seconds: 60 }); // Adds 60 seconds (1 minute)
 	}
 
-	function clearLog() {
-		const logContent = document.getElementById('logContent');
-		logContent.innerHTML = '';
-	}
-
 	// ####### Timer Functions #######
 
 	function startGlobalTimer() {
 		globalStartTime = Date.now(); // Start the global timer
 
-		const hide = document.getElementById('toHide');
-		hide.style.display = 'none';
 		noSleepEnabled = true;
-
-		toggleButtons(true); // Disable buttons at the start
-		document.getElementById('timerControls').style.display = 'block'; // Show timer controls
+		hideElements = true;
 	}
 
 	function endGlobalTimer() {
+		hideElements = false;
+		noSleepEnabled = false;
 		if (globalStartTime !== null) {
 			const elapsedTime = Math.floor((Date.now() - globalStartTime) / 1000); // Calculate elapsed time in seconds
-			log.logEvent(`Total time elapsed: ${elapsedTime} seconds.`);
+			log?.logEvent(`Total time elapsed: ${elapsedTime} seconds.`);
 			globalStartTime = null; // Reset the global timer
-
-			const hide = document.getElementById('toHide');
-			hide.style.display = 'flex';
-			noSleepEnabled = false;
-
-			toggleButtons(false); // Enable buttons at the end
-			document.getElementById('timerControls').style.display = 'none'; // Hide timer controls
 		}
 	}
 
@@ -127,7 +104,7 @@
 			TIMER_WORKER.addEventListener('message', handleMessage);
 		});
 
-		log.logEvent(`Timer '${name}' completed!`);
+		log?.logEvent(`Timer '${name}' completed!`);
 	}
 
 	// Initialize root timer UI
@@ -138,32 +115,37 @@
 <Bell bind:this={bell} />
 
 <div class="container">
-	<h1>Flow Timer</h1>
-	<TimerDisplay bind:this={timerDisplay}></TimerDisplay>
+	{#if !hideElements}
+		<h1>Flow Timer</h1>
 
-	<div class="container" id="toHide">
-		<div>
-			<TimerSector />
-			<button onclick={() => onclickStartTimer()}>Start</button>
+		<div class="container">
+			<div>
+				<TimerSector />
+				<button onclick={() => onclickStartTimer()}>Start</button>
+			</div>
+
+			<br />
+
+			<TimerBuilder />
+
+			<br />
 		</div>
+	{:else}
+		<TimerDisplay bind:this={timerDisplay}></TimerDisplay>
 
-		<br />
+		<div>
+			<button type="button" keepEnabled id="pauseResumeButton" onclick={() => togglePauseResume()}
+				>{'\u23F8'}</button
+			>
+			<button type="button" keepEnabled onclick={() => cancelTimer()}>{'\u23ED'}</button>
+			<button type="button" keepEnabled onclick={() => addOneMinute()}>+1:00</button>
+		</div>
+	{/if}
 
-		<TimerBuilder />
-
-		<br />
-	</div>
-
-	<div id="timerControls" style="display: none;">
-		<button type="button" keepEnabled id="pauseResumeButton" onclick={() => togglePauseResume()}
-			>{'\u23F8'}</button
-		>
-		<button type="button" keepEnabled onclick={() => cancelTimer()}>{'\u23ED'}</button>
-		<button type="button" keepEnabled onclick={() => addOneMinute()}>+1:00</button>
-	</div>
-
-	<h2>Log</h2>
-	<Log bind:this={log}></Log>
+	{#if $page.url.searchParams.has('debug')}
+		<h2>Log</h2>
+		<Log bind:this={log}></Log>
+	{/if}
 </div>
 
 <style>
@@ -171,7 +153,9 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		max-width: 720px;
+		max-width: 1024px;
+		min-width: 360px;
+		min-height: 300px;
 		margin: auto;
 	}
 	button {

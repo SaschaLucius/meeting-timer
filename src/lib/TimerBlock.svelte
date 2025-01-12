@@ -119,6 +119,7 @@
 		margin: 16px 0;
 		border-radius: 8px;
 		background-color: #f9f9f9;
+		width: 95%;
 	}
 	.delete-button {
 		color: red;

@@ -40,7 +40,7 @@
 	}
 </script>
 
-<div>
+<div style="width: 95%">
 	<TimerBlock bind:timer={$rootTimer} bind:editable />
 	<div class="timer-info">
 		Total Duration: <span id="totalDuration">{secondsToHMS(totalDuration)}</span>
