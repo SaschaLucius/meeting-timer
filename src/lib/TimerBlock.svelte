@@ -69,6 +69,7 @@
 		<input placeholder="Name" bind:value={timer.name} required style="width: 25%;" />
 		<input
 			placeholder="Duration in HH:mm:ss"
+			title={secondsToHMS(timer?.duration)}
 			value={secondsToHMS(timer?.duration)}
 			onblur={(event) => (timer.duration = hmsToSeconds((event.target as HTMLInputElement)?.value))}
 			disabled={timer?.timers !== undefined && timer.timers.length > 0}
@@ -78,11 +79,13 @@
 			placeholder="Repetitions"
 			type="number"
 			min="1"
+			title={timer.repetitions ? timer.repetitions + '' : ''}
 			bind:value={timer.repetitions}
 			style="width: 25%;"
 		/>
 		<input
 			placeholder="Description"
+			title={timer.description ? timer.description + '' : ''}
 			bind:value={timer.description}
 			style="width: calc(75% + 60px);"
 		/>
