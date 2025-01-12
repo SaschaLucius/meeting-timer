@@ -106,9 +106,9 @@
 		{#if editable}
 			<button onclick={addSubTimer}>+</button>
 		{/if}
-		<button onclick={() => (isHidden = !isHidden)}
-			>{isHidden ? `Show (${timer.timers?.length || 0})` : 'Hide'}</button
-		>
+		<button onclick={() => (isHidden = !isHidden)} disabled={timer?.timers === undefined || timer.timers.length === 0}>
+			{isHidden ? `Show (${timer.timers?.length || 0})` : 'Hide'}
+		</button>
 	{/if}
 </div>
 
@@ -154,7 +154,12 @@
 		color: white;
 		cursor: pointer;
 	}
-	.timer-block button:hover {
+	.timer-block button:disabled {
+		background-color: #ccc;
+		border-color: #ccc;
+		cursor: not-allowed;
+	}
+	.timer-block button:hover:not(:disabled) {
 		background-color: #0056b3;
 	}
 </style>
