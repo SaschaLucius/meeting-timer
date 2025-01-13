@@ -8,17 +8,16 @@ export default defineConfig({
 		SvelteKitPWA({
 			// PWA options
 			manifest: {
-				theme_color: '#8936FF',
+				theme_color: '#17637f',
 				background_color: '#2EC6FE',
 				icons: [
-					{ purpose: 'maskable', sizes: '512x512', src: 'icon512_maskable.png', type: 'image/png' },
-					{ purpose: 'any', sizes: '512x512', src: 'icon512_rounded.png', type: 'image/png' }
+					{ purpose: 'any', sizes: '512x512', src: 'icon512.png', type: 'image/png' }
 				],
 				orientation: 'any',
 				display: 'standalone',
 				lang: 'en-GB',
 				name: 'Flow Timer',
-				short_name: 'FT',
+				short_name: 'Flow Timer',
 				start_url: 'https://flow-timer.de/',
 				scope: 'https://flow-timer.de/'
 			},
@@ -30,7 +29,9 @@ export default defineConfig({
 			}
 		})
 	],
-
+	define: {
+		'process.env.NODE_ENV': '"production"',
+	},
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	}
