@@ -5,6 +5,7 @@
 	import { hmsToSeconds, secondsToHMS } from '$lib/utils';
 
 	export let timer: Timer;
+	export let depth = 0;
 
 	let isHidden = false;
 
@@ -20,9 +21,23 @@
 	}
 
 	export let deleteMyself = () => {};
+
+	function calculateBackgroundColor(depth: number): string {
+		const startColor = [249, 249, 249]; // RGB for #f9f9f9
+		const endColor = [149, 149, 149]; // RGB for a darker shade
+
+		const factor = Math.min(depth / 5, 1); // Ensure factor doesn't exceed 1
+
+		const newColor = startColor.map((start, index) => {
+			const end = endColor[index];
+			return Math.round(start + factor * (end - start));
+		});
+
+		return `rgb(${newColor.join(', ')})`;
+	}
 </script>
 
-<div class="timer-block">
+<div class="timer-block" style="background-color: {calculateBackgroundColor(depth)};">
 	{#if timer}
 		{#if editable}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -34,14 +49,16 @@
 			>
 		{/if}
 		<input placeholder="Name" bind:value={timer.name} required style="width: 25%;" />
-		<input
-			placeholder="Duration in HH:mm:ss"
-			title={secondsToHMS(timer?.duration)}
-			value={secondsToHMS(timer?.duration)}
-			onblur={(event) => (timer.duration = hmsToSeconds((event.target as HTMLInputElement)?.value))}
-			disabled={timer?.timers !== undefined && timer.timers.length > 0}
-			style="width: 25%;"
-		/>
+		{#if timer?.timers === undefined || timer.timers.length === 0}
+			<input
+				placeholder="Duration in HH:mm:ss"
+				title={secondsToHMS(timer?.duration)}
+				value={secondsToHMS(timer?.duration)}
+				onblur={(event) =>
+					(timer.duration = hmsToSeconds((event.target as HTMLInputElement)?.value))}
+				style="width: 25%;"
+			/>
+		{/if}
 		<input
 			placeholder="Repetitions"
 			type="number"
@@ -63,6 +80,7 @@
 					<div class="sub-timer">
 						<Self
 							bind:timer={timer.timers[i]}
+							depth={depth + 1}
 							deleteMyself={() => {
 								timer.timers?.splice(i, 1);
 								timer.timers = timer.timers;
@@ -73,15 +91,14 @@
 				{/each}
 			{/if}
 		</div>
-		{#if editable}
+		{#if editable && !isHidden}
 			<button title="Add Child Block" onclick={addSubTimer}>+</button>
 		{/if}
-		<button
-			onclick={() => (isHidden = !isHidden)}
-			disabled={timer?.timers === undefined || timer.timers.length === 0}
-		>
-			{isHidden ? `Show (${timer.timers?.length || 0})` : 'Hide'}
-		</button>
+		{#if timer?.timers !== undefined && timer.timers.length > 0}
+			<button onclick={() => (isHidden = !isHidden)}>
+				{isHidden ? `Show (${timer.timers?.length || 0})` : 'Hide'}
+			</button>
+		{/if}
 	{/if}
 </div>
 
@@ -91,7 +108,6 @@
 		padding: 8px;
 		margin: 16px 0;
 		border-radius: 8px;
-		background-color: #f9f9f9;
 		width: 95%;
 	}
 	.delete-button {
@@ -105,14 +121,14 @@
 		display: inline-block;
 		margin: 8px 4px;
 		padding: 8px;
-		border: 1px solid #ccc;
+		border: 1px solid rgb(204, 204, 204);
 		border-radius: 4px;
 		font-size: 14px;
 	}
 	.timer-block .timer-list {
 		margin-top: 16px;
-		padding-left: 16px;
-		border-left: 2px solid #ddd;
+		padding-left: 24px;
+		border-left: 2px solid rgb(221, 221, 221);
 	}
 	.timer-block .sub-timer {
 		margin-bottom: 16px;
