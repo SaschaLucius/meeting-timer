@@ -138,7 +138,7 @@ function postLogEvent(message) {
 async function startTimer(timer, rootTimer = false) {
 	const { name, repetitions, timers } = timer;
 	try {
-		if (repetitions > 1) {
+		if (repetitions && repetitions > 1) {
 			postLogEvent(`Starting '${name}' (${repetitions} repetitions).`);
 			for (let currentRep = repetitions; currentRep > 0; currentRep--) {
 				postUpdateDisplay({ repetitions: currentRep });
@@ -151,11 +151,12 @@ async function startTimer(timer, rootTimer = false) {
 			return;
 		}
 
-		if (timers) {
+		if (timers && timers.length > 0) {
 			await startSeriesOfTimers(timer);
 		} else {
 			await startSingleTimer(timer);
 		}
+
 		if (rootTimer) {
 			postMessage({ type: 'completed' }); // Send completed message
 			sendNotification(`All Timer for '${name}' completed!`);
@@ -196,9 +197,6 @@ onmessage = function (event) {
 	console.log('Worker: Command received from Main:', event.data);
 	const { command, seconds, timer } = event.data;
 	switch (command) {
-		case 'start':
-			TIMER_INSTANCE.start(seconds);
-			break;
 		case 'cancel':
 			TIMER_INSTANCE.cancel();
 			break;
