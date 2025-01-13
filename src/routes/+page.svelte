@@ -5,7 +5,6 @@
 	import TimerDisplay from '$lib/TimerDisplay.svelte';
 	import Log from '$lib/Log.svelte';
 	import { onMount } from 'svelte';
-	import Bell from '$lib/Bell.svelte';
 	import TimerSector from '$lib/TimerSector.svelte';
 	import { rootTimer } from '$lib/stores/timers';
 	import { page } from '$app/stores';
@@ -17,7 +16,6 @@
 	let noSleepEnabled = false;
 	let timerDisplay = undefined;
 	let log = undefined;
-	let bell = undefined;
 	let hideElements = false;
 	let debugMode = building ? true : $page.url.searchParams.has('debug');
 
@@ -54,11 +52,21 @@
 
 	async function onclickStartTimer() {
 		await NOTIFICATION_MANAGER.requestNotificationPermission();
+		noSleepEnabled = true;
+		hideElements = true;
 		startGlobalTimer();
 		await startTimer($rootTimer);
 		endGlobalTimer();
-		bell.play();
+		let audio = new Audio("finish.mp3")
+		await new Promise(res=>{
+			audio.play()
+			audio.onended = () => {
+				res();
+			};
+		});
 		alert(`The timer "${$rootTimer.name}" has finished!`);
+		hideElements = false;
+		noSleepEnabled = false;
 		timerDisplay.resetDisplay();
 	}
 
@@ -78,14 +86,9 @@
 
 	function startGlobalTimer() {
 		globalStartTime = Date.now(); // Start the global timer
-
-		noSleepEnabled = true;
-		hideElements = true;
 	}
 
 	function endGlobalTimer() {
-		hideElements = false;
-		noSleepEnabled = false;
 		if (globalStartTime !== null) {
 			const elapsedTime = Math.floor((Date.now() - globalStartTime) / 1000); // Calculate elapsed time in seconds
 			log?.logEvent(`Total time elapsed: ${elapsedTime} seconds.`);
@@ -114,7 +117,6 @@
 </script>
 
 <NoSleep bind:enabled={noSleepEnabled} />
-<Bell bind:this={bell} />
 
 <div class="container">
 	{#if !hideElements}
