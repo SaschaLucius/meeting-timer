@@ -57,8 +57,8 @@
 		startGlobalTimer();
 		await startTimer($rootTimer);
 		endGlobalTimer();
-		alert(`The timer "${$rootTimer.name}" has finished!`);
 		bell.play();
+		alert(`The timer "${$rootTimer.name}" has finished!`);
 		timerDisplay.resetDisplay();
 	}
 
