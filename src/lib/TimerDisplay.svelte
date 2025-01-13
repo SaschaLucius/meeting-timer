@@ -43,8 +43,8 @@
 
 <style>
 	.timer {
-		margin: 20px;
-		padding: 20px;
+		margin: 10px;
+		padding: 10px;
 		text-align: center;
 		background-color: #f9f9f9;
 		border-radius: 8px;
@@ -52,9 +52,13 @@
 		color: black;
 	}
 	.timer-name {
-		font-size: 24px;
+		font-size: 3em;
 		word-wrap: break-word;
 		text-align: center;
+	}
+	.remainingTime{
+		font-size: 24vw;
+		line-height: 85%;
 	}
 	.timer-description {
 		word-wrap: break-word;
