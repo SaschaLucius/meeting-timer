@@ -3,21 +3,11 @@
 	import TimerBlock from './TimerBlock.svelte';
 	import { rootTimer } from '$lib/stores/timers';
 	import type { Timer } from '$lib/types/timer';
+	import { secondsToHMS } from '$lib/utils';
 
 	export let editable = true;
 
 	$: totalDuration = calculateTotalTime($rootTimer);
-
-	// Converts total seconds to HH:mm:ss format
-	function secondsToHMS(totalSeconds: number | undefined): string {
-		if (totalSeconds === undefined) return '';
-		const hours = Math.floor(totalSeconds / 3600);
-		const minutes = Math.floor((totalSeconds % 3600) / 60);
-		const seconds = totalSeconds % 60;
-
-		// Format each unit to be two digits
-		return [hours, minutes, seconds].map((unit) => String(unit).padStart(2, '0')).join(':');
-	}
 
 	function calculateTotalTime(timer: Timer) {
 		let totalTime = 0;
