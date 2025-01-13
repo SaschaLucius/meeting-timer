@@ -49,12 +49,13 @@
 
 <style>
 	.timer {
-		margin-bottom: 20px;
+		margin: 20px;
 		padding: 20px;
 		text-align: center;
 		background-color: #f9f9f9;
 		border-radius: 8px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		color: black;
 	}
 	.timer-name {
 		font-size: 24px;

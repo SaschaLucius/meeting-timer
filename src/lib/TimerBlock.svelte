@@ -125,7 +125,7 @@
 <style>
 	.timer-block {
 		border: 1px solid #ccc;
-		padding: 16px;
+		padding: 8px;
 		margin: 16px 0;
 		border-radius: 8px;
 		background-color: #f9f9f9;
