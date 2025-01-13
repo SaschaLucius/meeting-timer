@@ -8,8 +8,8 @@ export default defineConfig({
 		SvelteKitPWA({
 			// PWA options
 			manifest: {
-				theme_color: '#17637f',
-				background_color: '#2EC6FE',
+				theme_color: '#00ACC1',
+				background_color: '#543ab7',
 				icons: [
 					{ purpose: 'any', sizes: '512x512', src: 'icon512.png', type: 'image/png' }
 				],
