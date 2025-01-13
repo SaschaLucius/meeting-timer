@@ -125,10 +125,10 @@
 		<div class="container">
 			<div>
 				<TimerSector />
-				<button onclick={() => onclickStartTimer()}>Start</button>
+				<br />
+				<br />
+				<button onclick={() => onclickStartTimer()} style="width: 100%; height: 50px; font-size: 2em;">Start</button>
 			</div>
-
-			<br />
 
 			<TimerBuilder />
 
