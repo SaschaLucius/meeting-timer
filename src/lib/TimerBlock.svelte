@@ -12,12 +12,12 @@
 	export let editable = true;
 
 	function addSubTimer() {
-		timer.duration = undefined;
 		if (timer.timers) {
 			timer.timers.push(getSubTimer(timer.duration));
 		} else {
 			timer.timers = [getSubTimer(timer.duration)];
 		}
+		timer.duration = undefined;
 	}
 
 	export let deleteMyself = () => {};
@@ -82,8 +82,11 @@
 							bind:timer={timer.timers[i]}
 							depth={depth + 1}
 							deleteMyself={() => {
-								timer.timers?.splice(i, 1);
+								const deleted = timer.timers?.splice(i, 1);
 								timer.timers = timer.timers;
+								if(timer.timers?.length === 0 && deleted !== undefined && deleted.length > 0) {
+									timer.duration = deleted[0].duration;
+								}
 							}}
 							{editable}
 						></Self>
