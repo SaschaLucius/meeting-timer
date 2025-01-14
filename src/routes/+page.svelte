@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import NotificationManager from '$lib/notificationManager.js';
 	import NoSleep from '$lib/NoSleep.svelte';
 	import TimerBuilder from '$lib/TimerBuilder.svelte';
@@ -7,19 +7,24 @@
 	import { onMount } from 'svelte';
 	import TimerSector from '$lib/TimerSector.svelte';
 	import { rootTimer } from '$lib/stores/timers';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { building } from '$app/environment';
+	import type { Timer } from '$lib/types/timer';
 
 	const NOTIFICATION_MANAGER = new NotificationManager();
 
-	let globalStartTime = null; // Global variable to store the start time
+	let globalStartTime: number | null = null; // Global variable to store the start time
 	let noSleepEnabled = false;
-	let timerDisplay = undefined;
-	let log = undefined;
+	let timerDisplay: TimerDisplay;
+	let log: Log | undefined = undefined; // stays undefined if debugMode is false
 	let hideElements = false;
-	let debugMode = building ? true : $page.url.searchParams.has('debug');
+	let debugMode = building ? true : page.url.searchParams.has('debug');
+	let buttonText = '\u23F8';
 
-	let TIMER_WORKER;
+	// ####### TIMER_WORKER #######
+
+	let TIMER_WORKER: Worker;
+
 	onMount(async () => {
 		// must be "async" because of the dynamic import. see "await import" below
 		if (window.Worker) {
@@ -36,7 +41,7 @@
 						timerDisplay.updateDisplay(event.data);
 						break;
 					case 'togglePauseResume':
-						document.getElementById('pauseResumeButton').innerText = isPaused ? '\u23F5' : '\u23F8';
+						buttonText = isPaused ? '\u23F5' : '\u23F8';
 						break;
 					case 'logEvent':
 						log?.logEvent(event.data.message, event.data.time);
@@ -47,28 +52,6 @@
 			};
 		}
 	});
-
-	// ####### Button Handler #######
-
-	async function onclickStartTimer() {
-		await NOTIFICATION_MANAGER.requestNotificationPermission();
-		noSleepEnabled = true;
-		hideElements = true;
-		startGlobalTimer();
-		await startTimer($rootTimer);
-		endGlobalTimer();
-		let audio = new Audio("finish.mp3")
-		await new Promise(res=>{
-			audio.play()
-			audio.onended = () => {
-				res();
-			};
-		});
-		alert(`The timer "${$rootTimer.name}" has finished!`);
-		hideElements = false;
-		noSleepEnabled = false;
-		timerDisplay.resetDisplay();
-	}
 
 	function togglePauseResume() {
 		TIMER_WORKER.postMessage({ command: 'togglePauseResume' });
@@ -82,7 +65,45 @@
 		TIMER_WORKER.postMessage({ command: 'addTime', seconds: 60 }); // Adds 60 seconds (1 minute)
 	}
 
-	// ####### Timer Functions #######
+	async function startTimer(timer: Timer) {
+		TIMER_WORKER.postMessage({ command: 'startTimer', timer });
+		// Wait for the timer to complete
+		await new Promise<void>((resolve) => {
+			const handleMessage = (event: any) => {
+				if (event.data.type === 'completed') {
+					TIMER_WORKER.removeEventListener('message', handleMessage);
+					resolve();
+				}
+			};
+			TIMER_WORKER.addEventListener('message', handleMessage);
+		});
+
+		log?.logEvent(`Timer '${name}' completed!`);
+	}
+
+	// ####### Start Button Handler #######
+
+	async function onclickStartTimer() {
+		await NOTIFICATION_MANAGER.requestNotificationPermission();
+		noSleepEnabled = true;
+		hideElements = true;
+		startGlobalTimer();
+		await startTimer($rootTimer);
+		endGlobalTimer();
+		let audio = new Audio('finish.mp3');
+		await new Promise<void>((res) => {
+			audio.play();
+			audio.onended = () => {
+				res();
+			};
+		});
+		alert(`The timer "${$rootTimer.name}" has finished!`);
+		hideElements = false;
+		noSleepEnabled = false;
+		timerDisplay?.resetDisplay();
+	}
+
+	// ####### Global Timer Functions #######
 
 	function startGlobalTimer() {
 		globalStartTime = Date.now(); // Start the global timer
@@ -95,25 +116,6 @@
 			globalStartTime = null; // Reset the global timer
 		}
 	}
-
-	async function startTimer(timer) {
-		TIMER_WORKER.postMessage({ command: 'startTimer', timer });
-		// Wait for the timer to complete
-		await new Promise((resolve) => {
-			const handleMessage = (event) => {
-				if (event.data.type === 'completed') {
-					TIMER_WORKER.removeEventListener('message', handleMessage);
-					resolve();
-				}
-			};
-			TIMER_WORKER.addEventListener('message', handleMessage);
-		});
-
-		log?.logEvent(`Timer '${name}' completed!`);
-	}
-
-	// Initialize root timer UI
-	//renderTimers(rootTimer, document.getElementById('timerBuilder'));
 </script>
 
 <NoSleep bind:enabled={noSleepEnabled} />
@@ -127,7 +129,10 @@
 				<TimerSector />
 				<br />
 				<br />
-				<button onclick={() => onclickStartTimer()} style="width: 100%; height: 50px; font-size: 2em;">Start</button>
+				<button
+					onclick={() => onclickStartTimer()}
+					style="width: 100%; height: 50px; font-size: 2em;">Start</button
+				>
 			</div>
 
 			<TimerBuilder />
@@ -138,11 +143,9 @@
 		<TimerDisplay bind:this={timerDisplay}></TimerDisplay>
 
 		<div>
-			<button type="button" keepEnabled id="pauseResumeButton" onclick={() => togglePauseResume()}
-				>{'\u23F8'}</button
-			>
-			<button type="button" keepEnabled onclick={() => cancelTimer()}>{'\u23ED'}</button>
-			<button type="button" keepEnabled onclick={() => addOneMinute()}>+1:00</button>
+			<button type="button" onclick={() => togglePauseResume()}>{buttonText}</button>
+			<button type="button" onclick={() => cancelTimer()}>{'\u23ED'}</button>
+			<button type="button" onclick={() => addOneMinute()}>+1:00</button>
 		</div>
 	{/if}
 
