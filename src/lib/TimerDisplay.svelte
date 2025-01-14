@@ -3,13 +3,13 @@
 	export let name: string = '-';
 	export let time: number = 0; // in seconds
 	export let repetitions: number = 0;
-	export let description: string = '-';
+	export let description: string = '';
 
 	export function resetDisplay(){
 		name = '-';
 		time = 0;
 		repetitions = 0;
-		description = '-';
+		description = '';
 	};
 
 	export function updateDisplay({

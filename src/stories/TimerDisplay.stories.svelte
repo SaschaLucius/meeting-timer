@@ -10,8 +10,29 @@
 	});
 </script>
 
+<script>
+	let interval;
+	let seconds = 0;
+
+	const startInterval = () => {
+		clearInterval(interval);
+		interval = setInterval(() => {
+			seconds++;
+		}, 5);
+	};
+	const stopInterval = () => {
+		clearInterval(interval);
+		interval = undefined;
+	};
+</script>
+
 <!-- More on writing stories with args: https://storybook.js.org/docs/writing-stories/args -->
 <Story name="Default" args={{}} />
+
+<Story name="With Timer">
+	<TimerDisplay name="Countdown" description="is is a description" time={seconds} repetitions="3" />
+	<button on:click={interval ? stopInterval : startInterval}>Start</button>
+</Story>
 
 <Story
 	name="With Values"
@@ -24,7 +45,7 @@
 />
 
 <Story
-	name="With Long Values"
+	name="With Long Text Values"
 	args={{
 		name: 'CountdownCountdownCountdownCountdownCountdownCountdownCountdownCountdown',
 		description:
