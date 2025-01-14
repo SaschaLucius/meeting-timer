@@ -115,7 +115,7 @@
 	.timer-block {
 		border: 1px solid #ccc;
 		padding: 8px;
-		margin: 16px 0;
+		margin: 2px 0;
 		border-radius: 8px;
 		width: 95%;
 	}
@@ -128,19 +128,16 @@
 	}
 	.timer-block input {
 		display: inline-block;
-		margin: 8px 4px;
+		margin: 4px 4px;
 		padding: 8px;
 		border: 1px solid rgb(204, 204, 204);
 		border-radius: 4px;
 		font-size: 14px;
 	}
 	.timer-block .timer-list {
-		margin-top: 16px;
+		margin-top: 8px;
 		padding-left: 24px;
 		border-left: 2px solid rgb(221, 221, 221);
-	}
-	.timer-block .sub-timer {
-		margin-bottom: 16px;
 	}
 	.timer-block button {
 		margin: 8px 4px;
