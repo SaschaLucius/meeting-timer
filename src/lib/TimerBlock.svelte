@@ -20,7 +20,13 @@
 		timer.duration = undefined;
 	}
 
-	export let deleteMyself = () => {};
+	export let deleteMyself = () => {
+		timer.name = 'New Timer';
+		timer.duration = undefined;
+		timer.repetitions = undefined;
+		timer.description = '';
+		timer.timers = [];
+	};
 
 	function calculateBackgroundColor(depth: number): string {
 		const startColor = [249, 249, 249]; // RGB for #f9f9f9
