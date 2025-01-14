@@ -6,7 +6,6 @@
 		try {
 			logItems = [...logItems, { time, message }];
 			logContent.scrollTop = logContent.scrollHeight;
-			console.log(message);
 		} catch (error) {
 			console.error('Log event failed:', error);
 		}
