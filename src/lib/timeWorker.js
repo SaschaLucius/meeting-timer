@@ -138,7 +138,7 @@ function postLogEvent(message) {
 async function startTimer(timer, rootTimer = false) {
 	const { name, repetitions, timers } = timer;
 	try {
-		if (repetitions && repetitions > 1) {
+		if (repetitions !== undefined && repetitions > 1) {
 			postLogEvent(`Starting '${name}' (${repetitions} repetitions).`);
 			for (let currentRep = repetitions; currentRep > 0; currentRep--) {
 				postUpdateDisplay({ repetitions: currentRep });
@@ -151,7 +151,7 @@ async function startTimer(timer, rootTimer = false) {
 			return;
 		}
 
-		if (timers && timers.length > 0) {
+		if (timers !== undefined && timers.length > 0) {
 			await startSeriesOfTimers(timer);
 		} else {
 			await startSingleTimer(timer);
