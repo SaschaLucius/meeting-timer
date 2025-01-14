@@ -41,7 +41,7 @@
 						timerDisplay.updateDisplay(event.data);
 						break;
 					case 'togglePauseResume':
-						buttonText = isPaused ? '\u23F5' : '\u23F8';
+						buttonText = isPaused ? '\u25BA' : '\u23F8';
 						break;
 					case 'logEvent':
 						log?.logEvent(event.data.message, event.data.time);
