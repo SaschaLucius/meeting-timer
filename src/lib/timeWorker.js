@@ -136,17 +136,21 @@ function postLogEvent(message) {
 }
 
 async function startTimer(timer, rootTimer = false) {
-	const { name, repetitions, timers } = timer;
+	const { name, repetitions, timers, duration } = timer;
 	try {
 		if (repetitions !== undefined && repetitions > 1) {
 			postLogEvent(`Starting '${name}' (${repetitions} repetitions).`);
 			for (let currentRep = repetitions; currentRep > 0; currentRep--) {
-				postUpdateDisplay({ repetitions: currentRep });
+				postUpdateDisplay({ repetitions: currentRep - 1 });
 				await startTimer({
 					...timer,
 					repetitions: undefined,
 					name: `${name} (${repetitions - currentRep + 1}/${repetitions})`
 				});
+			}
+			if (rootTimer) {
+				postMessage({ type: 'completed' }); // Send completed message
+				sendNotification(`All Timer for '${name}' completed!`);
 			}
 			return;
 		}
@@ -154,7 +158,11 @@ async function startTimer(timer, rootTimer = false) {
 		if (timers !== undefined && timers.length > 0) {
 			await startSeriesOfTimers(timer);
 		} else {
-			await startSingleTimer(timer);
+			if (duration) {
+				await startSingleTimer(timer);
+			} else {
+				console.error('Timer without duration defined.');
+			}
 		}
 
 		if (rootTimer) {
