@@ -19,7 +19,7 @@
 	let log: Log | undefined = undefined; // stays undefined if debugMode is false
 	let hideElements = false;
 	let debugMode = building ? true : page.url.searchParams.has('debug');
-	let buttonText = '\u23F8';
+	let buttonText = '\u23F8\uFE0E';
 
 	// ####### TIMER_WORKER #######
 
@@ -41,7 +41,7 @@
 						timerDisplay.updateDisplay(event.data);
 						break;
 					case 'togglePauseResume':
-						buttonText = isPaused ? '\u25BA' : '\u23F8';
+						buttonText = isPaused ? '\u25B6\uFE0E' : '\u23F8\uFE0E';
 						break;
 					case 'logEvent':
 						log?.logEvent(event.data.message, event.data.time);
