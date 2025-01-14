@@ -21,7 +21,7 @@
 	}
 
 	export let deleteMyself = () => {
-		timer.name = 'New Timer';
+		timer.name = '';
 		timer.duration = undefined;
 		timer.repetitions = undefined;
 		timer.description = '';
