@@ -9,6 +9,7 @@
 	});
 
 	let combinedTimers: (Timer & { prefix: string })[] = [];
+
 	$: {
 		const TIMER_DEFINITIONS = getTimerDefinitions();
 		combinedTimers = Object.keys(TIMER_DEFINITIONS)
@@ -52,6 +53,3 @@
 		</option>
 	{/each}
 </select>
-
-<style>
-</style>

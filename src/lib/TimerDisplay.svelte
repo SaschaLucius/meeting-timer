@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { secondsToHMS } from '$lib/utils';
+
 	export let name: string = '-';
 	export let time: number = 0; // in seconds
 	export let repetitions: number = 0;

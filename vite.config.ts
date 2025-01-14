@@ -10,9 +10,7 @@ export default defineConfig({
 			manifest: {
 				theme_color: '#00ACC1',
 				background_color: '#543ab7',
-				icons: [
-					{ purpose: 'any', sizes: '512x512', src: 'icon512.png', type: 'image/png' }
-				],
+				icons: [{ purpose: 'any', sizes: '512x512', src: 'icon512.png', type: 'image/png' }],
 				orientation: 'any',
 				display: 'standalone',
 				lang: 'en-GB',
@@ -30,7 +28,7 @@ export default defineConfig({
 		})
 	],
 	define: {
-		'process.env.NODE_ENV': '"production"',
+		'process.env.NODE_ENV': '"production"'
 	},
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']

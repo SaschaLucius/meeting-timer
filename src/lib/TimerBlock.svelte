@@ -6,10 +6,17 @@
 
 	export let timer: Timer;
 	export let depth = 0;
+	export let editable = true;
 
 	let isHidden = false;
 
-	export let editable = true;
+	export let deleteMyself = () => {
+		timer.name = '';
+		timer.duration = undefined;
+		timer.repetitions = undefined;
+		timer.description = '';
+		timer.timers = [];
+	};
 
 	function addSubTimer() {
 		if (timer.timers) {
@@ -19,14 +26,6 @@
 		}
 		timer.duration = undefined;
 	}
-
-	export let deleteMyself = () => {
-		timer.name = '';
-		timer.duration = undefined;
-		timer.repetitions = undefined;
-		timer.description = '';
-		timer.timers = [];
-	};
 
 	function calculateBackgroundColor(depth: number): string {
 		const startColor = [249, 249, 249]; // RGB for #f9f9f9
