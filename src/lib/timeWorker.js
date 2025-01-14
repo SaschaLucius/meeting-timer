@@ -1,35 +1,50 @@
+/**
+ * @typedef {Object} TimerType
+ * @property {string} name - The name of the timer.
+ * @property {number} [duration] - The duration of the timer in seconds (optional).
+ * @property {number} [repetitions] - The number of repetitions (optional).
+ * @property {TimerType[]} [timers] - A list of nested timers (optional).
+ * @property {string} [description] - A description of the timer (optional).
+ */
+
 class Timer {
 	constructor() {
 		/**
 		 * Time left in milliseconds
+		 * @type {number}
 		 */
 		this.timeLeft = 0;
 		/**
 		 * Tracks if the timer is running
+		 * @type {boolean}
 		 */
 		this.isRunning = false;
 		/**
 		 * Tracks if the timer is paused
+		 * @type {boolean}
 		 */
 		this.isPaused = false;
 		/**
 		 * Tracks the start time in milliseconds
+		 * @type {number}
 		 */
-		this.startTime = null;
+		this.startTime = 0;
 		/**
 		 * Tracks the elapsed time in milliseconds
+		 * @type {number}
 		 */
 		this.elapsedTime = 0;
 
 		/**
 		 * Tracks the seconds for the timer
+		 * @type {number}
 		 */
 		this.seconds = 0;
 	}
 
 	/**
 	 * Helper function to create a delay
-	 * @param {*} ms amount of delay in milliseconds
+	 * @param {number} ms amount of delay in milliseconds
 	 * @returns
 	 */
 	delay(ms) {
@@ -38,7 +53,7 @@ class Timer {
 
 	/**
 	 * Starts the timer with the specified number of seconds
-	 * @param {*} seconds number of seconds to run the timer
+	 * @param {number} seconds number of seconds to run the timer
 	 * @returns
 	 */
 	async start(seconds) {
@@ -92,7 +107,10 @@ class Timer {
 		postTogglePauseResume(false);
 	}
 
-	// Adds seconds to the current timer time
+	/**
+	 * Adds seconds to the current timer time
+	 * @param {number} seconds
+	 */
 	addTime(seconds) {
 		if (this.isRunning) {
 			this.seconds += seconds;
@@ -122,19 +140,43 @@ class Timer {
 
 const TIMER_INSTANCE = new Timer();
 
-function postUpdateDisplay({ name, time, repetitions, description }) {
+/**
+ * Sends a message to update the display with the provided details.
+ * @param {Object} params - The parameters for the update.
+ * @param {string | undefined} [params.name] - The name to display.
+ * @param {number | undefined} [params.time] - The time to display.
+ * @param {number | undefined} [params.repetitions] - The number of repetitions to display.
+ * @param {string | undefined} [params.description] - The description to display.
+ */
+function postUpdateDisplay({
+	name = undefined,
+	time = undefined,
+	repetitions = undefined,
+	description = undefined
+}) {
 	postMessage({ type: 'updateDisplay', name, time, repetitions, description });
 }
 
+/**
+ * @param {boolean} isPaused
+ */
 function postTogglePauseResume(isPaused) {
 	postMessage({ type: 'togglePauseResume', isPaused });
 }
 
+/**
+ * @param {string} message
+ */
 function postLogEvent(message) {
 	const time = new Date();
 	postMessage({ type: 'logEvent', message, time });
 }
 
+/**
+ * @param {TimerType} timer
+ * @param {boolean} rootTimer
+ * @returns
+ */
 async function startTimer(timer, rootTimer = false) {
 	const { name, repetitions, timers, duration } = timer;
 	try {
@@ -174,6 +216,11 @@ async function startTimer(timer, rootTimer = false) {
 	}
 }
 
+/**
+ * Starts a single timer and handles display updates, logging, and notifications.
+ * @param {TimerType} timer - The timer object containing name, duration, and description.
+ * @returns {Promise<void>} - A promise that resolves when the timer completes.
+ */
 async function startSingleTimer(timer) {
 	const { name, duration, description } = timer;
 
@@ -181,13 +228,22 @@ async function startSingleTimer(timer) {
 	postLogEvent(`Starting '${name}' with ${duration}.`);
 
 	// Wait for the timer to complete
-	await TIMER_INSTANCE.start(duration);
+	await TIMER_INSTANCE.start(duration ?? 0);
 	sendNotification(`Timer '${name}' completed!`);
 	postLogEvent(`Timer '${name}' completed!`);
 }
 
+/**
+ * Starts a series of timers sequentially.
+ * @param {TimerType} timer - The timer object containing the series information.
+ * @returns {Promise<void>} A promise that resolves when all timers in the series have completed.
+ */
 async function startSeriesOfTimers(timer) {
 	const { name, timers } = timer;
+	if (timers === undefined) {
+		console.error('Timers not defined for series:', name);
+		return;
+	}
 	postLogEvent(`Starting series '${name}'.`);
 	for (let i = 0; i < timers.length; i++) {
 		await startTimer(timers[i]);
@@ -195,6 +251,9 @@ async function startSeriesOfTimers(timer) {
 	postLogEvent(`Series '${name}' completed!`);
 }
 
+/**
+ * @param {string} message
+ */
 function sendNotification(message) {
 	if (Notification.permission === 'granted') {
 		new Notification(message);

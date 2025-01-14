@@ -35,7 +35,7 @@
 
 			TIMER_WORKER.onmessage = function (event) {
 				console.log('Main: Message received from worker:', event.data);
-				const { type, time, isPaused } = event.data;
+				const { type, isPaused } = event.data;
 				switch (type) {
 					case 'updateDisplay':
 						timerDisplay.updateDisplay(event.data);
@@ -69,7 +69,7 @@
 		TIMER_WORKER.postMessage({ command: 'startTimer', timer });
 		// Wait for the timer to complete
 		await new Promise<void>((resolve) => {
-			const handleMessage = (event: any) => {
+			const handleMessage = (event: MessageEvent) => {
 				if (event.data.type === 'completed') {
 					TIMER_WORKER.removeEventListener('message', handleMessage);
 					resolve();

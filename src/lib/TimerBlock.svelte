@@ -81,7 +81,7 @@
 		<div class="timer-list">
 			<!-- Sub-timers will be nested here -->
 			{#if !isHidden && timer !== undefined && timer.timers !== undefined && timer.timers.length > 0}
-				{#each timer.timers as item, i}
+				{#each timer.timers as _unused, i}
 					<div class="sub-timer">
 						<Self
 							bind:timer={timer.timers[i]}
