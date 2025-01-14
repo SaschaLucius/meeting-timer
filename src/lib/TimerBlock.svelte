@@ -89,7 +89,7 @@
 							deleteMyself={() => {
 								const deleted = timer.timers?.splice(i, 1);
 								timer.timers = timer.timers;
-								if(timer.timers?.length === 0 && deleted !== undefined && deleted.length > 0) {
+								if (timer.timers?.length === 0 && deleted !== undefined && deleted.length > 0) {
 									timer.duration = deleted[0].duration;
 								}
 							}}

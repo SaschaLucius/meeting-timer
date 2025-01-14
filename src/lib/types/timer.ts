@@ -6,7 +6,7 @@ export interface Timer {
 	description?: string;
 }
 
-export function deepEquals(arg1:Timer, arg2:Timer) {
+export function deepEquals(arg1: Timer, arg2: Timer) {
 	if (arg1.name !== arg2.name) {
 		return false;
 	}

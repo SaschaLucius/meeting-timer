@@ -6,12 +6,12 @@
 	export let repetitions: number = 0;
 	export let description: string = '';
 
-	export function resetDisplay(){
+	export function resetDisplay() {
 		name = '-';
 		time = 0;
 		repetitions = 0;
 		description = '';
-	};
+	}
 
 	export function updateDisplay({
 		name: newName,
@@ -37,7 +37,7 @@
 		<div class="timer-description"><span id="timerDescription">{description}</span></div>
 	{/if}
 	<div class="remainingTime"><span>{secondsToHMS(time, true)}</span></div>
-	{#if repetitions > 0}
+	{#if repetitions > 0}
 		<div class="timer-info">Repetitions Left: <span id="repetitionsLeft">{repetitions}</span></div>
 	{/if}
 </div>
@@ -57,7 +57,7 @@
 		word-wrap: break-word;
 		text-align: center;
 	}
-	.remainingTime{
+	.remainingTime {
 		font-size: 24vw;
 		line-height: 85%;
 	}
