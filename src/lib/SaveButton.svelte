@@ -1,6 +1,4 @@
-<script>
-	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
+<script lang="ts">
 	import { getTimerDefinitions } from '$lib/timerDefinitions';
 	import { rootTimer, currentTimer, savedTimers, defaultTimerName } from '$lib/stores/timers';
 	import { deepEquals } from '$lib/types/timer';

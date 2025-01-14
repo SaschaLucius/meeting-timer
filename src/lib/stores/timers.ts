@@ -6,4 +6,4 @@ import { getDefaultTimer } from '$lib/types/timer';
 export const rootTimer = writable<Timer>(getDefaultTimer());
 export const defaultTimerName = '1-2-4-All';
 export const currentTimer = writable<string>(defaultTimerName);
-export const savedTimers = persisted('savedTimers', {});
+export const savedTimers = persisted<Record<string, Timer>>('savedTimers', {});

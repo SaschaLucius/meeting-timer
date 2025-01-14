@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
 	import { getTimerDefinitions } from '$lib/timerDefinitions';
 	import { onMount } from 'svelte';
 	import { rootTimer, currentTimer, savedTimers as savedTimersStore } from '$lib/stores/timers';
-	import { browser } from '$app/environment';
+	import type { Timer } from '$lib/types/timer';
 
 	onMount(() => {
 		showSelectedTimer();
 	});
 
-	let combinedTimers = [];
+	let combinedTimers: (Timer & { prefix: string })[] = [];
 	$: {
 		const TIMER_DEFINITIONS = getTimerDefinitions();
 		combinedTimers = Object.keys(TIMER_DEFINITIONS)
@@ -33,17 +33,12 @@
 	function showSelectedTimer() {
 		const selectedStructure =
 			getTimerDefinitions()[$currentTimer] || $savedTimersStore[$currentTimer];
-		//const errorMessageElement = document.getElementById('errorMessage');
 
 		try {
-			if (selectedStructure && selectedStructure.timer) {
-				$rootTimer = structuredClone(selectedStructure.timer);
-			} else {
+			if (selectedStructure) {
 				$rootTimer = structuredClone(selectedStructure);
 			}
-			//errorMessageElement.innerText = ''; // Clear any previous error message
 		} catch (error) {
-			//errorMessageElement.innerText = 'Invalid JSON structure. Please try again. ' + error.message;
 			console.error('JSON Parse Error:', error);
 		}
 	}
