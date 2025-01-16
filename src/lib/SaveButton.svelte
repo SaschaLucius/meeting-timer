@@ -3,11 +3,6 @@
 	import { rootTimer, currentTimer, savedTimers, defaultTimerName } from '$lib/stores/timers';
 	import { deepEquals } from '$lib/types/timer';
 
-	const temp = $savedTimers;
-	temp[$rootTimer.name] = $rootTimer;
-	$savedTimers = temp;
-	$currentTimer = $rootTimer.name;
-
 	$: buttonLabel = $savedTimers[$rootTimer.name]
 		? deepEquals($savedTimers[$rootTimer.name], $rootTimer)
 			? 'Delete'
@@ -32,6 +27,11 @@
 				return; // Exit if the user declines to overwrite
 			}
 		}
+
+		const temp = $savedTimers;
+		temp[$rootTimer.name] = $rootTimer;
+		$savedTimers = temp;
+		$currentTimer = $rootTimer.name;
 	}
 
 	function deleteTimer() {
