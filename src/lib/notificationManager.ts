@@ -1,8 +1,19 @@
+/**
+ * NotificationManager class.
+ * 
+ * This class is responsible for managing notifications.
+ */
 class NotificationManager {
+	notificationEnabled: boolean;
+
 	constructor() {
 		this.notificationEnabled = false;
 	}
 
+	/**
+	 * Request permission for notifications.
+	 * @returns {Promise<void>}
+	 */
 	async requestNotificationPermission() {
 		if (!('Notification' in window)) {
 			console.log('This browser does not support notifications.');
@@ -16,7 +27,12 @@ class NotificationManager {
 		}
 	}
 
-	sendNotification(message) {
+	/**
+	 * Send a notification.
+	 * @param {string} message - The message to display in the notification
+	 * @returns {void}
+	 */
+	sendNotification(message: string) {
 		if (this.notificationEnabled && 'Notification' in window) {
 			new Notification(message);
 		}

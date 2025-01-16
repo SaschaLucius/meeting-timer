@@ -1,5 +1,5 @@
 <script lang="ts">
-	import NotificationManager from '$lib/notificationManager.js';
+	import NotificationManager from '$lib/notificationManager';
 	import NoSleep from '$lib/NoSleep.svelte';
 	import TimerBuilder from '$lib/TimerBuilder.svelte';
 	import TimerDisplay from '$lib/TimerDisplay.svelte';

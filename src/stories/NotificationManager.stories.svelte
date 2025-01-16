@@ -1,6 +1,6 @@
 <script module>
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import NotificationManager from '$lib/NotificationManager.js';
+  import NotificationManager from '$lib/notificationManager';
 
 	const { Story } = defineMeta({
 		title: 'NotificationManager',

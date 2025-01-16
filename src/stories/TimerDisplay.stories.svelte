@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import TimerDisplay from '$lib/TimerDisplay.svelte';
 
@@ -10,8 +10,8 @@
 	});
 </script>
 
-<script>
-	let interval;
+<script lang="ts">
+	let interval: number | undefined;
 	let seconds = 0;
 
 	const startInterval = () => {
@@ -30,7 +30,7 @@
 <Story name="Default" args={{}} />
 
 <Story name="With Timer">
-	<TimerDisplay name="Countdown" description="is is a description" time={seconds} repetitions="3" />
+	<TimerDisplay name="Countdown" description="is is a description" time={seconds} repetitions={3} />
 	<button on:click={interval ? stopInterval : startInterval}>Start</button>
 </Story>
 
