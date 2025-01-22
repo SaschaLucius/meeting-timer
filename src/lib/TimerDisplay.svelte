@@ -24,10 +24,10 @@
 		repetitions: number;
 		description: string;
 	}) {
-		if (newName !== undefined) name = newName;
-		if (newTime !== undefined) time = newTime;
-		if (newRepetions !== undefined) repetitions = newRepetions;
-		if (newDescription !== undefined) description = newDescription;
+		if (newName !== undefined && newName !== name) name = newName;
+		if (newTime !== undefined && newTime !== time) time = newTime;
+		if (newRepetions !== undefined && newRepetions !== repetitions) repetitions = newRepetions;
+		if (newDescription !== undefined && newDescription !== description) description = newDescription;
 	}
 </script>
 
